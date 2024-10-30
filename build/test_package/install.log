@@ -1,8 +1,12 @@
+/home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages/test_package/distance_subscriber.py
+/home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages/test_package/camera_subscriber.py
 /home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages/test_package/aruco_publisher.py
 /home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages/test_package/camera_publisher.py
 /home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages/test_package/distance_publisher.py
 /home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages/test_package/__init__.py
 /home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages/test_package/aruco_subscriber.py
+/home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages/test_package/__pycache__/distance_subscriber.cpython-310.pyc
+/home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages/test_package/__pycache__/camera_subscriber.cpython-310.pyc
 /home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages/test_package/__pycache__/aruco_publisher.cpython-310.pyc
 /home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages/test_package/__pycache__/camera_publisher.cpython-310.pyc
 /home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages/test_package/__pycache__/distance_publisher.cpython-310.pyc
@@ -20,4 +24,6 @@
 /home/minibot/test_files_ros/install/test_package/lib/test_package/aruco_publisher
 /home/minibot/test_files_ros/install/test_package/lib/test_package/aruco_subscriber
 /home/minibot/test_files_ros/install/test_package/lib/test_package/camera_publisher
+/home/minibot/test_files_ros/install/test_package/lib/test_package/camera_subscriber
 /home/minibot/test_files_ros/install/test_package/lib/test_package/distance_publisher
+/home/minibot/test_files_ros/install/test_package/lib/test_package/distance_subscriber
