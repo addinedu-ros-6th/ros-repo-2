@@ -1,0 +1,20 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from test_package_msgs/msg/ArucoMarker.msg
+// generated code does not contain a copyright notice
+
+
+module test_package_msgs {
+  module msg {
+    struct ArucoMarker {
+      int32 id;
+
+      float distance;
+
+      float x;
+
+      float y;
+
+      float z;
+    };
+  };
+};

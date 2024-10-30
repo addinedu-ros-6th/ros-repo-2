@@ -1,0 +1,81 @@
+[0.000000] (-) TimerEvent: {}
+[0.000788] (test_package) JobQueued: {'identifier': 'test_package', 'dependencies': OrderedDict()}
+[0.001606] (test_package) JobStarted: {'identifier': 'test_package'}
+[0.099240] (-) TimerEvent: {}
+[0.199647] (-) TimerEvent: {}
+[0.300043] (-) TimerEvent: {}
+[0.400444] (-) TimerEvent: {}
+[0.500796] (-) TimerEvent: {}
+[0.601152] (-) TimerEvent: {}
+[0.701500] (-) TimerEvent: {}
+[0.801868] (-) TimerEvent: {}
+[0.902238] (-) TimerEvent: {}
+[1.002603] (-) TimerEvent: {}
+[1.103007] (-) TimerEvent: {}
+[1.203579] (-) TimerEvent: {}
+[1.304040] (-) TimerEvent: {}
+[1.404435] (-) TimerEvent: {}
+[1.504802] (-) TimerEvent: {}
+[1.605208] (-) TimerEvent: {}
+[1.705587] (-) TimerEvent: {}
+[1.805937] (-) TimerEvent: {}
+[1.906301] (-) TimerEvent: {}
+[2.006684] (-) TimerEvent: {}
+[2.107087] (-) TimerEvent: {}
+[2.207437] (-) TimerEvent: {}
+[2.307794] (-) TimerEvent: {}
+[2.408159] (-) TimerEvent: {}
+[2.508567] (-) TimerEvent: {}
+[2.608985] (-) TimerEvent: {}
+[2.709400] (-) TimerEvent: {}
+[2.809832] (-) TimerEvent: {}
+[2.910290] (-) TimerEvent: {}
+[3.010699] (-) TimerEvent: {}
+[3.111130] (-) TimerEvent: {}
+[3.211502] (-) TimerEvent: {}
+[3.312042] (-) TimerEvent: {}
+[3.412648] (-) TimerEvent: {}
+[3.437614] (test_package) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', 'setup.py', 'egg_info', '--egg-base', '../../build/test_package', 'build', '--build-base', '/home/minibot/ros2_test/build/test_package/build', 'install', '--record', '/home/minibot/ros2_test/build/test_package/install.log', '--single-version-externally-managed', 'install_data'], 'cwd': '/home/minibot/ros2_test/src/test_package', 'env': {'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'minibot', 'SSH_CLIENT': '192.168.0.155 51182 22', 'LC_TIME': 'ko_KR.UTF-8', 'XDG_SESSION_TYPE': 'tty', 'GIT_ASKPASS': '/home/minibot/.vscode-server/cli/servers/Stable-384ff7382de624fb94dbaf6da11977bba1ecd427/server/extensions/git/dist/askpass.sh', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/aarch64-linux-gnu:/opt/ros/humble/lib', 'BROWSER': '/home/minibot/.vscode-server/cli/servers/Stable-384ff7382de624fb94dbaf6da11977bba1ecd427/server/bin/helpers/browser.sh', 'MOTD_SHOWN': 'pam', 'HOME': '/home/minibot', 'TERM_PROGRAM_VERSION': '1.94.2', 'VSCODE_IPC_HOOK_CLI': '/run/user/1000/vscode-ipc-8d0f6895-1936-4449-ace9-4d1bb8490987.sock', 'ROS_PYTHON_VERSION': '3', 'VSCODE_GIT_ASKPASS_MAIN': '/home/minibot/.vscode-server/cli/servers/Stable-384ff7382de624fb94dbaf6da11977bba1ecd427/server/extensions/git/dist/askpass-main.js', 'LC_MONETARY': 'ko_KR.UTF-8', 'VSCODE_GIT_ASKPASS_NODE': '/home/minibot/.vscode-server/cli/servers/Stable-384ff7382de624fb94dbaf6da11977bba1ecd427/server/node', 'SSL_CERT_FILE': '/usr/lib/ssl/certs/ca-certificates.crt', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLORTERM': 'truecolor', 'COLCON_PREFIX_PATH': '/home/minibot/ros2_test/install', 'ROS_DISTRO': 'humble', 'LOGNAME': 'minibot', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'XDG_SESSION_CLASS': 'user', 'TERM': 'xterm-256color', 'XDG_SESSION_ID': '3', 'ROS_LOCALHOST_ONLY': '0', 'PATH': '/opt/ros/humble/bin:/home/minibot/.vscode-server/cli/servers/Stable-384ff7382de624fb94dbaf6da11977bba1ecd427/server/bin/remote-cli:/home/minibot/.local/bin:/home/minibot/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin', 'LC_ADDRESS': 'ko_KR.UTF-8', 'XDG_RUNTIME_DIR': '/run/user/1000', 'SSL_CERT_DIR': '/usr/lib/ssl/certs', 'LANG': 'en_US.UTF-8', 'LC_TELEPHONE': 'ko_KR.UTF-8', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'VSCODE_GIT_IPC_HANDLE': '/run/user/1000/vscode-git-e49ac175c2.sock', 'TERM_PROGRAM': 'vscode', 'ROS_DOMAIN_ID': '51', 'AMENT_PREFIX_PATH': '/home/minibot/ros2_test/install/test_package:/opt/ros/humble', 'SHELL': '/bin/bash', 'LC_NAME': 'ko_KR.UTF-8', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'LC_MEASUREMENT': 'ko_KR.UTF-8', 'LC_IDENTIFICATION': 'ko_KR.UTF-8', 'VSCODE_GIT_ASKPASS_EXTRA_ARGS': '', 'PWD': '/home/minibot/ros2_test/build/test_package', 'LC_ALL': 'en_US.UTF-8', 'SSH_CONNECTION': '192.168.0.155 51182 192.168.0.39 22', 'XDG_DATA_DIRS': '/usr/share/gnome:/usr/local/share:/usr/share:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/minibot/ros2_test/build/test_package/prefix_override:/home/minibot/ros2_test/install/test_package/lib/python3.10/site-packages:/home/minibot/ros2_test/install/test_package/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'LC_NUMERIC': 'ko_KR.UTF-8', 'LC_PAPER': 'ko_KR.UTF-8', 'COLCON': '1'}, 'shell': False}
+[3.512794] (-) TimerEvent: {}
+[3.613178] (-) TimerEvent: {}
+[3.713737] (-) TimerEvent: {}
+[3.814155] (-) TimerEvent: {}
+[3.914538] (-) TimerEvent: {}
+[4.014901] (-) TimerEvent: {}
+[4.115261] (-) TimerEvent: {}
+[4.215604] (-) TimerEvent: {}
+[4.315960] (-) TimerEvent: {}
+[4.416333] (-) TimerEvent: {}
+[4.510006] (test_package) StdoutLine: {'line': b'running egg_info\n'}
+[4.513401] (test_package) StdoutLine: {'line': b'writing ../../build/test_package/test_package.egg-info/PKG-INFO\n'}
+[4.514840] (test_package) StdoutLine: {'line': b'writing dependency_links to ../../build/test_package/test_package.egg-info/dependency_links.txt\n'}
+[4.516064] (test_package) StdoutLine: {'line': b'writing entry points to ../../build/test_package/test_package.egg-info/entry_points.txt\n'}
+[4.517417] (-) TimerEvent: {}
+[4.518120] (test_package) StdoutLine: {'line': b'writing requirements to ../../build/test_package/test_package.egg-info/requires.txt\n'}
+[4.518779] (test_package) StdoutLine: {'line': b'writing top-level names to ../../build/test_package/test_package.egg-info/top_level.txt\n'}
+[4.527512] (test_package) StdoutLine: {'line': b"reading manifest file '../../build/test_package/test_package.egg-info/SOURCES.txt'\n"}
+[4.532885] (test_package) StdoutLine: {'line': b"writing manifest file '../../build/test_package/test_package.egg-info/SOURCES.txt'\n"}
+[4.534184] (test_package) StdoutLine: {'line': b'running build\n'}
+[4.535428] (test_package) StdoutLine: {'line': b'running build_py\n'}
+[4.536870] (test_package) StdoutLine: {'line': b'copying test_package/camera_publisher.py -> /home/minibot/ros2_test/build/test_package/build/lib/test_package\n'}
+[4.537505] (test_package) StdoutLine: {'line': b'copying test_package/distance_publisher.py -> /home/minibot/ros2_test/build/test_package/build/lib/test_package\n'}
+[4.539016] (test_package) StdoutLine: {'line': b'running install\n'}
+[4.540425] (test_package) StdoutLine: {'line': b'running install_lib\n'}
+[4.544349] (test_package) StdoutLine: {'line': b'copying /home/minibot/ros2_test/build/test_package/build/lib/test_package/camera_publisher.py -> /home/minibot/ros2_test/install/test_package/lib/python3.10/site-packages/test_package\n'}
+[4.546281] (test_package) StdoutLine: {'line': b'copying /home/minibot/ros2_test/build/test_package/build/lib/test_package/distance_publisher.py -> /home/minibot/ros2_test/install/test_package/lib/python3.10/site-packages/test_package\n'}
+[4.549530] (test_package) StdoutLine: {'line': b'byte-compiling /home/minibot/ros2_test/install/test_package/lib/python3.10/site-packages/test_package/camera_publisher.py to camera_publisher.cpython-310.pyc\n'}
+[4.552820] (test_package) StdoutLine: {'line': b'byte-compiling /home/minibot/ros2_test/install/test_package/lib/python3.10/site-packages/test_package/distance_publisher.py to distance_publisher.cpython-310.pyc\n'}
+[4.555504] (test_package) StdoutLine: {'line': b'running install_data\n'}
+[4.556854] (test_package) StdoutLine: {'line': b'running install_egg_info\n'}
+[4.564814] (test_package) StdoutLine: {'line': b"removing '/home/minibot/ros2_test/install/test_package/lib/python3.10/site-packages/test_package-0.0.0-py3.10.egg-info' (and everything under it)\n"}
+[4.568463] (test_package) StdoutLine: {'line': b'Copying ../../build/test_package/test_package.egg-info to /home/minibot/ros2_test/install/test_package/lib/python3.10/site-packages/test_package-0.0.0-py3.10.egg-info\n'}
+[4.576296] (test_package) StdoutLine: {'line': b'running install_scripts\n'}
+[4.617588] (-) TimerEvent: {}
+[4.656328] (test_package) StdoutLine: {'line': b'Installing camera_publisher script to /home/minibot/ros2_test/install/test_package/lib/test_package\n'}
+[4.657262] (test_package) StdoutLine: {'line': b'Installing distance_publisher script to /home/minibot/ros2_test/install/test_package/lib/test_package\n'}
+[4.658713] (test_package) StdoutLine: {'line': b"writing list of installed files to '/home/minibot/ros2_test/build/test_package/install.log'\n"}
+[4.717851] (-) TimerEvent: {}
+[4.769640] (test_package) CommandEnded: {'returncode': 0}
+[4.817969] (-) TimerEvent: {}
+[4.837981] (test_package) JobEnded: {'identifier': 'test_package', 'rc': 0}
+[4.840343] (-) EventReactorShutdown: {}

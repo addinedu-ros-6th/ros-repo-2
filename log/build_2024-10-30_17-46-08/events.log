@@ -1,0 +1,271 @@
+[0.000000] (-) TimerEvent: {}
+[0.000618] (test_package) JobQueued: {'identifier': 'test_package', 'dependencies': OrderedDict()}
+[0.001609] (test_package_msgs) JobQueued: {'identifier': 'test_package_msgs', 'dependencies': OrderedDict()}
+[0.002208] (test_package) JobStarted: {'identifier': 'test_package'}
+[0.057120] (test_package_msgs) JobStarted: {'identifier': 'test_package_msgs'}
+[0.099066] (-) TimerEvent: {}
+[0.199593] (-) TimerEvent: {}
+[0.300011] (-) TimerEvent: {}
+[0.400464] (-) TimerEvent: {}
+[0.500913] (-) TimerEvent: {}
+[0.601374] (-) TimerEvent: {}
+[0.701837] (-) TimerEvent: {}
+[0.802471] (-) TimerEvent: {}
+[0.903170] (-) TimerEvent: {}
+[1.003602] (-) TimerEvent: {}
+[1.104245] (-) TimerEvent: {}
+[1.204960] (-) TimerEvent: {}
+[1.305397] (-) TimerEvent: {}
+[1.405800] (-) TimerEvent: {}
+[1.506317] (-) TimerEvent: {}
+[1.562770] (test_package_msgs) JobProgress: {'identifier': 'test_package_msgs', 'progress': 'cmake'}
+[1.568394] (test_package_msgs) JobProgress: {'identifier': 'test_package_msgs', 'progress': 'build'}
+[1.571322] (test_package_msgs) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/minibot/test_files_ros/build/test_package_msgs', '--', '-j4', '-l4'], 'cwd': '/home/minibot/test_files_ros/build/test_package_msgs', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'minibot'), ('LC_TIME', 'ko_KR.UTF-8'), ('XDG_SESSION_TYPE', 'wayland'), ('SHLVL', '0'), ('LD_LIBRARY_PATH', '/home/minibot/test_files_ros/install/test_package_msgs/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/aarch64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/minibot'), ('OLDPWD', '/home/minibot'), ('DESKTOP_SESSION', 'ubuntu'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('LC_MONETARY', 'ko_KR.UTF-8'), ('SYSTEMD_EXEC_PID', '1914'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('IM_CONFIG_PHASE', '1'), ('WAYLAND_DISPLAY', 'wayland-0'), ('COLCON_PREFIX_PATH', '/home/minibot/test_files_ros/install'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'minibot'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'minibot'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/humble/bin:/home/minibot/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/raspi:@/tmp/.ICE-unix/1673,unix/raspi:/tmp/.ICE-unix/1673'), ('XDG_MENU_PREFIX', 'gnome-'), ('LC_ADDRESS', 'ko_KR.UTF-8'), ('GNOME_TERMINAL_SCREEN', '/org/gnome/Terminal/screen/cc3f88e2_d3d0_43b6_b763_a08c3e7f2791'), ('GNOME_SETUP_DISPLAY', ':1'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('DISPLAY', ':0'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('LC_TELEPHONE', 'ko_KR.UTF-8'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/.mutter-Xwaylandauth.H2QYW2'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('GNOME_TERMINAL_SERVICE', ':1.95'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('ROS_DOMAIN_ID', '51'), ('AMENT_PREFIX_PATH', '/home/minibot/test_files_ros/install/test_package_msgs:/home/minibot/test_files_ros/install/test_package:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('LC_NAME', 'ko_KR.UTF-8'), ('QT_ACCESSIBILITY', '1'), ('GDMSESSION', 'ubuntu'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('LC_MEASUREMENT', 'ko_KR.UTF-8'), ('LC_IDENTIFICATION', 'ko_KR.UTF-8'), ('QT_IM_MODULE', 'ibus'), ('PWD', '/home/minibot/test_files_ros/build/test_package_msgs'), ('LC_ALL', 'en_US.UTF-8'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages:/home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('LC_NUMERIC', 'ko_KR.UTF-8'), ('LC_PAPER', 'ko_KR.UTF-8'), ('COLCON', '1'), ('VTE_VERSION', '6800'), ('CMAKE_PREFIX_PATH', '/home/minibot/test_files_ros/install/test_package_msgs:/home/minibot/test_files_ros/install/test_package:/opt/ros/humble')]), 'shell': False}
+[1.606556] (-) TimerEvent: {}
+[1.707039] (-) TimerEvent: {}
+[1.807445] (-) TimerEvent: {}
+[1.907027] (test_package_msgs) StdoutLine: {'line': b'[  3%] Built target test_package_msgs__cpp\n'}
+[1.908546] (-) TimerEvent: {}
+[2.008931] (-) TimerEvent: {}
+[2.051485] (test_package_msgs) StdoutLine: {'line': b'[  3%] Built target ament_cmake_python_copy_test_package_msgs\n'}
+[2.109115] (-) TimerEvent: {}
+[2.122862] (test_package_msgs) StdoutLine: {'line': b'Consolidate compiler generated dependencies of target test_package_msgs__rosidl_typesupport_fastrtps_cpp\n'}
+[2.209298] (-) TimerEvent: {}
+[2.221662] (test_package_msgs) StdoutLine: {'line': b'[ 12%] Built target test_package_msgs__rosidl_typesupport_fastrtps_cpp\n'}
+[2.288931] (test_package_msgs) StdoutLine: {'line': b'Consolidate compiler generated dependencies of target test_package_msgs__rosidl_typesupport_introspection_cpp\n'}
+[2.309464] (-) TimerEvent: {}
+[2.342546] (test_package_msgs) StdoutLine: {'line': b'[ 22%] Built target test_package_msgs__rosidl_typesupport_introspection_cpp\n'}
+[2.409663] (-) TimerEvent: {}
+[2.510122] (-) TimerEvent: {}
+[2.610617] (-) TimerEvent: {}
+[2.712410] (-) TimerEvent: {}
+[2.812875] (-) TimerEvent: {}
+[2.913382] (-) TimerEvent: {}
+[3.013798] (-) TimerEvent: {}
+[3.114235] (-) TimerEvent: {}
+[3.214666] (-) TimerEvent: {}
+[3.315108] (-) TimerEvent: {}
+[3.415714] (-) TimerEvent: {}
+[3.516128] (-) TimerEvent: {}
+[3.616529] (-) TimerEvent: {}
+[3.716930] (-) TimerEvent: {}
+[3.817332] (-) TimerEvent: {}
+[3.836019] (test_package_msgs) StdoutLine: {'line': b'running egg_info\n'}
+[3.839491] (test_package_msgs) StdoutLine: {'line': b'writing test_package_msgs.egg-info/PKG-INFO\n'}
+[3.840685] (test_package_msgs) StdoutLine: {'line': b'writing dependency_links to test_package_msgs.egg-info/dependency_links.txt\n'}
+[3.841826] (test_package_msgs) StdoutLine: {'line': b'writing top-level names to test_package_msgs.egg-info/top_level.txt\n'}
+[3.863782] (test_package_msgs) StdoutLine: {'line': b"reading manifest file 'test_package_msgs.egg-info/SOURCES.txt'\n"}
+[3.869745] (test_package_msgs) StdoutLine: {'line': b"writing manifest file 'test_package_msgs.egg-info/SOURCES.txt'\n"}
+[3.917669] (-) TimerEvent: {}
+[4.012179] (test_package_msgs) StdoutLine: {'line': b'[ 22%] Built target ament_cmake_python_build_test_package_msgs_egg\n'}
+[4.017842] (-) TimerEvent: {}
+[4.118309] (-) TimerEvent: {}
+[4.174545] (test_package_msgs) StdoutLine: {'line': b'Consolidate compiler generated dependencies of target test_package_msgs__rosidl_typesupport_cpp\n'}
+[4.218679] (-) TimerEvent: {}
+[4.259643] (test_package_msgs) StdoutLine: {'line': b'[ 32%] Built target test_package_msgs__rosidl_typesupport_cpp\n'}
+[4.318883] (-) TimerEvent: {}
+[4.391805] (test_package_msgs) StdoutLine: {'line': b'Consolidate compiler generated dependencies of target test_package_msgs__rosidl_generator_c\n'}
+[4.419065] (-) TimerEvent: {}
+[4.476052] (test_package_msgs) StdoutLine: {'line': b'[ 41%] Built target test_package_msgs__rosidl_generator_c\n'}
+[4.519369] (-) TimerEvent: {}
+[4.612733] (test_package_msgs) StdoutLine: {'line': b'Consolidate compiler generated dependencies of target test_package_msgs__rosidl_typesupport_fastrtps_c\n'}
+[4.619534] (-) TimerEvent: {}
+[4.685817] (test_package_msgs) StdoutLine: {'line': b'[ 51%] Built target test_package_msgs__rosidl_typesupport_fastrtps_c\n'}
+[4.719768] (-) TimerEvent: {}
+[4.754019] (test_package_msgs) StdoutLine: {'line': b'Consolidate compiler generated dependencies of target test_package_msgs__rosidl_typesupport_c\n'}
+[4.817345] (test_package_msgs) StdoutLine: {'line': b'[ 61%] Built target test_package_msgs__rosidl_typesupport_c\n'}
+[4.820030] (-) TimerEvent: {}
+[4.896275] (test_package_msgs) StdoutLine: {'line': b'Consolidate compiler generated dependencies of target test_package_msgs__rosidl_typesupport_introspection_c\n'}
+[4.920217] (-) TimerEvent: {}
+[4.953845] (test_package_msgs) StdoutLine: {'line': b'[ 70%] Built target test_package_msgs__rosidl_typesupport_introspection_c\n'}
+[5.020513] (-) TimerEvent: {}
+[5.067927] (test_package_msgs) StdoutLine: {'line': b'[ 70%] Built target test_package_msgs\n'}
+[5.120719] (-) TimerEvent: {}
+[5.204480] (test_package_msgs) StdoutLine: {'line': b'[ 74%] Built target test_package_msgs__py\n'}
+[5.220903] (-) TimerEvent: {}
+[5.299290] (test_package_msgs) StdoutLine: {'line': b'Consolidate compiler generated dependencies of target test_package_msgs__rosidl_generator_py\n'}
+[5.321096] (-) TimerEvent: {}
+[5.403669] (test_package_msgs) StdoutLine: {'line': b'[ 80%] Built target test_package_msgs__rosidl_generator_py\n'}
+[5.421445] (-) TimerEvent: {}
+[5.504537] (test_package_msgs) StdoutLine: {'line': b'Consolidate compiler generated dependencies of target test_package_msgs__rosidl_typesupport_fastrtps_c__pyext\n'}
+[5.521694] (-) TimerEvent: {}
+[5.559693] (test_package) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', 'setup.py', 'egg_info', '--egg-base', '../../build/test_package', 'build', '--build-base', '/home/minibot/test_files_ros/build/test_package/build', 'install', '--record', '/home/minibot/test_files_ros/build/test_package/install.log', '--single-version-externally-managed', 'install_data'], 'cwd': '/home/minibot/test_files_ros/src/test_package', 'env': {'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'minibot', 'LC_TIME': 'ko_KR.UTF-8', 'XDG_SESSION_TYPE': 'wayland', 'SHLVL': '0', 'LD_LIBRARY_PATH': '/home/minibot/test_files_ros/install/test_package_msgs/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/aarch64-linux-gnu:/opt/ros/humble/lib', 'HOME': '/home/minibot', 'OLDPWD': '/home/minibot', 'DESKTOP_SESSION': 'ubuntu', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'LC_MONETARY': 'ko_KR.UTF-8', 'SYSTEMD_EXEC_PID': '1914', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLORTERM': 'truecolor', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'COLCON_PREFIX_PATH': '/home/minibot/test_files_ros/install', 'ROS_DISTRO': 'humble', 'LOGNAME': 'minibot', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'minibot', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'ROS_LOCALHOST_ONLY': '0', 'PATH': '/opt/ros/humble/bin:/home/minibot/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin', 'SESSION_MANAGER': 'local/raspi:@/tmp/.ICE-unix/1673,unix/raspi:/tmp/.ICE-unix/1673', 'XDG_MENU_PREFIX': 'gnome-', 'LC_ADDRESS': 'ko_KR.UTF-8', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/cc3f88e2_d3d0_43b6_b763_a08c3e7f2791', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'LC_TELEPHONE': 'ko_KR.UTF-8', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.H2QYW2', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'GNOME_TERMINAL_SERVICE': ':1.95', 'SSH_AGENT_LAUNCHER': 'gnome-keyring', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'ROS_DOMAIN_ID': '51', 'AMENT_PREFIX_PATH': '/home/minibot/test_files_ros/install/test_package_msgs:/home/minibot/test_files_ros/install/test_package:/opt/ros/humble', 'SHELL': '/bin/bash', 'LC_NAME': 'ko_KR.UTF-8', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'LC_MEASUREMENT': 'ko_KR.UTF-8', 'LC_IDENTIFICATION': 'ko_KR.UTF-8', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/minibot/test_files_ros/build/test_package', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/minibot/test_files_ros/build/test_package/prefix_override:/home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages:/home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages:/home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'LC_NUMERIC': 'ko_KR.UTF-8', 'LC_PAPER': 'ko_KR.UTF-8', 'COLCON': '1', 'VTE_VERSION': '6800', 'CMAKE_PREFIX_PATH': '/home/minibot/test_files_ros/install/test_package_msgs'}, 'shell': False}
+[5.594349] (test_package_msgs) StdoutLine: {'line': b'[ 87%] Built target test_package_msgs__rosidl_typesupport_fastrtps_c__pyext\n'}
+[5.621954] (-) TimerEvent: {}
+[5.682882] (test_package_msgs) StdoutLine: {'line': b'Consolidate compiler generated dependencies of target test_package_msgs__rosidl_typesupport_c__pyext\n'}
+[5.722162] (-) TimerEvent: {}
+[5.741352] (test_package_msgs) StdoutLine: {'line': b'[ 93%] Built target test_package_msgs__rosidl_typesupport_c__pyext\n'}
+[5.819439] (test_package_msgs) StdoutLine: {'line': b'Consolidate compiler generated dependencies of target test_package_msgs__rosidl_typesupport_introspection_c__pyext\n'}
+[5.822348] (-) TimerEvent: {}
+[5.885571] (test_package_msgs) StdoutLine: {'line': b'[100%] Built target test_package_msgs__rosidl_typesupport_introspection_c__pyext\n'}
+[5.923099] (-) TimerEvent: {}
+[5.947237] (test_package_msgs) CommandEnded: {'returncode': 0}
+[6.023367] (-) TimerEvent: {}
+[6.124499] (-) TimerEvent: {}
+[6.225521] (-) TimerEvent: {}
+[6.327005] (-) TimerEvent: {}
+[6.411489] (test_package_msgs) JobProgress: {'identifier': 'test_package_msgs', 'progress': 'install'}
+[6.427232] (-) TimerEvent: {}
+[6.465220] (test_package_msgs) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/minibot/test_files_ros/build/test_package_msgs'], 'cwd': '/home/minibot/test_files_ros/build/test_package_msgs', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'minibot'), ('LC_TIME', 'ko_KR.UTF-8'), ('XDG_SESSION_TYPE', 'wayland'), ('SHLVL', '0'), ('LD_LIBRARY_PATH', '/home/minibot/test_files_ros/install/test_package_msgs/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/aarch64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/minibot'), ('OLDPWD', '/home/minibot'), ('DESKTOP_SESSION', 'ubuntu'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('LC_MONETARY', 'ko_KR.UTF-8'), ('SYSTEMD_EXEC_PID', '1914'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('IM_CONFIG_PHASE', '1'), ('WAYLAND_DISPLAY', 'wayland-0'), ('COLCON_PREFIX_PATH', '/home/minibot/test_files_ros/install'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'minibot'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'minibot'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/humble/bin:/home/minibot/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/raspi:@/tmp/.ICE-unix/1673,unix/raspi:/tmp/.ICE-unix/1673'), ('XDG_MENU_PREFIX', 'gnome-'), ('LC_ADDRESS', 'ko_KR.UTF-8'), ('GNOME_TERMINAL_SCREEN', '/org/gnome/Terminal/screen/cc3f88e2_d3d0_43b6_b763_a08c3e7f2791'), ('GNOME_SETUP_DISPLAY', ':1'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('DISPLAY', ':0'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('LC_TELEPHONE', 'ko_KR.UTF-8'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/.mutter-Xwaylandauth.H2QYW2'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('GNOME_TERMINAL_SERVICE', ':1.95'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('ROS_DOMAIN_ID', '51'), ('AMENT_PREFIX_PATH', '/home/minibot/test_files_ros/install/test_package_msgs:/home/minibot/test_files_ros/install/test_package:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('LC_NAME', 'ko_KR.UTF-8'), ('QT_ACCESSIBILITY', '1'), ('GDMSESSION', 'ubuntu'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('LC_MEASUREMENT', 'ko_KR.UTF-8'), ('LC_IDENTIFICATION', 'ko_KR.UTF-8'), ('QT_IM_MODULE', 'ibus'), ('PWD', '/home/minibot/test_files_ros/build/test_package_msgs'), ('LC_ALL', 'en_US.UTF-8'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages:/home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('LC_NUMERIC', 'ko_KR.UTF-8'), ('LC_PAPER', 'ko_KR.UTF-8'), ('COLCON', '1'), ('VTE_VERSION', '6800'), ('CMAKE_PREFIX_PATH', '/home/minibot/test_files_ros/install/test_package_msgs:/home/minibot/test_files_ros/install/test_package:/opt/ros/humble')]), 'shell': False}
+[6.516635] (test_package_msgs) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[6.519223] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/ament_index/resource_index/rosidl_interfaces/test_package_msgs\n'}
+[6.521533] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs\n'}
+[6.523379] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg\n'}
+[6.526759] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail\n'}
+[6.527546] (-) TimerEvent: {}
+[6.528909] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__functions.h\n'}
+[6.530704] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__struct.h\n'}
+[6.535169] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__type_support.h\n'}
+[6.535943] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__functions.c\n'}
+[6.536681] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/aruco_marker.h\n'}
+[6.537246] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/rosidl_generator_c__visibility_control.h\n'}
+[6.537790] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/environment/library_path.sh\n'}
+[6.538345] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/environment/library_path.dsv\n'}
+[6.540828] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/lib/libtest_package_msgs__rosidl_generator_c.so\n'}
+[6.545648] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs\n'}
+[6.546686] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg\n'}
+[6.547414] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail\n'}
+[6.548190] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__rosidl_typesupport_fastrtps_c.h\n'}
+[6.555929] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/rosidl_typesupport_fastrtps_c__visibility_control.h\n'}
+[6.556723] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/lib/libtest_package_msgs__rosidl_typesupport_fastrtps_c.so\n'}
+[6.557387] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs\n'}
+[6.558055] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg\n'}
+[6.558698] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail\n'}
+[6.559313] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__rosidl_typesupport_introspection_c.h\n'}
+[6.559950] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__type_support.c\n'}
+[6.560589] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/rosidl_typesupport_introspection_c__visibility_control.h\n'}
+[6.561792] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/lib/libtest_package_msgs__rosidl_typesupport_introspection_c.so\n'}
+[6.566087] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/lib/libtest_package_msgs__rosidl_typesupport_c.so\n'}
+[6.569366] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs\n'}
+[6.571294] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg\n'}
+[6.580931] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail\n'}
+[6.581839] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__builder.hpp\n'}
+[6.582674] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__struct.hpp\n'}
+[6.588134] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__traits.hpp\n'}
+[6.589114] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/aruco_marker.hpp\n'}
+[6.589899] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs\n'}
+[6.590863] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg\n'}
+[6.593141] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail\n'}
+[6.595418] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/dds_fastrtps\n'}
+[6.596208] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[6.596959] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/rosidl_typesupport_fastrtps_cpp__visibility_control.h\n'}
+[6.597708] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/lib/libtest_package_msgs__rosidl_typesupport_fastrtps_cpp.so\n'}
+[6.598459] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs\n'}
+[6.599360] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg\n'}
+[6.600167] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail\n'}
+[6.601293] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__type_support.cpp\n'}
+[6.604753] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__rosidl_typesupport_introspection_cpp.hpp\n'}
+[6.627289] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/lib/libtest_package_msgs__rosidl_typesupport_introspection_cpp.so\n'}
+[6.628307] (-) TimerEvent: {}
+[6.628658] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/lib/libtest_package_msgs__rosidl_typesupport_cpp.so\n'}
+[6.629548] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/environment/pythonpath.sh\n'}
+[6.630693] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/environment/pythonpath.dsv\n'}
+[6.631510] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs-0.0.0-py3.10.egg-info\n'}
+[6.637128] (test_package_msgs) StdoutLine: {'line': b'-- Installing: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs-0.0.0-py3.10.egg-info/dependency_links.txt\n'}
+[6.642204] (test_package_msgs) StdoutLine: {'line': b'-- Installing: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs-0.0.0-py3.10.egg-info/top_level.txt\n'}
+[6.647929] (test_package_msgs) StdoutLine: {'line': b'-- Installing: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs-0.0.0-py3.10.egg-info/SOURCES.txt\n'}
+[6.652175] (test_package_msgs) StdoutLine: {'line': b'-- Installing: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs-0.0.0-py3.10.egg-info/PKG-INFO\n'}
+[6.655980] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs\n'}
+[6.659380] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/test_package_msgs_s__rosidl_typesupport_c.cpython-310-aarch64-linux-gnu.so\n'}
+[6.662601] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/_test_package_msgs_s.ep.rosidl_typesupport_c.c\n'}
+[6.666396] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/libtest_package_msgs__rosidl_generator_py.so\n'}
+[6.670159] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/msg\n'}
+[6.674047] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/msg/_aruco_marker_s.c\n'}
+[6.677546] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/msg/_aruco_marker.py\n'}
+[6.681472] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/msg/__init__.py\n'}
+[6.685326] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/_test_package_msgs_s.ep.rosidl_typesupport_introspection_c.c\n'}
+[6.689715] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/_test_package_msgs_s.ep.rosidl_typesupport_fastrtps_c.c\n'}
+[6.693668] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/test_package_msgs_s__rosidl_typesupport_introspection_c.cpython-310-aarch64-linux-gnu.so\n'}
+[6.697441] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/__init__.py\n'}
+[6.702049] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/test_package_msgs_s__rosidl_typesupport_fastrtps_c.cpython-310-aarch64-linux-gnu.so\n'}
+[6.728566] (-) TimerEvent: {}
+[6.829929] (-) TimerEvent: {}
+[6.902989] (test_package_msgs) StdoutLine: {'line': b"Listing '/home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs'...\n"}
+[6.907340] (test_package_msgs) StdoutLine: {'line': b"Listing '/home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/msg'...\n"}
+[6.940774] (-) TimerEvent: {}
+[6.967014] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/test_package_msgs_s__rosidl_typesupport_fastrtps_c.cpython-310-aarch64-linux-gnu.so\n'}
+[6.971958] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/test_package_msgs_s__rosidl_typesupport_introspection_c.cpython-310-aarch64-linux-gnu.so\n'}
+[6.979545] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/test_package_msgs_s__rosidl_typesupport_c.cpython-310-aarch64-linux-gnu.so\n'}
+[6.991468] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/lib/libtest_package_msgs__rosidl_generator_py.so\n'}
+[6.994240] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/msg/ArucoMarker.idl\n'}
+[6.997127] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/msg/ArucoMarker.msg\n'}
+[6.997837] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/ament_index/resource_index/package_run_dependencies/test_package_msgs\n'}
+[6.998424] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/ament_index/resource_index/parent_prefix_path/test_package_msgs\n'}
+[7.001125] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/environment/ament_prefix_path.sh\n'}
+[7.001877] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/environment/ament_prefix_path.dsv\n'}
+[7.002434] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/environment/path.sh\n'}
+[7.003794] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/environment/path.dsv\n'}
+[7.005410] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/local_setup.bash\n'}
+[7.007001] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/local_setup.sh\n'}
+[7.008619] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/local_setup.zsh\n'}
+[7.010324] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/local_setup.dsv\n'}
+[7.011861] (test_package_msgs) StdoutLine: {'line': b'-- Installing: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/package.dsv\n'}
+[7.015590] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/ament_index/resource_index/packages/test_package_msgs\n'}
+[7.019326] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/export_test_package_msgs__rosidl_generator_cExport.cmake\n'}
+[7.021219] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/export_test_package_msgs__rosidl_generator_cExport-noconfig.cmake\n'}
+[7.024917] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/export_test_package_msgs__rosidl_typesupport_fastrtps_cExport.cmake\n'}
+[7.026712] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/export_test_package_msgs__rosidl_typesupport_fastrtps_cExport-noconfig.cmake\n'}
+[7.030756] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/test_package_msgs__rosidl_typesupport_introspection_cExport.cmake\n'}
+[7.032631] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/test_package_msgs__rosidl_typesupport_introspection_cExport-noconfig.cmake\n'}
+[7.036416] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/test_package_msgs__rosidl_typesupport_cExport.cmake\n'}
+[7.038286] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/test_package_msgs__rosidl_typesupport_cExport-noconfig.cmake\n'}
+[7.040915] (-) TimerEvent: {}
+[7.042128] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/export_test_package_msgs__rosidl_generator_cppExport.cmake\n'}
+[7.046018] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/export_test_package_msgs__rosidl_typesupport_fastrtps_cppExport.cmake\n'}
+[7.048044] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/export_test_package_msgs__rosidl_typesupport_fastrtps_cppExport-noconfig.cmake\n'}
+[7.051941] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/test_package_msgs__rosidl_typesupport_introspection_cppExport.cmake\n'}
+[7.053906] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/test_package_msgs__rosidl_typesupport_introspection_cppExport-noconfig.cmake\n'}
+[7.057669] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/test_package_msgs__rosidl_typesupport_cppExport.cmake\n'}
+[7.059605] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/test_package_msgs__rosidl_typesupport_cppExport-noconfig.cmake\n'}
+[7.063489] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/export_test_package_msgs__rosidl_generator_pyExport.cmake\n'}
+[7.065398] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/export_test_package_msgs__rosidl_generator_pyExport-noconfig.cmake\n'}
+[7.067700] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/rosidl_cmake-extras.cmake\n'}
+[7.068529] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/ament_cmake_export_include_directories-extras.cmake\n'}
+[7.070294] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/ament_cmake_export_libraries-extras.cmake\n'}
+[7.072732] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/ament_cmake_export_targets-extras.cmake\n'}
+[7.073486] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/rosidl_cmake_export_typesupport_targets-extras.cmake\n'}
+[7.075762] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/ament_cmake_export_dependencies-extras.cmake\n'}
+[7.076604] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/rosidl_cmake_export_typesupport_libraries-extras.cmake\n'}
+[7.079008] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/test_package_msgsConfig.cmake\n'}
+[7.079735] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/test_package_msgsConfig-version.cmake\n'}
+[7.080531] (test_package_msgs) StdoutLine: {'line': b'-- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/package.xml\n'}
+[7.091377] (test_package_msgs) CommandEnded: {'returncode': 0}
+[7.141650] (-) TimerEvent: {}
+[7.242139] (-) TimerEvent: {}
+[7.342708] (-) TimerEvent: {}
+[7.443961] (-) TimerEvent: {}
+[7.545738] (-) TimerEvent: {}
+[7.647806] (-) TimerEvent: {}
+[7.748594] (-) TimerEvent: {}
+[7.849603] (-) TimerEvent: {}
+[7.875996] (test_package_msgs) JobEnded: {'identifier': 'test_package_msgs', 'rc': 0}
+[7.882053] (test_package) StdoutLine: {'line': b'running egg_info\n'}
+[7.885234] (test_package) StdoutLine: {'line': b'writing ../../build/test_package/test_package.egg-info/PKG-INFO\n'}
+[7.886175] (test_package) StdoutLine: {'line': b'writing dependency_links to ../../build/test_package/test_package.egg-info/dependency_links.txt\n'}
+[7.887252] (test_package) StdoutLine: {'line': b'writing entry points to ../../build/test_package/test_package.egg-info/entry_points.txt\n'}
+[7.888025] (test_package) StdoutLine: {'line': b'writing requirements to ../../build/test_package/test_package.egg-info/requires.txt\n'}
+[7.889188] (test_package) StdoutLine: {'line': b'writing top-level names to ../../build/test_package/test_package.egg-info/top_level.txt\n'}
+[7.889856] (test_package) StdoutLine: {'line': b"reading manifest file '../../build/test_package/test_package.egg-info/SOURCES.txt'\n"}
+[7.890355] (test_package) StdoutLine: {'line': b"writing manifest file '../../build/test_package/test_package.egg-info/SOURCES.txt'\n"}
+[7.890739] (test_package) StdoutLine: {'line': b'running build\n'}
+[7.891095] (test_package) StdoutLine: {'line': b'running build_py\n'}
+[7.891442] (test_package) StdoutLine: {'line': b'copying test_package/aruco_publisher.py -> /home/minibot/test_files_ros/build/test_package/build/lib/test_package\n'}
+[7.891801] (test_package) StdoutLine: {'line': b'running install\n'}
+[7.892138] (test_package) StdoutLine: {'line': b'running install_lib\n'}
+[7.892578] (test_package) StdoutLine: {'line': b'copying /home/minibot/test_files_ros/build/test_package/build/lib/test_package/aruco_publisher.py -> /home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages/test_package\n'}
+[7.892981] (test_package) StdoutLine: {'line': b'byte-compiling /home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages/test_package/aruco_publisher.py to aruco_publisher.cpython-310.pyc\n'}
+[7.893348] (test_package) StdoutLine: {'line': b'running install_data\n'}
+[7.894456] (test_package) StdoutLine: {'line': b'running install_egg_info\n'}
+[7.894846] (test_package) StdoutLine: {'line': b"removing '/home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages/test_package-0.0.0-py3.10.egg-info' (and everything under it)\n"}
+[7.895216] (test_package) StdoutLine: {'line': b'Copying ../../build/test_package/test_package.egg-info to /home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages/test_package-0.0.0-py3.10.egg-info\n'}
+[7.900569] (test_package) StdoutLine: {'line': b'running install_scripts\n'}
+[7.949792] (-) TimerEvent: {}
+[7.996080] (test_package) StdoutLine: {'line': b'Installing aruco_publisher script to /home/minibot/test_files_ros/install/test_package/lib/test_package\n'}
+[7.997370] (test_package) StdoutLine: {'line': b'Installing camera_publisher script to /home/minibot/test_files_ros/install/test_package/lib/test_package\n'}
+[7.998524] (test_package) StdoutLine: {'line': b'Installing distance_publisher script to /home/minibot/test_files_ros/install/test_package/lib/test_package\n'}
+[8.000019] (test_package) StdoutLine: {'line': b"writing list of installed files to '/home/minibot/test_files_ros/build/test_package/install.log'\n"}
+[8.050133] (-) TimerEvent: {}
+[8.135048] (test_package) CommandEnded: {'returncode': 0}
+[8.150452] (-) TimerEvent: {}
+[8.177080] (test_package) JobEnded: {'identifier': 'test_package', 'rc': 0}
+[8.184751] (-) EventReactorShutdown: {}

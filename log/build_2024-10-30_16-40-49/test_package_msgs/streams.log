@@ -1,0 +1,216 @@
+[1.643s] Invoking command in '/home/minibot/test_files_ros/build/test_package_msgs': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/minibot/test_files_ros/install/test_package:/opt/ros/humble /usr/bin/cmake --build /home/minibot/test_files_ros/build/test_package_msgs -- -j4 -l4
+[1.773s] -- Found ament_cmake: 1.3.8 (/opt/ros/humble/share/ament_cmake/cmake)
+[2.591s] -- Found rosidl_default_generators: 1.2.0 (/opt/ros/humble/share/rosidl_default_generators/cmake)
+[2.611s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[2.630s] -- Found rosidl_adapter: 3.1.5 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[2.871s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[5.026s] -- Found ament_cmake_ros: 0.10.0 (/opt/ros/humble/share/ament_cmake_ros/cmake)
+[6.274s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[7.792s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[7.924s] -- Found python_cmake_module: 0.10.0 (/opt/ros/humble/share/python_cmake_module/cmake)
+[8.046s] -- Using PYTHON_EXECUTABLE: /usr/bin/python3
+[8.047s] -- Using PYTHON_INCLUDE_DIRS: /usr/include/python3.10
+[8.049s] -- Using PYTHON_LIBRARIES: /usr/lib/aarch64-linux-gnu/libpython3.10.so
+[8.102s] -- Found ament_lint_auto: 0.12.10 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[8.164s] -- Added test 'lint_cmake' to check CMake code style
+[8.173s] -- Added test 'xmllint' to check XML markup files
+[8.185s] -- Configuring done
+[8.398s] -- Generating done
+[8.435s] -- Build files have been written to: /home/minibot/test_files_ros/build/test_package_msgs
+[8.560s] [  3%] Generating C code for ROS interfaces
+[8.604s] [  6%] Generating C++ code for ROS interfaces
+[8.735s] [  6%] Built target ament_cmake_python_copy_test_package_msgs
+[10.381s] Consolidate compiler generated dependencies of target test_package_msgs__rosidl_generator_c
+[10.414s] [  6%] Built target test_package_msgs__cpp
+[10.441s] [  9%] Building C object CMakeFiles/test_package_msgs__rosidl_generator_c.dir/rosidl_generator_c/test_package_msgs/msg/detail/aruco_marker__functions.c.o
+[10.492s] [ 12%] Generating C++ type support dispatch for ROS interfaces
+[10.514s] [ 16%] Generating C++ type support for eProsima Fast-RTPS
+[10.923s] [ 19%] Linking C shared library libtest_package_msgs__rosidl_generator_c.so
+[11.247s] [ 19%] Built target test_package_msgs__rosidl_generator_c
+[11.396s] [ 22%] Generating C++ introspection for ROS interfaces
+[11.560s] running egg_info
+[11.569s] writing test_package_msgs.egg-info/PKG-INFO
+[11.575s] writing dependency_links to test_package_msgs.egg-info/dependency_links.txt
+[11.582s] writing top-level names to test_package_msgs.egg-info/top_level.txt
+[11.602s] reading manifest file 'test_package_msgs.egg-info/SOURCES.txt'
+[11.609s] writing manifest file 'test_package_msgs.egg-info/SOURCES.txt'
+[11.936s] [ 22%] Built target ament_cmake_python_build_test_package_msgs_egg
+[12.076s] [ 25%] Generating C type support for eProsima Fast-RTPS
+[12.339s] Consolidate compiler generated dependencies of target test_package_msgs__rosidl_typesupport_fastrtps_cpp
+[12.475s] [ 29%] Building CXX object CMakeFiles/test_package_msgs__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/test_package_msgs/msg/detail/dds_fastrtps/aruco_marker__type_support.cpp.o
+[12.695s] Consolidate compiler generated dependencies of target test_package_msgs__rosidl_typesupport_cpp
+[12.834s] [ 32%] Building CXX object CMakeFiles/test_package_msgs__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/test_package_msgs/msg/aruco_marker__type_support.cpp.o
+[13.293s] Consolidate compiler generated dependencies of target test_package_msgs__rosidl_typesupport_introspection_cpp
+[13.360s] [ 35%] Building CXX object CMakeFiles/test_package_msgs__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/test_package_msgs/msg/detail/aruco_marker__type_support.cpp.o
+[14.259s] Consolidate compiler generated dependencies of target test_package_msgs__rosidl_typesupport_fastrtps_c
+[14.374s] [ 38%] Building CXX object CMakeFiles/test_package_msgs__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/test_package_msgs/msg/detail/aruco_marker__type_support_c.cpp.o
+[15.930s] [ 41%] Linking CXX shared library libtest_package_msgs__rosidl_typesupport_cpp.so
+[16.348s] [ 41%] Built target test_package_msgs__rosidl_typesupport_cpp
+[16.496s] [ 45%] Generating C introspection for ROS interfaces
+[16.593s] [ 48%] Linking CXX shared library libtest_package_msgs__rosidl_typesupport_fastrtps_cpp.so
+[16.655s] [ 51%] Linking CXX shared library libtest_package_msgs__rosidl_typesupport_introspection_cpp.so
+[17.029s] [ 51%] Built target test_package_msgs__rosidl_typesupport_introspection_cpp
+[17.192s] [ 54%] Generating C type support dispatch for ROS interfaces
+[17.399s] [ 54%] Built target test_package_msgs__rosidl_typesupport_fastrtps_cpp
+[18.520s] [ 58%] Linking CXX shared library libtest_package_msgs__rosidl_typesupport_fastrtps_c.so
+[18.758s] Consolidate compiler generated dependencies of target test_package_msgs__rosidl_typesupport_introspection_c
+[18.926s] [ 61%] Building C object CMakeFiles/test_package_msgs__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/test_package_msgs/msg/detail/aruco_marker__type_support.c.o
+[19.192s] [ 64%] Linking C shared library libtest_package_msgs__rosidl_typesupport_introspection_c.so
+[19.414s] [ 64%] Built target test_package_msgs__rosidl_typesupport_introspection_c
+[19.449s] [ 64%] Built target test_package_msgs__rosidl_typesupport_fastrtps_c
+[19.644s] Consolidate compiler generated dependencies of target test_package_msgs__rosidl_typesupport_c
+[19.720s] [ 67%] Building CXX object CMakeFiles/test_package_msgs__rosidl_typesupport_c.dir/rosidl_typesupport_c/test_package_msgs/msg/aruco_marker__type_support.cpp.o
+[19.936s] [ 70%] Linking CXX shared library libtest_package_msgs__rosidl_typesupport_c.so
+[20.181s] [ 70%] Built target test_package_msgs__rosidl_typesupport_c
+[20.304s] [ 70%] Built target test_package_msgs
+[20.431s] [ 74%] Generating Python code for ROS interfaces
+[22.276s] [ 74%] Built target test_package_msgs__py
+[22.340s] Consolidate compiler generated dependencies of target test_package_msgs__rosidl_generator_py
+[22.411s] [ 77%] Building C object CMakeFiles/test_package_msgs__rosidl_generator_py.dir/rosidl_generator_py/test_package_msgs/msg/_aruco_marker_s.c.o
+[22.936s] [ 80%] Linking C shared library rosidl_generator_py/test_package_msgs/libtest_package_msgs__rosidl_generator_py.so
+[23.136s] [ 80%] Built target test_package_msgs__rosidl_generator_py
+[23.217s] Consolidate compiler generated dependencies of target test_package_msgs__rosidl_typesupport_introspection_c__pyext
+[23.242s] Consolidate compiler generated dependencies of target test_package_msgs__rosidl_typesupport_fastrtps_c__pyext
+[23.300s] [ 83%] Building C object CMakeFiles/test_package_msgs__rosidl_typesupport_introspection_c__pyext.dir/rosidl_generator_py/test_package_msgs/_test_package_msgs_s.ep.rosidl_typesupport_introspection_c.c.o
+[23.333s] Consolidate compiler generated dependencies of target test_package_msgs__rosidl_typesupport_c__pyext
+[23.373s] [ 87%] Building C object CMakeFiles/test_package_msgs__rosidl_typesupport_fastrtps_c__pyext.dir/rosidl_generator_py/test_package_msgs/_test_package_msgs_s.ep.rosidl_typesupport_fastrtps_c.c.o
+[23.410s] [ 90%] Building C object CMakeFiles/test_package_msgs__rosidl_typesupport_c__pyext.dir/rosidl_generator_py/test_package_msgs/_test_package_msgs_s.ep.rosidl_typesupport_c.c.o
+[23.879s] [ 93%] Linking C shared library rosidl_generator_py/test_package_msgs/test_package_msgs_s__rosidl_typesupport_introspection_c.cpython-310-aarch64-linux-gnu.so
+[23.959s] [ 96%] Linking C shared library rosidl_generator_py/test_package_msgs/test_package_msgs_s__rosidl_typesupport_c.cpython-310-aarch64-linux-gnu.so
+[24.036s] [100%] Linking C shared library rosidl_generator_py/test_package_msgs/test_package_msgs_s__rosidl_typesupport_fastrtps_c.cpython-310-aarch64-linux-gnu.so
+[24.144s] [100%] Built target test_package_msgs__rosidl_typesupport_introspection_c__pyext
+[24.172s] [100%] Built target test_package_msgs__rosidl_typesupport_c__pyext
+[24.258s] [100%] Built target test_package_msgs__rosidl_typesupport_fastrtps_c__pyext
+[24.317s] Invoked command in '/home/minibot/test_files_ros/build/test_package_msgs' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/minibot/test_files_ros/install/test_package:/opt/ros/humble /usr/bin/cmake --build /home/minibot/test_files_ros/build/test_package_msgs -- -j4 -l4
+[24.735s] Invoking command in '/home/minibot/test_files_ros/build/test_package_msgs': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/minibot/test_files_ros/install/test_package:/opt/ros/humble /usr/bin/cmake --install /home/minibot/test_files_ros/build/test_package_msgs
+[24.782s] -- Install configuration: ""
+[24.783s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/ament_index/resource_index/rosidl_interfaces/test_package_msgs
+[24.783s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs
+[24.784s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg
+[24.784s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail
+[24.785s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__functions.h
+[24.785s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__struct.h
+[24.786s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__type_support.h
+[24.787s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__functions.c
+[24.788s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/aruco_marker.h
+[24.788s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/rosidl_generator_c__visibility_control.h
+[24.789s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/environment/library_path.sh
+[24.790s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/environment/library_path.dsv
+[24.792s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/lib/libtest_package_msgs__rosidl_generator_c.so
+[24.792s] -- Set runtime path of "/home/minibot/test_files_ros/install/test_package_msgs/lib/libtest_package_msgs__rosidl_generator_c.so" to ""
+[24.793s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs
+[24.793s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg
+[24.794s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail
+[24.795s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__rosidl_typesupport_fastrtps_c.h
+[24.795s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/rosidl_typesupport_fastrtps_c__visibility_control.h
+[24.796s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/lib/libtest_package_msgs__rosidl_typesupport_fastrtps_c.so
+[24.797s] -- Set runtime path of "/home/minibot/test_files_ros/install/test_package_msgs/lib/libtest_package_msgs__rosidl_typesupport_fastrtps_c.so" to ""
+[24.798s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs
+[24.799s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg
+[24.801s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail
+[24.803s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__rosidl_typesupport_introspection_c.h
+[24.804s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__type_support.c
+[24.806s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/rosidl_typesupport_introspection_c__visibility_control.h
+[24.808s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/lib/libtest_package_msgs__rosidl_typesupport_introspection_c.so
+[24.810s] -- Set runtime path of "/home/minibot/test_files_ros/install/test_package_msgs/lib/libtest_package_msgs__rosidl_typesupport_introspection_c.so" to ""
+[24.811s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/lib/libtest_package_msgs__rosidl_typesupport_c.so
+[24.811s] -- Set runtime path of "/home/minibot/test_files_ros/install/test_package_msgs/lib/libtest_package_msgs__rosidl_typesupport_c.so" to ""
+[24.812s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs
+[24.813s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg
+[24.816s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail
+[24.819s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__builder.hpp
+[24.820s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__struct.hpp
+[24.821s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__traits.hpp
+[24.822s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/aruco_marker.hpp
+[24.823s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs
+[24.824s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg
+[24.825s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail
+[24.826s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/dds_fastrtps
+[24.827s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__rosidl_typesupport_fastrtps_cpp.hpp
+[24.827s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/rosidl_typesupport_fastrtps_cpp__visibility_control.h
+[24.828s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/lib/libtest_package_msgs__rosidl_typesupport_fastrtps_cpp.so
+[24.830s] -- Set runtime path of "/home/minibot/test_files_ros/install/test_package_msgs/lib/libtest_package_msgs__rosidl_typesupport_fastrtps_cpp.so" to ""
+[24.830s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs
+[24.832s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg
+[24.833s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail
+[24.835s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__type_support.cpp
+[24.835s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/include/test_package_msgs/test_package_msgs/msg/detail/aruco_marker__rosidl_typesupport_introspection_cpp.hpp
+[24.837s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/lib/libtest_package_msgs__rosidl_typesupport_introspection_cpp.so
+[24.840s] -- Set runtime path of "/home/minibot/test_files_ros/install/test_package_msgs/lib/libtest_package_msgs__rosidl_typesupport_introspection_cpp.so" to ""
+[24.842s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/lib/libtest_package_msgs__rosidl_typesupport_cpp.so
+[24.845s] -- Set runtime path of "/home/minibot/test_files_ros/install/test_package_msgs/lib/libtest_package_msgs__rosidl_typesupport_cpp.so" to ""
+[24.847s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/environment/pythonpath.sh
+[24.847s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/environment/pythonpath.dsv
+[24.849s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs-0.0.0-py3.10.egg-info
+[24.849s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs-0.0.0-py3.10.egg-info/dependency_links.txt
+[24.851s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs-0.0.0-py3.10.egg-info/top_level.txt
+[24.852s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs-0.0.0-py3.10.egg-info/SOURCES.txt
+[24.854s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs-0.0.0-py3.10.egg-info/PKG-INFO
+[24.856s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs
+[24.857s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/test_package_msgs_s__rosidl_typesupport_c.cpython-310-aarch64-linux-gnu.so
+[24.858s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/_test_package_msgs_s.ep.rosidl_typesupport_c.c
+[24.860s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/libtest_package_msgs__rosidl_generator_py.so
+[24.862s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/msg
+[24.862s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/msg/_aruco_marker_s.c
+[24.864s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/msg/_aruco_marker.py
+[24.865s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/msg/__init__.py
+[24.867s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/_test_package_msgs_s.ep.rosidl_typesupport_introspection_c.c
+[24.869s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/_test_package_msgs_s.ep.rosidl_typesupport_fastrtps_c.c
+[24.871s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/test_package_msgs_s__rosidl_typesupport_introspection_c.cpython-310-aarch64-linux-gnu.so
+[24.872s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/__init__.py
+[24.874s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/test_package_msgs_s__rosidl_typesupport_fastrtps_c.cpython-310-aarch64-linux-gnu.so
+[25.065s] Listing '/home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs'...
+[25.067s] Compiling '/home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/__init__.py'...
+[25.069s] Listing '/home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/msg'...
+[25.070s] Compiling '/home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/msg/__init__.py'...
+[25.071s] Compiling '/home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/msg/_aruco_marker.py'...
+[25.101s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/test_package_msgs_s__rosidl_typesupport_fastrtps_c.cpython-310-aarch64-linux-gnu.so
+[25.102s] -- Set runtime path of "/home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/test_package_msgs_s__rosidl_typesupport_fastrtps_c.cpython-310-aarch64-linux-gnu.so" to ""
+[25.104s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/test_package_msgs_s__rosidl_typesupport_introspection_c.cpython-310-aarch64-linux-gnu.so
+[25.107s] -- Set runtime path of "/home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/test_package_msgs_s__rosidl_typesupport_introspection_c.cpython-310-aarch64-linux-gnu.so" to ""
+[25.109s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/test_package_msgs_s__rosidl_typesupport_c.cpython-310-aarch64-linux-gnu.so
+[25.112s] -- Set runtime path of "/home/minibot/test_files_ros/install/test_package_msgs/local/lib/python3.10/dist-packages/test_package_msgs/test_package_msgs_s__rosidl_typesupport_c.cpython-310-aarch64-linux-gnu.so" to ""
+[25.113s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/lib/libtest_package_msgs__rosidl_generator_py.so
+[25.116s] -- Set runtime path of "/home/minibot/test_files_ros/install/test_package_msgs/lib/libtest_package_msgs__rosidl_generator_py.so" to ""
+[25.117s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/msg/ArucoMarker.idl
+[25.123s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/msg/ArucoMarker.msg
+[25.124s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/ament_index/resource_index/package_run_dependencies/test_package_msgs
+[25.126s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/ament_index/resource_index/parent_prefix_path/test_package_msgs
+[25.126s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/environment/ament_prefix_path.sh
+[25.128s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/environment/ament_prefix_path.dsv
+[25.130s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/environment/path.sh
+[25.130s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/environment/path.dsv
+[25.131s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/local_setup.bash
+[25.132s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/local_setup.sh
+[25.133s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/local_setup.zsh
+[25.135s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/local_setup.dsv
+[25.136s] -- Installing: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/package.dsv
+[25.137s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/ament_index/resource_index/packages/test_package_msgs
+[25.139s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/export_test_package_msgs__rosidl_generator_cExport.cmake
+[25.140s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/export_test_package_msgs__rosidl_generator_cExport-noconfig.cmake
+[25.142s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/export_test_package_msgs__rosidl_typesupport_fastrtps_cExport.cmake
+[25.143s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/export_test_package_msgs__rosidl_typesupport_fastrtps_cExport-noconfig.cmake
+[25.145s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/test_package_msgs__rosidl_typesupport_introspection_cExport.cmake
+[25.146s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/test_package_msgs__rosidl_typesupport_introspection_cExport-noconfig.cmake
+[25.148s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/test_package_msgs__rosidl_typesupport_cExport.cmake
+[25.151s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/test_package_msgs__rosidl_typesupport_cExport-noconfig.cmake
+[25.153s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/export_test_package_msgs__rosidl_generator_cppExport.cmake
+[25.153s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/export_test_package_msgs__rosidl_typesupport_fastrtps_cppExport.cmake
+[25.154s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/export_test_package_msgs__rosidl_typesupport_fastrtps_cppExport-noconfig.cmake
+[25.155s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/test_package_msgs__rosidl_typesupport_introspection_cppExport.cmake
+[25.155s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/test_package_msgs__rosidl_typesupport_introspection_cppExport-noconfig.cmake
+[25.156s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/test_package_msgs__rosidl_typesupport_cppExport.cmake
+[25.157s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/test_package_msgs__rosidl_typesupport_cppExport-noconfig.cmake
+[25.158s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/export_test_package_msgs__rosidl_generator_pyExport.cmake
+[25.160s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/export_test_package_msgs__rosidl_generator_pyExport-noconfig.cmake
+[25.163s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/rosidl_cmake-extras.cmake
+[25.164s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/ament_cmake_export_include_directories-extras.cmake
+[25.165s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/ament_cmake_export_libraries-extras.cmake
+[25.165s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/ament_cmake_export_targets-extras.cmake
+[25.166s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/rosidl_cmake_export_typesupport_targets-extras.cmake
+[25.167s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/ament_cmake_export_dependencies-extras.cmake
+[25.167s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/rosidl_cmake_export_typesupport_libraries-extras.cmake
+[25.168s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/test_package_msgsConfig.cmake
+[25.169s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/cmake/test_package_msgsConfig-version.cmake
+[25.169s] -- Up-to-date: /home/minibot/test_files_ros/install/test_package_msgs/share/test_package_msgs/package.xml
+[25.170s] Invoked command in '/home/minibot/test_files_ros/build/test_package_msgs' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/minibot/test_files_ros/install/test_package:/opt/ros/humble /usr/bin/cmake --install /home/minibot/test_files_ros/build/test_package_msgs

@@ -1,0 +1,5 @@
+  File "/home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages/test_package/aruco_publisher.py", line 121
+    KeyboardInterrupt:
+                      ^
+SyntaxError: invalid syntax
+

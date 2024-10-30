@@ -1,0 +1,6 @@
+{
+  "package_name": "test_package_msgs",
+  "non_idl_tuples": [
+    "/home/minibot/test_files_ros/src/test_package_msgs:msg/ArucoMarker.msg"
+  ]
+}

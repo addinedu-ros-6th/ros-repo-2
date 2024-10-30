@@ -1,0 +1,2 @@
+Invoking command in '/home/minibot/test_files_ros/build/test_package_msgs': /usr/bin/cmake /home/minibot/test_files_ros/src/test_package_msgs -DCMAKE_INSTALL_PREFIX=/home/minibot/test_files_ros/install/test_package_msgs
+Invoked command in '/home/minibot/test_files_ros/build/test_package_msgs' returned '1': /usr/bin/cmake /home/minibot/test_files_ros/src/test_package_msgs -DCMAKE_INSTALL_PREFIX=/home/minibot/test_files_ros/install/test_package_msgs

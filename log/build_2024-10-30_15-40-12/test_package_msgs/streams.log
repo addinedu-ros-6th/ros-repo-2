@@ -1,0 +1,47 @@
+[1.234s] Invoking command in '/home/minibot/test_files_ros/build/test_package_msgs': /usr/bin/cmake /home/minibot/test_files_ros/src/test_package_msgs -DCMAKE_INSTALL_PREFIX=/home/minibot/test_files_ros/install/test_package_msgs
+[1.276s] -- Found ament_cmake: 1.3.8 (/opt/ros/humble/share/ament_cmake/cmake)
+[1.892s] -- Found rosidl_default_generators: 1.2.0 (/opt/ros/humble/share/rosidl_default_generators/cmake)
+[1.901s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[1.914s] -- Found rosidl_adapter: 3.1.5 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[2.123s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[3.128s] Error parsing '/home/minibot/test_files_ros/src/test_package_msgs/package.xml':
+[3.332s] Traceback (most recent call last):
+[3.332s]   File "/usr/lib/python3/dist-packages/catkin_pkg/package.py", line 610, in parse_package_string
+[3.334s]     root = dom.parseString(data)
+[3.335s]   File "/usr/lib/python3.10/xml/dom/minidom.py", line 2000, in parseString
+[3.339s]     return expatbuilder.parseString(string)
+[3.340s]   File "/usr/lib/python3.10/xml/dom/expatbuilder.py", line 925, in parseString
+[3.342s]     return builder.parseString(string)
+[3.342s]   File "/usr/lib/python3.10/xml/dom/expatbuilder.py", line 223, in parseString
+[3.345s]     parser.Parse(string, True)
+[3.347s] xml.parsers.expat.ExpatError: mismatched tag: line 15, column 47
+[3.348s] 
+[3.350s] During handling of the above exception, another exception occurred:
+[3.351s] 
+[3.352s] Traceback (most recent call last):
+[3.354s]   File "/opt/ros/humble/share/ament_cmake_core/cmake/core/package_xml_2_cmake.py", line 150, in <module>
+[3.356s]     main()
+[3.358s]   File "/opt/ros/humble/share/ament_cmake_core/cmake/core/package_xml_2_cmake.py", line 53, in main
+[3.359s]     raise e
+[3.360s]   File "/opt/ros/humble/share/ament_cmake_core/cmake/core/package_xml_2_cmake.py", line 49, in main
+[3.361s]     package = parse_package_string(
+[3.363s]   File "/usr/lib/python3/dist-packages/catkin_pkg/package.py", line 612, in parse_package_string
+[3.364s]     raise InvalidPackage('The manifest contains invalid XML:\n%s' % ex, filename)
+[3.366s] catkin_pkg.package.InvalidPackage: Error(s) in package '/home/minibot/test_files_ros/src/test_package_msgs/package.xml':
+[3.367s] The manifest contains invalid XML:
+[3.367s] mismatched tag: line 15, column 47
+[3.450s] CMake Error at /opt/ros/humble/share/ament_cmake_core/cmake/core/ament_package_xml.cmake:95 (message):
+[3.450s]   execute_process(/usr/bin/python3
+[3.451s]   /opt/ros/humble/share/ament_cmake_core/cmake/core/package_xml_2_cmake.py
+[3.451s]   /home/minibot/test_files_ros/src/test_package_msgs/package.xml
+[3.451s]   /home/minibot/test_files_ros/build/test_package_msgs/ament_cmake_core/package.cmake)
+[3.452s]   returned error code 1
+[3.452s] Call Stack (most recent call first):
+[3.453s]   /opt/ros/humble/share/ament_cmake_core/cmake/core/ament_package_xml.cmake:49 (_ament_package_xml)
+[3.453s]   /opt/ros/humble/share/rosidl_cmake/cmake/rosidl_generate_interfaces.cmake:226 (ament_package_xml)
+[3.454s]   CMakeLists.txt:16 (rosidl_generate_interfaces)
+[3.454s] 
+[3.454s] 
+[3.455s] -- Configuring incomplete, errors occurred!
+[3.455s] See also "/home/minibot/test_files_ros/build/test_package_msgs/CMakeFiles/CMakeOutput.log".
+[3.465s] Invoked command in '/home/minibot/test_files_ros/build/test_package_msgs' returned '1': /usr/bin/cmake /home/minibot/test_files_ros/src/test_package_msgs -DCMAKE_INSTALL_PREFIX=/home/minibot/test_files_ros/install/test_package_msgs

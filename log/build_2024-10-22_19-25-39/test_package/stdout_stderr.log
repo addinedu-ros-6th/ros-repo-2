@@ -1,0 +1,34 @@
+running egg_info
+creating ../../build/test_package/test_package.egg-info
+writing ../../build/test_package/test_package.egg-info/PKG-INFO
+writing dependency_links to ../../build/test_package/test_package.egg-info/dependency_links.txt
+writing entry points to ../../build/test_package/test_package.egg-info/entry_points.txt
+writing requirements to ../../build/test_package/test_package.egg-info/requires.txt
+writing top-level names to ../../build/test_package/test_package.egg-info/top_level.txt
+writing manifest file '../../build/test_package/test_package.egg-info/SOURCES.txt'
+reading manifest file '../../build/test_package/test_package.egg-info/SOURCES.txt'
+writing manifest file '../../build/test_package/test_package.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/minibot/ros2_test/build/test_package/build
+creating /home/minibot/ros2_test/build/test_package/build/lib
+creating /home/minibot/ros2_test/build/test_package/build/lib/test_package
+copying test_package/camera_publisher.py -> /home/minibot/ros2_test/build/test_package/build/lib/test_package
+copying test_package/__init__.py -> /home/minibot/ros2_test/build/test_package/build/lib/test_package
+running install
+running install_lib
+creating /home/minibot/ros2_test/install/test_package/lib/python3.10/site-packages/test_package
+copying /home/minibot/ros2_test/build/test_package/build/lib/test_package/camera_publisher.py -> /home/minibot/ros2_test/install/test_package/lib/python3.10/site-packages/test_package
+copying /home/minibot/ros2_test/build/test_package/build/lib/test_package/__init__.py -> /home/minibot/ros2_test/install/test_package/lib/python3.10/site-packages/test_package
+byte-compiling /home/minibot/ros2_test/install/test_package/lib/python3.10/site-packages/test_package/camera_publisher.py to camera_publisher.cpython-310.pyc
+byte-compiling /home/minibot/ros2_test/install/test_package/lib/python3.10/site-packages/test_package/__init__.py to __init__.cpython-310.pyc
+running install_data
+creating /home/minibot/ros2_test/install/test_package/share/ament_index
+creating /home/minibot/ros2_test/install/test_package/share/ament_index/resource_index
+creating /home/minibot/ros2_test/install/test_package/share/ament_index/resource_index/packages
+copying resource/test_package -> /home/minibot/ros2_test/install/test_package/share/ament_index/resource_index/packages
+copying package.xml -> /home/minibot/ros2_test/install/test_package/share/test_package
+running install_egg_info
+Copying ../../build/test_package/test_package.egg-info to /home/minibot/ros2_test/install/test_package/lib/python3.10/site-packages/test_package-0.0.0-py3.10.egg-info
+running install_scripts
+writing list of installed files to '/home/minibot/ros2_test/build/test_package/install.log'

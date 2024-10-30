@@ -1,0 +1,6 @@
+[console_scripts]
+aruco_publisher = test_package.aruco_publisher:main
+aruco_subscriber = test_package.aruco_subscriber:main
+camera_publisher = test_package.camera_publisher:main
+distance_publisher = test_package.distance_publisher:main
+

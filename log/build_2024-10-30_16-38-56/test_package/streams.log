@@ -1,0 +1,23 @@
+[3.368s] Invoking command in '/home/minibot/test_files_ros/src/test_package': PYTHONPATH=/home/minibot/test_files_ros/build/test_package/prefix_override:/home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../build/test_package build --build-base /home/minibot/test_files_ros/build/test_package/build install --record /home/minibot/test_files_ros/build/test_package/install.log --single-version-externally-managed install_data
+[4.838s] running egg_info
+[4.851s] writing ../../build/test_package/test_package.egg-info/PKG-INFO
+[4.853s] writing dependency_links to ../../build/test_package/test_package.egg-info/dependency_links.txt
+[4.856s] writing entry points to ../../build/test_package/test_package.egg-info/entry_points.txt
+[4.859s] writing requirements to ../../build/test_package/test_package.egg-info/requires.txt
+[4.863s] writing top-level names to ../../build/test_package/test_package.egg-info/top_level.txt
+[4.867s] reading manifest file '../../build/test_package/test_package.egg-info/SOURCES.txt'
+[4.872s] writing manifest file '../../build/test_package/test_package.egg-info/SOURCES.txt'
+[4.875s] running build
+[4.879s] running build_py
+[4.883s] running install
+[4.886s] running install_lib
+[4.893s] running install_data
+[4.903s] running install_egg_info
+[4.904s] removing '/home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages/test_package-0.0.0-py3.10.egg-info' (and everything under it)
+[4.904s] Copying ../../build/test_package/test_package.egg-info to /home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages/test_package-0.0.0-py3.10.egg-info
+[4.910s] running install_scripts
+[5.012s] Installing aruco_publisher script to /home/minibot/test_files_ros/install/test_package/lib/test_package
+[5.013s] Installing camera_publisher script to /home/minibot/test_files_ros/install/test_package/lib/test_package
+[5.013s] Installing distance_publisher script to /home/minibot/test_files_ros/install/test_package/lib/test_package
+[5.016s] writing list of installed files to '/home/minibot/test_files_ros/build/test_package/install.log'
+[5.165s] Invoked command in '/home/minibot/test_files_ros/src/test_package' returned '0': PYTHONPATH=/home/minibot/test_files_ros/build/test_package/prefix_override:/home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../build/test_package build --build-base /home/minibot/test_files_ros/build/test_package/build install --record /home/minibot/test_files_ros/build/test_package/install.log --single-version-externally-managed install_data
