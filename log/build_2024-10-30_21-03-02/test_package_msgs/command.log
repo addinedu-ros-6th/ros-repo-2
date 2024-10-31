@@ -1,0 +1,2 @@
+Invoking command in '/home/kim/ros_repo_2/test_files_ros/build/test_package_msgs': /usr/bin/cmake --build /home/kim/ros_repo_2/test_files_ros/build/test_package_msgs -- -j12 -l12
+Invoked command in '/home/kim/ros_repo_2/test_files_ros/build/test_package_msgs' returned '2': /usr/bin/cmake --build /home/kim/ros_repo_2/test_files_ros/build/test_package_msgs -- -j12 -l12

@@ -1,0 +1,6 @@
+[0.203s] Invoking command in '/home/kim/ros_repo_2/test_files_ros/build/test_package_msgs': /usr/bin/cmake --build /home/kim/ros_repo_2/test_files_ros/build/test_package_msgs -- -j12 -l12
+[0.209s] [0mCMake Error: The current CMakeCache.txt directory /home/kim/ros_repo_2/test_files_ros/build/test_package_msgs/CMakeCache.txt is different than the directory /home/minibot/test_files_ros/build/test_package_msgs where CMakeCache.txt was created. This may result in binaries being created in the wrong place. If you are not sure, reedit the CMakeCache.txt[0m
+[0.218s] [0mCMake Error: The source directory "/home/minibot/test_files_ros/src/test_package_msgs" does not exist.
+[0.218s] Specify --help for usage, or press the help button on the CMake GUI.[0m
+[0.219s] gmake: *** [Makefile:747: cmake_check_build_system] Error 1
+[0.220s] Invoked command in '/home/kim/ros_repo_2/test_files_ros/build/test_package_msgs' returned '2': /usr/bin/cmake --build /home/kim/ros_repo_2/test_files_ros/build/test_package_msgs -- -j12 -l12

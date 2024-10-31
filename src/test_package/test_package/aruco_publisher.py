@@ -62,6 +62,19 @@ class ArucoPublisher(Node):
                     # Convert rotation vector to rotation matrix
                     rotation_matrix, _ = cv2.Rodrigues(rvec)
 
+                    # Calculate Euler angles from the rotation matrix
+                    sy = np.sqrt(rotation_matrix[0, 0] ** 2 + rotation_matrix[1, 0] ** 2)
+                    singular = sy < 1e-6
+
+                    if not singular:
+                        yaw = np.arctan2(rotation_matrix[2, 1], rotation_matrix[2, 2])
+                        pitch = np.arctan2(-rotation_matrix[2, 0], sy)
+                        roll = np.arctan2(rotation_matrix[1, 0], rotation_matrix[0, 0])
+                    else:
+                        yaw = np.arctan2(-rotation_matrix[1, 2], rotation_matrix[1, 1])
+                        pitch = np.arctan2(-rotation_matrix[2, 0], sy)
+                        roll = 0
+
                     # Transform tvec to the world coordinate system
                     transformed_tvec = -np.matmul(rotation_matrix.T, tvec)
 
@@ -77,7 +90,10 @@ class ArucoPublisher(Node):
                         "distance": distance,
                         "x": x,
                         "y": y,
-                        "z": z
+                        "z": z,
+                        "yaw": np.degrees(yaw),
+                        "pitch": np.degrees(pitch),
+                        "roll": np.degrees(roll)
                     })
 
             if marker_data:
@@ -88,18 +104,21 @@ class ArucoPublisher(Node):
                 marker_msg.x = closest_marker["x"]
                 marker_msg.y = closest_marker["y"]
                 marker_msg.z = closest_marker["z"]
+                marker_msg.yaw = closest_marker["yaw"]
+                marker_msg.pitch = closest_marker["pitch"]
+                marker_msg.roll = closest_marker["roll"]
 
                 # Publish the message
                 self.publisher.publish(marker_msg)
                 self.get_logger().info(
                     f"Published Marker ID: {marker_msg.id}, "
                     f"Distance: {marker_msg.distance:.2f}m, "
-                    f"X: {marker_msg.x:.2f}m, Y: {marker_msg.y:.2f}m, Z: {marker_msg.z:.2f}m"
+                    f"X: {marker_msg.x:.2f}m, Y: {marker_msg.y:.2f}m, Z: {marker_msg.z:.2f}m, "
+                    f"Yaw: {marker_msg.yaw:.2f}°, Pitch: {marker_msg.pitch:.2f}°, Roll: {marker_msg.roll:.2f}°"
                 )
             
-            
                 # Draw the axes on the frame
-                cv2.drawFrameAxes(frame, self.camera_matrix, self.dist_coeffs, rvec, tvec, 0.03)
+                # cv2.drawFrameAxes(frame, self.camera_matrix, self.dist_coeffs, rvec, tvec, 0.03)
 
         # Display the frame
         # cv2.imshow("Aruco Marker Detection", frame)
