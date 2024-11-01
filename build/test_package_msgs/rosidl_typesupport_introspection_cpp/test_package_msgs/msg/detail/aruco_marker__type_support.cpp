@@ -37,7 +37,7 @@ void ArucoMarker_fini_function(void * message_memory)
   typed_message->~ArucoMarker();
 }
 
-static const ::rosidl_typesupport_introspection_cpp::MessageMember ArucoMarker_message_member_array[5] = {
+static const ::rosidl_typesupport_introspection_cpp::MessageMember ArucoMarker_message_member_array[8] = {
   {
     "id",  // name
     ::rosidl_typesupport_introspection_cpp::ROS_TYPE_INT32,  // type
@@ -122,13 +122,64 @@ static const ::rosidl_typesupport_introspection_cpp::MessageMember ArucoMarker_m
     nullptr,  // fetch(index, &value) function pointer
     nullptr,  // assign(index, value) function pointer
     nullptr  // resize(index) function pointer
+  },
+  {
+    "yaw",  // name
+    ::rosidl_typesupport_introspection_cpp::ROS_TYPE_FLOAT,  // type
+    0,  // upper bound of string
+    nullptr,  // members of sub message
+    false,  // is array
+    0,  // array size
+    false,  // is upper bound
+    offsetof(test_package_msgs::msg::ArucoMarker, yaw),  // bytes offset in struct
+    nullptr,  // default value
+    nullptr,  // size() function pointer
+    nullptr,  // get_const(index) function pointer
+    nullptr,  // get(index) function pointer
+    nullptr,  // fetch(index, &value) function pointer
+    nullptr,  // assign(index, value) function pointer
+    nullptr  // resize(index) function pointer
+  },
+  {
+    "pitch",  // name
+    ::rosidl_typesupport_introspection_cpp::ROS_TYPE_FLOAT,  // type
+    0,  // upper bound of string
+    nullptr,  // members of sub message
+    false,  // is array
+    0,  // array size
+    false,  // is upper bound
+    offsetof(test_package_msgs::msg::ArucoMarker, pitch),  // bytes offset in struct
+    nullptr,  // default value
+    nullptr,  // size() function pointer
+    nullptr,  // get_const(index) function pointer
+    nullptr,  // get(index) function pointer
+    nullptr,  // fetch(index, &value) function pointer
+    nullptr,  // assign(index, value) function pointer
+    nullptr  // resize(index) function pointer
+  },
+  {
+    "roll",  // name
+    ::rosidl_typesupport_introspection_cpp::ROS_TYPE_FLOAT,  // type
+    0,  // upper bound of string
+    nullptr,  // members of sub message
+    false,  // is array
+    0,  // array size
+    false,  // is upper bound
+    offsetof(test_package_msgs::msg::ArucoMarker, roll),  // bytes offset in struct
+    nullptr,  // default value
+    nullptr,  // size() function pointer
+    nullptr,  // get_const(index) function pointer
+    nullptr,  // get(index) function pointer
+    nullptr,  // fetch(index, &value) function pointer
+    nullptr,  // assign(index, value) function pointer
+    nullptr  // resize(index) function pointer
   }
 };
 
 static const ::rosidl_typesupport_introspection_cpp::MessageMembers ArucoMarker_message_members = {
   "test_package_msgs::msg",  // message namespace
   "ArucoMarker",  // message name
-  5,  // number of fields
+  8,  // number of fields
   sizeof(test_package_msgs::msg::ArucoMarker),
   ArucoMarker_message_member_array,  // message members
   ArucoMarker_init_function,  // function to initialize message memory (memory has to be allocated)

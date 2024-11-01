@@ -15,6 +15,12 @@ module test_package_msgs {
       float y;
 
       float z;
+
+      float yaw;
+
+      float pitch;
+
+      float roll;
     };
   };
 };

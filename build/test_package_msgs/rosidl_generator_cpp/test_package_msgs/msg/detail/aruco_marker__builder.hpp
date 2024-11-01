@@ -21,16 +21,64 @@ namespace msg
 namespace builder
 {
 
+class Init_ArucoMarker_roll
+{
+public:
+  explicit Init_ArucoMarker_roll(::test_package_msgs::msg::ArucoMarker & msg)
+  : msg_(msg)
+  {}
+  ::test_package_msgs::msg::ArucoMarker roll(::test_package_msgs::msg::ArucoMarker::_roll_type arg)
+  {
+    msg_.roll = std::move(arg);
+    return std::move(msg_);
+  }
+
+private:
+  ::test_package_msgs::msg::ArucoMarker msg_;
+};
+
+class Init_ArucoMarker_pitch
+{
+public:
+  explicit Init_ArucoMarker_pitch(::test_package_msgs::msg::ArucoMarker & msg)
+  : msg_(msg)
+  {}
+  Init_ArucoMarker_roll pitch(::test_package_msgs::msg::ArucoMarker::_pitch_type arg)
+  {
+    msg_.pitch = std::move(arg);
+    return Init_ArucoMarker_roll(msg_);
+  }
+
+private:
+  ::test_package_msgs::msg::ArucoMarker msg_;
+};
+
+class Init_ArucoMarker_yaw
+{
+public:
+  explicit Init_ArucoMarker_yaw(::test_package_msgs::msg::ArucoMarker & msg)
+  : msg_(msg)
+  {}
+  Init_ArucoMarker_pitch yaw(::test_package_msgs::msg::ArucoMarker::_yaw_type arg)
+  {
+    msg_.yaw = std::move(arg);
+    return Init_ArucoMarker_pitch(msg_);
+  }
+
+private:
+  ::test_package_msgs::msg::ArucoMarker msg_;
+};
+
 class Init_ArucoMarker_z
 {
 public:
   explicit Init_ArucoMarker_z(::test_package_msgs::msg::ArucoMarker & msg)
   : msg_(msg)
   {}
-  ::test_package_msgs::msg::ArucoMarker z(::test_package_msgs::msg::ArucoMarker::_z_type arg)
+  Init_ArucoMarker_yaw z(::test_package_msgs::msg::ArucoMarker::_z_type arg)
   {
     msg_.z = std::move(arg);
-    return std::move(msg_);
+    return Init_ArucoMarker_yaw(msg_);
   }
 
 private:

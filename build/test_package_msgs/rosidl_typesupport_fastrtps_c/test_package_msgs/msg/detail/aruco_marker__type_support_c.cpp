@@ -74,6 +74,21 @@ static bool _ArucoMarker__cdr_serialize(
     cdr << ros_message->z;
   }
 
+  // Field name: yaw
+  {
+    cdr << ros_message->yaw;
+  }
+
+  // Field name: pitch
+  {
+    cdr << ros_message->pitch;
+  }
+
+  // Field name: roll
+  {
+    cdr << ros_message->roll;
+  }
+
   return true;
 }
 
@@ -109,6 +124,21 @@ static bool _ArucoMarker__cdr_deserialize(
   // Field name: z
   {
     cdr >> ros_message->z;
+  }
+
+  // Field name: yaw
+  {
+    cdr >> ros_message->yaw;
+  }
+
+  // Field name: pitch
+  {
+    cdr >> ros_message->pitch;
+  }
+
+  // Field name: roll
+  {
+    cdr >> ros_message->roll;
   }
 
   return true;
@@ -155,6 +185,24 @@ size_t get_serialized_size_test_package_msgs__msg__ArucoMarker(
   // field.name z
   {
     size_t item_size = sizeof(ros_message->z);
+    current_alignment += item_size +
+      eprosima::fastcdr::Cdr::alignment(current_alignment, item_size);
+  }
+  // field.name yaw
+  {
+    size_t item_size = sizeof(ros_message->yaw);
+    current_alignment += item_size +
+      eprosima::fastcdr::Cdr::alignment(current_alignment, item_size);
+  }
+  // field.name pitch
+  {
+    size_t item_size = sizeof(ros_message->pitch);
+    current_alignment += item_size +
+      eprosima::fastcdr::Cdr::alignment(current_alignment, item_size);
+  }
+  // field.name roll
+  {
+    size_t item_size = sizeof(ros_message->roll);
     current_alignment += item_size +
       eprosima::fastcdr::Cdr::alignment(current_alignment, item_size);
   }
@@ -227,6 +275,30 @@ size_t max_serialized_size_test_package_msgs__msg__ArucoMarker(
     current_alignment += array_size * sizeof(uint32_t) +
       eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint32_t));
   }
+  // member: yaw
+  {
+    size_t array_size = 1;
+
+    last_member_size = array_size * sizeof(uint32_t);
+    current_alignment += array_size * sizeof(uint32_t) +
+      eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint32_t));
+  }
+  // member: pitch
+  {
+    size_t array_size = 1;
+
+    last_member_size = array_size * sizeof(uint32_t);
+    current_alignment += array_size * sizeof(uint32_t) +
+      eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint32_t));
+  }
+  // member: roll
+  {
+    size_t array_size = 1;
+
+    last_member_size = array_size * sizeof(uint32_t);
+    current_alignment += array_size * sizeof(uint32_t) +
+      eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint32_t));
+  }
 
   size_t ret_val = current_alignment - initial_alignment;
   if (is_plain) {
@@ -236,7 +308,7 @@ size_t max_serialized_size_test_package_msgs__msg__ArucoMarker(
     using DataType = test_package_msgs__msg__ArucoMarker;
     is_plain =
       (
-      offsetof(DataType, z) +
+      offsetof(DataType, roll) +
       last_member_size
       ) == ret_val;
   }

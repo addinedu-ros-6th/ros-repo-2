@@ -57,6 +57,27 @@ inline void to_flow_style_yaml(
   {
     out << "z: ";
     rosidl_generator_traits::value_to_yaml(msg.z, out);
+    out << ", ";
+  }
+
+  // member: yaw
+  {
+    out << "yaw: ";
+    rosidl_generator_traits::value_to_yaml(msg.yaw, out);
+    out << ", ";
+  }
+
+  // member: pitch
+  {
+    out << "pitch: ";
+    rosidl_generator_traits::value_to_yaml(msg.pitch, out);
+    out << ", ";
+  }
+
+  // member: roll
+  {
+    out << "roll: ";
+    rosidl_generator_traits::value_to_yaml(msg.roll, out);
   }
   out << "}";
 }  // NOLINT(readability/fn_size)
@@ -112,6 +133,36 @@ inline void to_block_style_yaml(
     }
     out << "z: ";
     rosidl_generator_traits::value_to_yaml(msg.z, out);
+    out << "\n";
+  }
+
+  // member: yaw
+  {
+    if (indentation > 0) {
+      out << std::string(indentation, ' ');
+    }
+    out << "yaw: ";
+    rosidl_generator_traits::value_to_yaml(msg.yaw, out);
+    out << "\n";
+  }
+
+  // member: pitch
+  {
+    if (indentation > 0) {
+      out << std::string(indentation, ' ');
+    }
+    out << "pitch: ";
+    rosidl_generator_traits::value_to_yaml(msg.pitch, out);
+    out << "\n";
+  }
+
+  // member: roll
+  {
+    if (indentation > 0) {
+      out << std::string(indentation, ' ');
+    }
+    out << "roll: ";
+    rosidl_generator_traits::value_to_yaml(msg.roll, out);
     out << "\n";
   }
 }  // NOLINT(readability/fn_size)

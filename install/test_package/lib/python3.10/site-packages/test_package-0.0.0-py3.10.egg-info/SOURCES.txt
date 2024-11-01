@@ -14,8 +14,8 @@ test/test_flake8.py
 test/test_pep257.py
 test_package/__init__.py
 test_package/aruco_publisher.py
+test_package/aruco_publisher_udp.py
 test_package/aruco_subscriber.py
-test_package/camera_publisher.py
 test_package/camera_subscriber.py
 test_package/distance_publisher.py
 test_package/distance_subscriber.py

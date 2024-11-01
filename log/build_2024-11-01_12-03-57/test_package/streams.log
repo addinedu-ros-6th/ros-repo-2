@@ -1,0 +1,29 @@
+[4.094s] Invoking command in '/home/minibot/test_files_ros/src/test_package': PYTHONPATH=/home/minibot/test_files_ros/build/test_package/prefix_override:/home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../build/test_package build --build-base /home/minibot/test_files_ros/build/test_package/build install --record /home/minibot/test_files_ros/build/test_package/install.log --single-version-externally-managed install_data
+[5.580s] running egg_info
+[5.583s] writing ../../build/test_package/test_package.egg-info/PKG-INFO
+[5.585s] writing dependency_links to ../../build/test_package/test_package.egg-info/dependency_links.txt
+[5.587s] writing entry points to ../../build/test_package/test_package.egg-info/entry_points.txt
+[5.588s] writing requirements to ../../build/test_package/test_package.egg-info/requires.txt
+[5.589s] writing top-level names to ../../build/test_package/test_package.egg-info/top_level.txt
+[5.601s] reading manifest file '../../build/test_package/test_package.egg-info/SOURCES.txt'
+[5.607s] writing manifest file '../../build/test_package/test_package.egg-info/SOURCES.txt'
+[5.608s] running build
+[5.609s] running build_py
+[5.612s] copying test_package/aruco_publisher_udp.py -> /home/minibot/test_files_ros/build/test_package/build/lib/test_package
+[5.614s] running install
+[5.615s] running install_lib
+[5.622s] copying /home/minibot/test_files_ros/build/test_package/build/lib/test_package/aruco_publisher_udp.py -> /home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages/test_package
+[5.627s] byte-compiling /home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages/test_package/aruco_publisher_udp.py to aruco_publisher_udp.cpython-310.pyc
+[5.635s] running install_data
+[5.636s] running install_egg_info
+[5.645s] removing '/home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages/test_package-0.0.0-py3.10.egg-info' (and everything under it)
+[5.648s] Copying ../../build/test_package/test_package.egg-info to /home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages/test_package-0.0.0-py3.10.egg-info
+[5.661s] running install_scripts
+[5.766s] Installing aruco_publisher script to /home/minibot/test_files_ros/install/test_package/lib/test_package
+[5.768s] Installing aruco_publisher_udp script to /home/minibot/test_files_ros/install/test_package/lib/test_package
+[5.770s] Installing aruco_subscriber script to /home/minibot/test_files_ros/install/test_package/lib/test_package
+[5.771s] Installing camera_subscriber script to /home/minibot/test_files_ros/install/test_package/lib/test_package
+[5.780s] Installing distance_publisher script to /home/minibot/test_files_ros/install/test_package/lib/test_package
+[5.781s] Installing distance_subscriber script to /home/minibot/test_files_ros/install/test_package/lib/test_package
+[5.783s] writing list of installed files to '/home/minibot/test_files_ros/build/test_package/install.log'
+[5.947s] Invoked command in '/home/minibot/test_files_ros/src/test_package' returned '0': PYTHONPATH=/home/minibot/test_files_ros/build/test_package/prefix_override:/home/minibot/test_files_ros/install/test_package/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../build/test_package build --build-base /home/minibot/test_files_ros/build/test_package/build install --record /home/minibot/test_files_ros/build/test_package/install.log --single-version-externally-managed install_data

@@ -42,6 +42,12 @@ cdr_serialize(
   cdr << ros_message.y;
   // Member: z
   cdr << ros_message.z;
+  // Member: yaw
+  cdr << ros_message.yaw;
+  // Member: pitch
+  cdr << ros_message.pitch;
+  // Member: roll
+  cdr << ros_message.roll;
   return true;
 }
 
@@ -65,6 +71,15 @@ cdr_deserialize(
 
   // Member: z
   cdr >> ros_message.z;
+
+  // Member: yaw
+  cdr >> ros_message.yaw;
+
+  // Member: pitch
+  cdr >> ros_message.pitch;
+
+  // Member: roll
+  cdr >> ros_message.roll;
 
   return true;
 }
@@ -109,6 +124,24 @@ get_serialized_size(
   // Member: z
   {
     size_t item_size = sizeof(ros_message.z);
+    current_alignment += item_size +
+      eprosima::fastcdr::Cdr::alignment(current_alignment, item_size);
+  }
+  // Member: yaw
+  {
+    size_t item_size = sizeof(ros_message.yaw);
+    current_alignment += item_size +
+      eprosima::fastcdr::Cdr::alignment(current_alignment, item_size);
+  }
+  // Member: pitch
+  {
+    size_t item_size = sizeof(ros_message.pitch);
+    current_alignment += item_size +
+      eprosima::fastcdr::Cdr::alignment(current_alignment, item_size);
+  }
+  // Member: roll
+  {
+    size_t item_size = sizeof(ros_message.roll);
     current_alignment += item_size +
       eprosima::fastcdr::Cdr::alignment(current_alignment, item_size);
   }
@@ -181,6 +214,33 @@ max_serialized_size_ArucoMarker(
       eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint32_t));
   }
 
+  // Member: yaw
+  {
+    size_t array_size = 1;
+
+    last_member_size = array_size * sizeof(uint32_t);
+    current_alignment += array_size * sizeof(uint32_t) +
+      eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint32_t));
+  }
+
+  // Member: pitch
+  {
+    size_t array_size = 1;
+
+    last_member_size = array_size * sizeof(uint32_t);
+    current_alignment += array_size * sizeof(uint32_t) +
+      eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint32_t));
+  }
+
+  // Member: roll
+  {
+    size_t array_size = 1;
+
+    last_member_size = array_size * sizeof(uint32_t);
+    current_alignment += array_size * sizeof(uint32_t) +
+      eprosima::fastcdr::Cdr::alignment(current_alignment, sizeof(uint32_t));
+  }
+
   size_t ret_val = current_alignment - initial_alignment;
   if (is_plain) {
     // All members are plain, and type is not empty.
@@ -189,7 +249,7 @@ max_serialized_size_ArucoMarker(
     using DataType = test_package_msgs::msg::ArucoMarker;
     is_plain =
       (
-      offsetof(DataType, z) +
+      offsetof(DataType, roll) +
       last_member_size
       ) == ret_val;
   }

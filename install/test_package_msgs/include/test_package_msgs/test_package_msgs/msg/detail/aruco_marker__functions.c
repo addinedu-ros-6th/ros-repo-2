@@ -22,6 +22,9 @@ test_package_msgs__msg__ArucoMarker__init(test_package_msgs__msg__ArucoMarker * 
   // x
   // y
   // z
+  // yaw
+  // pitch
+  // roll
   return true;
 }
 
@@ -36,6 +39,9 @@ test_package_msgs__msg__ArucoMarker__fini(test_package_msgs__msg__ArucoMarker * 
   // x
   // y
   // z
+  // yaw
+  // pitch
+  // roll
 }
 
 bool
@@ -64,6 +70,18 @@ test_package_msgs__msg__ArucoMarker__are_equal(const test_package_msgs__msg__Aru
   if (lhs->z != rhs->z) {
     return false;
   }
+  // yaw
+  if (lhs->yaw != rhs->yaw) {
+    return false;
+  }
+  // pitch
+  if (lhs->pitch != rhs->pitch) {
+    return false;
+  }
+  // roll
+  if (lhs->roll != rhs->roll) {
+    return false;
+  }
   return true;
 }
 
@@ -85,6 +103,12 @@ test_package_msgs__msg__ArucoMarker__copy(
   output->y = input->y;
   // z
   output->z = input->z;
+  // yaw
+  output->yaw = input->yaw;
+  // pitch
+  output->pitch = input->pitch;
+  // roll
+  output->roll = input->roll;
   return true;
 }
 

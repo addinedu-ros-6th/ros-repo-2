@@ -25,6 +25,9 @@ typedef struct test_package_msgs__msg__ArucoMarker
   float x;
   float y;
   float z;
+  float yaw;
+  float pitch;
+  float roll;
 } test_package_msgs__msg__ArucoMarker;
 
 // Struct for a sequence of test_package_msgs__msg__ArucoMarker.

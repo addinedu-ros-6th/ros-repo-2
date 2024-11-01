@@ -62,6 +62,9 @@ class ArucoMarker(metaclass=Metaclass_ArucoMarker):
         '_x',
         '_y',
         '_z',
+        '_yaw',
+        '_pitch',
+        '_roll',
     ]
 
     _fields_and_field_types = {
@@ -70,10 +73,16 @@ class ArucoMarker(metaclass=Metaclass_ArucoMarker):
         'x': 'float',
         'y': 'float',
         'z': 'float',
+        'yaw': 'float',
+        'pitch': 'float',
+        'roll': 'float',
     }
 
     SLOT_TYPES = (
         rosidl_parser.definition.BasicType('int32'),  # noqa: E501
+        rosidl_parser.definition.BasicType('float'),  # noqa: E501
+        rosidl_parser.definition.BasicType('float'),  # noqa: E501
+        rosidl_parser.definition.BasicType('float'),  # noqa: E501
         rosidl_parser.definition.BasicType('float'),  # noqa: E501
         rosidl_parser.definition.BasicType('float'),  # noqa: E501
         rosidl_parser.definition.BasicType('float'),  # noqa: E501
@@ -89,6 +98,9 @@ class ArucoMarker(metaclass=Metaclass_ArucoMarker):
         self.x = kwargs.get('x', float())
         self.y = kwargs.get('y', float())
         self.z = kwargs.get('z', float())
+        self.yaw = kwargs.get('yaw', float())
+        self.pitch = kwargs.get('pitch', float())
+        self.roll = kwargs.get('roll', float())
 
     def __repr__(self):
         typename = self.__class__.__module__.split('.')
@@ -128,6 +140,12 @@ class ArucoMarker(metaclass=Metaclass_ArucoMarker):
         if self.y != other.y:
             return False
         if self.z != other.z:
+            return False
+        if self.yaw != other.yaw:
+            return False
+        if self.pitch != other.pitch:
+            return False
+        if self.roll != other.roll:
             return False
         return True
 
@@ -210,3 +228,48 @@ class ArucoMarker(metaclass=Metaclass_ArucoMarker):
             assert not (value < -3.402823466e+38 or value > 3.402823466e+38) or math.isinf(value), \
                 "The 'z' field must be a float in [-3.402823466e+38, 3.402823466e+38]"
         self._z = value
+
+    @builtins.property
+    def yaw(self):
+        """Message field 'yaw'."""
+        return self._yaw
+
+    @yaw.setter
+    def yaw(self, value):
+        if __debug__:
+            assert \
+                isinstance(value, float), \
+                "The 'yaw' field must be of type 'float'"
+            assert not (value < -3.402823466e+38 or value > 3.402823466e+38) or math.isinf(value), \
+                "The 'yaw' field must be a float in [-3.402823466e+38, 3.402823466e+38]"
+        self._yaw = value
+
+    @builtins.property
+    def pitch(self):
+        """Message field 'pitch'."""
+        return self._pitch
+
+    @pitch.setter
+    def pitch(self, value):
+        if __debug__:
+            assert \
+                isinstance(value, float), \
+                "The 'pitch' field must be of type 'float'"
+            assert not (value < -3.402823466e+38 or value > 3.402823466e+38) or math.isinf(value), \
+                "The 'pitch' field must be a float in [-3.402823466e+38, 3.402823466e+38]"
+        self._pitch = value
+
+    @builtins.property
+    def roll(self):
+        """Message field 'roll'."""
+        return self._roll
+
+    @roll.setter
+    def roll(self, value):
+        if __debug__:
+            assert \
+                isinstance(value, float), \
+                "The 'roll' field must be of type 'float'"
+            assert not (value < -3.402823466e+38 or value > 3.402823466e+38) or math.isinf(value), \
+                "The 'roll' field must be a float in [-3.402823466e+38, 3.402823466e+38]"
+        self._roll = value

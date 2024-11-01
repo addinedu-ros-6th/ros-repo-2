@@ -31,7 +31,7 @@ void test_package_msgs__msg__ArucoMarker__rosidl_typesupport_introspection_c__Ar
   test_package_msgs__msg__ArucoMarker__fini(message_memory);
 }
 
-static rosidl_typesupport_introspection_c__MessageMember test_package_msgs__msg__ArucoMarker__rosidl_typesupport_introspection_c__ArucoMarker_message_member_array[5] = {
+static rosidl_typesupport_introspection_c__MessageMember test_package_msgs__msg__ArucoMarker__rosidl_typesupport_introspection_c__ArucoMarker_message_member_array[8] = {
   {
     "id",  // name
     rosidl_typesupport_introspection_c__ROS_TYPE_INT32,  // type
@@ -116,13 +116,64 @@ static rosidl_typesupport_introspection_c__MessageMember test_package_msgs__msg_
     NULL,  // fetch(index, &value) function pointer
     NULL,  // assign(index, value) function pointer
     NULL  // resize(index) function pointer
+  },
+  {
+    "yaw",  // name
+    rosidl_typesupport_introspection_c__ROS_TYPE_FLOAT,  // type
+    0,  // upper bound of string
+    NULL,  // members of sub message
+    false,  // is array
+    0,  // array size
+    false,  // is upper bound
+    offsetof(test_package_msgs__msg__ArucoMarker, yaw),  // bytes offset in struct
+    NULL,  // default value
+    NULL,  // size() function pointer
+    NULL,  // get_const(index) function pointer
+    NULL,  // get(index) function pointer
+    NULL,  // fetch(index, &value) function pointer
+    NULL,  // assign(index, value) function pointer
+    NULL  // resize(index) function pointer
+  },
+  {
+    "pitch",  // name
+    rosidl_typesupport_introspection_c__ROS_TYPE_FLOAT,  // type
+    0,  // upper bound of string
+    NULL,  // members of sub message
+    false,  // is array
+    0,  // array size
+    false,  // is upper bound
+    offsetof(test_package_msgs__msg__ArucoMarker, pitch),  // bytes offset in struct
+    NULL,  // default value
+    NULL,  // size() function pointer
+    NULL,  // get_const(index) function pointer
+    NULL,  // get(index) function pointer
+    NULL,  // fetch(index, &value) function pointer
+    NULL,  // assign(index, value) function pointer
+    NULL  // resize(index) function pointer
+  },
+  {
+    "roll",  // name
+    rosidl_typesupport_introspection_c__ROS_TYPE_FLOAT,  // type
+    0,  // upper bound of string
+    NULL,  // members of sub message
+    false,  // is array
+    0,  // array size
+    false,  // is upper bound
+    offsetof(test_package_msgs__msg__ArucoMarker, roll),  // bytes offset in struct
+    NULL,  // default value
+    NULL,  // size() function pointer
+    NULL,  // get_const(index) function pointer
+    NULL,  // get(index) function pointer
+    NULL,  // fetch(index, &value) function pointer
+    NULL,  // assign(index, value) function pointer
+    NULL  // resize(index) function pointer
   }
 };
 
 static const rosidl_typesupport_introspection_c__MessageMembers test_package_msgs__msg__ArucoMarker__rosidl_typesupport_introspection_c__ArucoMarker_message_members = {
   "test_package_msgs__msg",  // message namespace
   "ArucoMarker",  // message name
-  5,  // number of fields
+  8,  // number of fields
   sizeof(test_package_msgs__msg__ArucoMarker),
   test_package_msgs__msg__ArucoMarker__rosidl_typesupport_introspection_c__ArucoMarker_message_member_array,  // message members
   test_package_msgs__msg__ArucoMarker__rosidl_typesupport_introspection_c__ArucoMarker_init_function,  // function to initialize message memory (memory has to be allocated)

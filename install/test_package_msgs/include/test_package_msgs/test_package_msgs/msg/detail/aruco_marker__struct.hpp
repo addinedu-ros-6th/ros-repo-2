@@ -43,6 +43,9 @@ struct ArucoMarker_
       this->x = 0.0f;
       this->y = 0.0f;
       this->z = 0.0f;
+      this->yaw = 0.0f;
+      this->pitch = 0.0f;
+      this->roll = 0.0f;
     }
   }
 
@@ -57,6 +60,9 @@ struct ArucoMarker_
       this->x = 0.0f;
       this->y = 0.0f;
       this->z = 0.0f;
+      this->yaw = 0.0f;
+      this->pitch = 0.0f;
+      this->roll = 0.0f;
     }
   }
 
@@ -76,6 +82,15 @@ struct ArucoMarker_
   using _z_type =
     float;
   _z_type z;
+  using _yaw_type =
+    float;
+  _yaw_type yaw;
+  using _pitch_type =
+    float;
+  _pitch_type pitch;
+  using _roll_type =
+    float;
+  _roll_type roll;
 
   // setters for named parameter idiom
   Type & set__id(
@@ -106,6 +121,24 @@ struct ArucoMarker_
     const float & _arg)
   {
     this->z = _arg;
+    return *this;
+  }
+  Type & set__yaw(
+    const float & _arg)
+  {
+    this->yaw = _arg;
+    return *this;
+  }
+  Type & set__pitch(
+    const float & _arg)
+  {
+    this->pitch = _arg;
+    return *this;
+  }
+  Type & set__roll(
+    const float & _arg)
+  {
+    this->roll = _arg;
     return *this;
   }
 
@@ -164,6 +197,15 @@ struct ArucoMarker_
       return false;
     }
     if (this->z != other.z) {
+      return false;
+    }
+    if (this->yaw != other.yaw) {
+      return false;
+    }
+    if (this->pitch != other.pitch) {
+      return false;
+    }
+    if (this->roll != other.roll) {
       return false;
     }
     return true;
