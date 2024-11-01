@@ -11,31 +11,40 @@ class ArucoPublisher(Node):
     def __init__(self):
         super().__init__('aruco_marker_publisher')
         
-        # Create a publisher to publish marker data
-        self.publisher = self.create_publisher(ArucoMarker, 'aruco_marker_data', 10)
-        
-        # Initialize Aruco detector
-        aruco_dict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_5X5_100)
-        self.detector = cv2.aruco.ArucoDetector(aruco_dict)
+        # Declare parameters to be loaded from YAML
+        self.declare_parameter('data_path', "~/Downloads/ArucoMarker/calibration_data.npz")
+        self.declare_parameter('client_ip', '192.168.0.130')
+        self.declare_parameter('client_port', 9999)
+        self.declare_parameter('marker_length', 0.15)
 
-        # Marker length (in meters)
-        self.marker_length = 0.15  # Example: 15 cm
-        
+        # Load parameters
+        data_path = self.get_parameter('data_path').get_parameter_value().string_value
+        client_ip = self.get_parameter('client_ip').get_parameter_value().string_value
+        client_port = self.get_parameter('client_port').get_parameter_value().integer_value
+        self.marker_length = self.get_parameter('marker_length').get_parameter_value().double_value
+
         # Load calibration data
-        data_path = os.path.expanduser("~/Downloads/ArucoMarker/calibration_data.npz")
+        data_path = os.path.expanduser(data_path)
         data = np.load(data_path)
         self.camera_matrix = data['camera_matrix']
         self.dist_coeffs = data['dist_coeffs']
+
+        # Create a publisher to publish marker data
+        self.publisher = self.create_publisher(ArucoMarker, 'aruco_marker_data', 10)
+
+        # Initialize Aruco detector
+        aruco_dict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_5X5_100)
+        self.detector = cv2.aruco.ArucoDetector(aruco_dict)
         
         # Open webcam
         self.cap = cv2.VideoCapture(0)
-        
-        # Start timer to periodically process and publish data
-        self.timer = self.create_timer(0.1, self.detect_and_publish)
 
         # Initialize UDP socket
         self.udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.client_address = ('192.168.0.155', 9999)  # Replace <client_ip> with the client's IP address
+        self.client_address = (client_ip, client_port)  # Replace <client_ip> with the client's IP address
+
+        # Start timer to periodically process and publish data
+        self.timer = self.create_timer(0.1, self.detect_and_publish)
 
     def detect_and_publish(self):
         ret, frame = self.cap.read()  # Read frame from webcam
