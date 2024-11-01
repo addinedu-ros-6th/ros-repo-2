@@ -21,6 +21,7 @@ class ArucoMarkerSubscriber(Node):
             f"Received Marker - ID: {msg.id}, "
             f"Distance: {msg.distance:.2f}m, "
             f"X: {msg.x:.2f}m, Y: {msg.y:.2f}m, Z: {msg.z:.2f}m"
+            f"Yaw: {msg.yaw:.2f}m, Pitch: {msg.pitch:.2f}m, Roll: {msg.roll:.2f}m"
         )
 
 def main(args=None):

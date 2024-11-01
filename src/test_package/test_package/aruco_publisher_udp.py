@@ -135,7 +135,6 @@ class ArucoPublisher(Node):
         _, buffer = cv2.imencode('.jpg', frame, encode_param)
         frame_data = buffer.tobytes()
         # Send the encoded frame via UDP
-        self.udp_socket.close()
         self.udp_socket.sendto(frame_data, self.client_address)
 
 
@@ -147,6 +146,7 @@ class ArucoPublisher(Node):
         # Release resources when the node is destroyed
         self.cap.release()
         # cv2.destroyAllWindows()
+        self.udp_socket.close()
         super().destroy_node()
 
 def main(args=None):
