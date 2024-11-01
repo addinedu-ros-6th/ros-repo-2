@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'camera_publisher = test_package.camera_publisher:main',
+            'aruco_publisher_udp = test_package.aruco_publisher_udp:main',
             'camera_subscriber = test_package.camera_subscriber:main',
 
             'distance_publisher = test_package.distance_publisher:main',
