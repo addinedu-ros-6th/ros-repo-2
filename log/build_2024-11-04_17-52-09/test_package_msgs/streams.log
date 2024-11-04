@@ -1,0 +1,6 @@
+[1.289s] Invoking command in '/home/minibot/test_files_ros/build/test_package_msgs': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/minibot/test_files_ros/install/test_package:/opt/ros/humble /usr/bin/cmake --build /home/minibot/test_files_ros/build/test_package_msgs -- -j4 -l4
+[1.471s] gmake[1]: *** [CMakeFiles/Makefile2:421: CMakeFiles/ament_cmake_python_copy_test_package_msgs.dir/all] Interrupt
+[1.471s] gmake[1]: *** [CMakeFiles/Makefile2:317: CMakeFiles/test_package_msgs__cpp.dir/all] Interrupt
+[1.473s] gmake[1]: *** [CMakeFiles/Makefile2:213: CMakeFiles/test_package_msgs__rosidl_generator_c.dir/all] Interrupt
+[1.474s] gmake: *** [Makefile:146: all] Interrupt
+[1.478s] Invoked command in '/home/minibot/test_files_ros/build/test_package_msgs' returned '-2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/minibot/test_files_ros/install/test_package:/opt/ros/humble /usr/bin/cmake --build /home/minibot/test_files_ros/build/test_package_msgs -- -j4 -l4

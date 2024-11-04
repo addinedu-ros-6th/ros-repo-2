@@ -78,7 +78,7 @@ class ArucoPublisher(Node):
 
                     # Calculate Euler angles from the rotation matrix
                     sy = np.sqrt(rotation_matrix[0, 0] ** 2 + rotation_matrix[1, 0] ** 2)
-                    singular = sy < 1e-6
+                    singular = sy < 1e-4
 
                     if not singular:
                         yaw = np.arctan2(rotation_matrix[2, 1], rotation_matrix[2, 2])
@@ -98,17 +98,38 @@ class ArucoPublisher(Node):
                     z = transformed_tvec[2][0]
                     distance = np.sqrt(x**2 + y**2 + z**2)
 
-                    # Append marker data to the list
+                    # Initialize previous_yaw at the beginning of the code (if not already initialized)
+                    if not hasattr(self, "previous_yaw"):
+                        self.previous_yaw = 0
+
+                    # Compute smoothed yaw by averaging the previous and current yaw
+                    new_yaw = np.degrees(yaw)
+                    smoothed_yaw = (self.previous_yaw + new_yaw) / 2
+                    self.previous_yaw = smoothed_yaw  # Update previous yaw for the next frame
+
+                    # Append marker data with smoothed yaw
                     marker_data.append({
                         "id": int(ids[i][0]),
                         "distance": distance,
                         "x": x,
                         "y": y,
                         "z": z,
-                        "yaw": np.degrees(yaw),
+                        "yaw": smoothed_yaw,  # Use smoothed yaw
                         "pitch": np.degrees(pitch),
                         "roll": np.degrees(roll)
                     })
+
+                    # # Append marker data to the list
+                    # marker_data.append({
+                    #     "id": int(ids[i][0]),
+                    #     "distance": distance,
+                    #     "x": x,
+                    #     "y": y,
+                    #     "z": z,
+                    #     "yaw": np.degrees(yaw),
+                    #     "pitch": np.degrees(pitch),
+                    #     "roll": np.degrees(roll)
+                    # })
 
             if marker_data:
                 closest_marker = min(marker_data, key=lambda x: x["distance"])
