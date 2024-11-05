@@ -1,6 +1,0 @@
-source;share/Servee_Robot/hook/pythonpath.ps1
-source;share/Servee_Robot/hook/pythonpath.dsv
-source;share/Servee_Robot/hook/pythonpath.sh
-source;share/Servee_Robot/hook/ament_prefix_path.ps1
-source;share/Servee_Robot/hook/ament_prefix_path.dsv
-source;share/Servee_Robot/hook/ament_prefix_path.sh
