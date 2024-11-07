@@ -1,0 +1,5 @@
+battery_state_pub:
+  ros__parameters:
+    charging_percentage: 100.0
+    charging_increment: 0.001
+    charging: TRUE
