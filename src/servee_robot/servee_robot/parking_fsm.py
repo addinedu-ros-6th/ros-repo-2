@@ -2,7 +2,7 @@ import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
-from servee_interfaces.msg import ArucoMarker
+from servee_interfaces.msg import ArucoMarkerResult
 import tf_transformations
 import math
 import time
@@ -32,7 +32,7 @@ class ParkingFSM(Node):
         self.group3 = ReentrantCallbackGroup()
 
         self.twist_pub = self.create_publisher(Twist, '/base_controller/cmd_vel_unstamped', 10, callback_group=self.group0)
-        self.marker_sub = self.create_subscription(ArucoMarker, '/aruco_marker_data', self.marker_callback, 10, callback_group=self.group1)
+        self.marker_sub = self.create_subscription(ArucoMarkerResult, '/aruco_marker_data', self.marker_callback, 10, callback_group=self.group1)
         self.odom_sub = self.create_subscription(Odometry, '/base_controller/odom', self.odom_callback, 10, callback_group=self.group2)
         self.laser_sub = self.create_subscription(LaserScan, '/scan', self.laser_scan_callback, qos_profile, callback_group=self.group3)
 
@@ -93,7 +93,7 @@ class ParkingFSM(Node):
         self.timer = self.create_timer(0.1, self.run_fsm)
         
     def marker_callback(self, msg):
-        # Extract data from ArucoMarker message
+        # Extract data from ArucoMarkerResult message
         self.marker_id = msg.id
         self.marker_x = msg.x
         self.marker_z = msg.z / 2
