@@ -1,0 +1,6 @@
+picam_processor:
+  ros__parameters:
+    data_path: "~/Downloads/ArucoMarker/calibration_data.npz"
+    client_ip: "192.168.0.155"
+    client_port: 9999
+    marker_length: 0.05  # 5cm
