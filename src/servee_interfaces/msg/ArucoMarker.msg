@@ -1,0 +1,9 @@
+int32 id
+float32 distance
+float32 x
+float32 y
+float32 z
+float32 yaw
+float32 pitch
+float32 roll
+float32 centerline_error
