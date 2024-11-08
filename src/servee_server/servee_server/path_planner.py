@@ -11,7 +11,7 @@ from rclpy.qos import QoSProfile, QoSHistoryPolicy, QoSDurabilityPolicy, QoSReli
 class PathPlanner(Node):
     def __init__(self):
         super().__init__("path_planner_node")
-        self.astar_plan = AStarPlanner(resolution=1, rr=1, padding=5)
+        self.astar_plan = AStarPlanner(resolution=1, rr=0.2, padding=1)
         
         # qos_profile = QoSProfile(depth=1)
         # qos_profile.durability = QoSDurabilityPolicy.TRANSIENT_LOCAL
@@ -55,8 +55,15 @@ class PathPlanner(Node):
             pose.orientation.w = quaternion[3]
             
             res.path.poses.append(pose)
-        self.get_logger().info(f"경로 보내기 {res.path.poses[0].position}")
-        self.publisher_.publish(res)
+            self.get_logger().info(f"경로: x:{pose.position.x:.3f}, y:{pose.position.y:.3f}")
+            
+        if res.path.poses:
+            self.get_logger().info(f"경로 보내기 {res.path.poses[0].position}")
+            self.get_logger().info(f"경로 개수: {str(len(res.path.poses))}")
+            self.publisher_.publish(res)
+        else:
+            self.get_logger().warning("경로 계산에 실패하여 경로가 없습니다.")
+       
 
     
 def main(args=None):

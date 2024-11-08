@@ -5,7 +5,6 @@ import py_trees_ros
 import rclpy
 import rclpy.parameter
 from rclpy.node import Node
-from servee_interfaces.srv import PathPlan
 from servee_interfaces.msg import ReqPath, ResPath
 from geometry_msgs.msg import Pose
 from etc.utils.pose_utils import PoseUtils
@@ -28,28 +27,40 @@ class RequestPath(Behaviour):
         self.req_path_pub = RequestPathPublisher()
 
         
-    def initialise(self) -> None:   
-        if self.are_you_ready() == False:
-            return Status.FAILURE
-          
-        goal_pose = self.blackboard.goal_pose
-        curr_pose = self.blackboard.curr_pose.pose.pose
-        
-        self.req_path_pub.publish(curr_pose, goal_pose)        
-        
     def update(self) -> Status:
-        
         if self.are_you_ready() == False:
             return Status.FAILURE
+        
+        if self.is_move() == True:
+            return Status.SUCCESS
+        
+        goal_pose = self.blackboard.goal_pose
+        curr_pose = self.blackboard.curr_pose
+        
+        self.req_path_pub.publish(curr_pose, goal_pose) 
+        
         return Status.SUCCESS
 
 
     def are_you_ready(self):
-        if self.blackboard.exists('goal_pose') == False:
+        """
+        Service에게 요청할 수 있는 상태인가?
+        """
+        # 이동을 할 수 없는 상태. 
+        if self.blackboard.robot_state not in ["receive_goal"]:
             return False
         
-        if self.blackboard.robot_state not in ["idle", "home"]:
-            return False
+        
+    def is_move(self):
+        """
+        이동 중인 상태인지 체크한다.
+        이동 중에는 트리가 Move로 바로 넘어갈 수 있게 처리한다.
+        """
+        if self.blackboard.robot_state in ["move", "home"]:
+            return True
+
+        
+        
    
    
 class RequestPathPublisher(Node):
@@ -68,8 +79,8 @@ class RequestPathPublisher(Node):
         curr_y = curr_pose.position.y
         
         # 목표 위치
-        goal_x = goal_pose.goal_pose.position.x
-        goal_y = goal_pose.goal_pose.position.y
+        goal_x = goal_pose.position.x
+        goal_y = goal_pose.position.y
         
         msg = ReqPath()
         msg.curr_pose = PoseUtils.create_pose(curr_x, curr_y)

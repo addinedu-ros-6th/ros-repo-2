@@ -6,7 +6,6 @@ import py_trees_ros
 import rclpy
 import rclpy.parameter
 from rclpy.node import Node
-from servee_interfaces.srv import PathPlan
 from servee_interfaces.msg import ReqPath, ResPath
 from geometry_msgs.msg import Pose
 from etc.utils.pose_utils import PoseUtils
@@ -20,7 +19,7 @@ class ResponsePath(Behaviour):
         self.blackboard.register_key(key="robot_state", access=Access.WRITE)
         
     def setup(self, **kwargs: Any) -> None:
-        self.node = kwargs['node']
+        self.node: Node = kwargs['node']
         self.node.create_subscription(
             ResPath,
             'servee/response_path',
@@ -29,9 +28,10 @@ class ResponsePath(Behaviour):
         )
     
     def update(self) -> Status:
-        if self.blackboard.robot_state == "task":
+        if self.blackboard.robot_state in ["task", "home"]:
             return Status.SUCCESS
-        return Status.RUNNING
+        
+        return Status.FAILURE
     
     def callback(self, msg):
         self.node.get_logger().debug(f"msg {msg}")
