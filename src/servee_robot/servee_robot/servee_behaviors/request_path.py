@@ -50,6 +50,9 @@ class RequestPath(Behaviour):
         if self.blackboard.robot_state not in ["receive_goal"]:
             return False
         
+        if not self.blackboard.exists("curr_pose"):
+            return False
+        
         
     def is_move(self):
         """

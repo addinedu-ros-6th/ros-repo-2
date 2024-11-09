@@ -13,8 +13,8 @@ from py_trees import logging as log_tree
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
 from servee_interfaces.msg import TaskGoalPose, ResPath
-from servee_robot.servee_behaviors import led_flasher, movement, request_path, response_path, get_curr_pose, receive_goal
-from geometry_msgs.msg import PoseWithCovarianceStamped
+from servee_robot.servee_behaviors import led_flasher, request_path, response_path, get_curr_pose, receive_goal, move_forward, robot_rotate, waypoint_arrival_checker
+
 
 
 
@@ -71,12 +71,13 @@ def move_to_goal():
     Move (Parallel - SuccessOnOne):
         - 
     """
-    move = Parallel("Movement", policy=ParallelPolicy.SuccessOnOne())
-    move_robot = movement.Movement("robot_movement_node")
+    move = Sequence("Movement", memory=False)
+    waypoint_check = waypoint_arrival_checker.WaypointArrivalChecker("waypoint_check_node")
+    rotate = robot_rotate.RobotRotate("robot_ratate_node")
+    forward = move_forward.MoveForward("move_forward_node")
     
-    # 여기서 맵에 끼였을때라던지 
-    # 교차로 입장에 대한 처리가 추가될 예정이다.
-    move.add_children([move_robot])
+    
+    move.add_children([waypoint_check, rotate, forward])
     
     return move
 
