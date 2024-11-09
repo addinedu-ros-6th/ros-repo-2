@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1314</width>
+    <height>881</height>
+   </rect>
+  </property>
+  <property name="baseSize">
+   <size>
+    <width>13</width>
+    <height>10</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">PushButton {
+                background-color: #FF0000;  /* 배경색 */
+                color: white;                /* 글자색 */
+                border: none;                /* 테두리 없음 */
+                padding: 15px 32px;         /* 패딩 */
+                text-align: center;          /* 텍스트 정렬 */
+                text-decoration: none;       /* 텍스트 장식 없음 */
+                display: inline-block;       /* 인라인 블록 */
+                font-size: 16px;             /* 글자 크기 */
+                margin: 4px 2px;            /* 마진 */
+                cursor: pointer;             /* 커서 모양 */
+                border-radius: 12px;        /* 모서리 둥글게 */
+            }
+            QPushButton:hover {
+                background-color: #45a049;   /* 마우스 오버 시 색상 */
+            }</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>40</y>
+      <width>671</width>
+      <height>501</height>
+     </rect>
+    </property>
+    <property name="tabPosition">
+     <enum>QTabWidget::North</enum>
+    </property>
+    <property name="tabShape">
+     <enum>QTabWidget::Rounded</enum>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <property name="elideMode">
+     <enum>Qt::ElideNone</enum>
+    </property>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>중식</string>
+     </attribute>
+     <widget class="QPushButton" name="vendor_1_button">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>10</y>
+        <width>141</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>짜장의민족</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="vendor_2_button">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>10</y>
+        <width>141</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>역대급짬뽕</string>
+      </property>
+     </widget>
+     <widget class="QScrollArea" name="scrollArea_1">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>50</y>
+        <width>651</width>
+        <height>281</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="sizeIncrement">
+       <size>
+        <width>0</width>
+        <height>1000</height>
+       </size>
+      </property>
+      <property name="baseSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAsNeeded</enum>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAsNeeded</enum>
+      </property>
+      <property name="sizeAdjustPolicy">
+       <enum>QAbstractScrollArea::AdjustToContents</enum>
+      </property>
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>649</width>
+         <height>279</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QScrollArea" name="scrollArea_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>50</y>
+        <width>651</width>
+        <height>281</height>
+       </rect>
+      </property>
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents_2">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>649</width>
+         <height>279</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+     <zorder>scrollArea_1</zorder>
+     <zorder>vendor_1_button</zorder>
+     <zorder>vendor_2_button</zorder>
+     <zorder>scrollArea_2</zorder>
+    </widget>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>양식</string>
+     </attribute>
+     <widget class="QPushButton" name="vendor_3_button">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>10</y>
+        <width>141</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>나폴리맛피아</string>
+      </property>
+     </widget>
+     <widget class="QScrollArea" name="scrollArea_3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>50</y>
+        <width>651</width>
+        <height>281</height>
+       </rect>
+      </property>
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents_3">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>649</width>
+         <height>279</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_3">
+     <attribute name="title">
+      <string>분식</string>
+     </attribute>
+     <widget class="QScrollArea" name="scrollArea_4">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>50</y>
+        <width>651</width>
+        <height>281</height>
+       </rect>
+      </property>
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents_4">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>649</width>
+         <height>279</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QPushButton" name="vendor_1_button_4">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>10</y>
+        <width>141</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>김밥지옥</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QTableWidget" name="shopping_tableWidget">
+    <property name="geometry">
+     <rect>
+      <x>740</x>
+      <y>70</y>
+      <width>531</width>
+      <height>261</height>
+     </rect>
+    </property>
+    <attribute name="horizontalHeaderDefaultSectionSize">
+     <number>105</number>
+    </attribute>
+    <column>
+     <property name="text">
+      <string>음식점명</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>음식명</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>수량</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>가격</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>주문취소</string>
+     </property>
+    </column>
+   </widget>
+   <widget class="QLabel" name="label_shopping">
+    <property name="geometry">
+     <rect>
+      <x>880</x>
+      <y>30</y>
+      <width>231</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>dsrom10</family>
+      <pointsize>20</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+      <underline>false</underline>
+      <strikeout>false</strikeout>
+      <stylestrategy>PreferAntialias</stylestrategy>
+     </font>
+    </property>
+    <property name="text">
+     <string>shopping List</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>890</x>
+      <y>410</y>
+      <width>161</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>dsrom10</family>
+      <pointsize>20</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+      <underline>false</underline>
+      <strikeout>false</strikeout>
+      <stylestrategy>PreferAntialias</stylestrategy>
+     </font>
+    </property>
+    <property name="text">
+     <string>Order List</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_shopping_2">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>0</y>
+      <width>231</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>dsrom10</family>
+      <pointsize>20</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+      <underline>false</underline>
+      <strikeout>false</strikeout>
+      <stylestrategy>PreferAntialias</stylestrategy>
+     </font>
+    </property>
+    <property name="text">
+     <string>Menu</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_predict">
+    <property name="geometry">
+     <rect>
+      <x>750</x>
+      <y>350</y>
+      <width>141</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>15</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>결제 예상 금액 : </string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_predict_price">
+    <property name="geometry">
+     <rect>
+      <x>880</x>
+      <y>350</y>
+      <width>101</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>15</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="button_payment">
+    <property name="geometry">
+     <rect>
+      <x>1110</x>
+      <y>360</y>
+      <width>141</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>결 제</string>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="order_tableWidget">
+    <property name="geometry">
+     <rect>
+      <x>730</x>
+      <y>460</y>
+      <width>531</width>
+      <height>321</height>
+     </rect>
+    </property>
+    <property name="gridStyle">
+     <enum>Qt::SolidLine</enum>
+    </property>
+    <property name="sortingEnabled">
+     <bool>false</bool>
+    </property>
+    <attribute name="horizontalHeaderDefaultSectionSize">
+     <number>110</number>
+    </attribute>
+    <column>
+     <property name="text">
+      <string>음식점명</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>음식명</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>수량</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>가격</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>상태</string>
+     </property>
+    </column>
+   </widget>
+   <widget class="QLabel" name="label_payment_2">
+    <property name="geometry">
+     <rect>
+      <x>1030</x>
+      <y>790</y>
+      <width>121</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>15</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>결제 금액 : </string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_total_price">
+    <property name="geometry">
+     <rect>
+      <x>1160</x>
+      <y>790</y>
+      <width>101</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu</family>
+      <pointsize>15</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="button_service_call">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>10</y>
+      <width>141</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+                background-color:rgb(121, 31, 31);  /* 배경색 */
+                color: white;                /* 글자색 */
+                border: none;                /* 테두리 없음 */
+                padding: 15px 32px;         /* 패딩 */
+                text-align: center;          /* 텍스트 정렬 */
+                text-decoration: none;       /* 텍스트 장식 없음 */
+                display: inline-block;       /* 인라인 블록 */
+                font-size: 16px;             /* 글자 크기 */
+                margin: 2px 2px;            /* 마진 */
+                cursor: pointer;             /* 커서 모양 */
+                border-radius: 12px;        /* 모서리 둥글게 */
+            }
+            QPushButton:hover {
+                background-color: #45a049;   /* 마우스 오버 시 색상 */
+            }</string>
+    </property>
+    <property name="text">
+     <string>직원호출</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="button_retrieve">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>560</y>
+      <width>141</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+                background-color:rgb(121, 121, 31);  /* 배경색 */
+                color: white;                /* 글자색 */
+                border: none;                /* 테두리 없음 */
+                padding: 15px 32px;         /* 패딩 */
+                text-align: center;          /* 텍스트 정렬 */
+                text-decoration: none;       /* 텍스트 장식 없음 */
+                display: inline-block;       /* 인라인 블록 */
+                font-size: 16px;             /* 글자 크기 */
+                margin: 2px 2px;            /* 마진 */
+                cursor: pointer;             /* 커서 모양 */
+                border-radius: 12px;        /* 모서리 둥글게 */
+            }
+            QPushButton:hover {
+                background-color: #45a049;   /* 마우스 오버 시 색상 */
+            }</string>
+    </property>
+    <property name="text">
+     <string>그릇 회수</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1314</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>vendor_1_button</tabstop>
+  <tabstop>vendor_2_button</tabstop>
+  <tabstop>scrollArea_1</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>
