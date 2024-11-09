@@ -78,7 +78,7 @@ class AStarPlanner:
         print("Loading map start!")
 
         # 맵 정보를 담고 있는 YAML 파일의 경로를 설정하고 데이터를 로드
-        map_yaml_file = os.path.join(get_package_share_directory('my_robot_navigation'), 'maps', 'map_name.yaml')
+        map_yaml_file = os.path.join(get_package_share_directory('minibot_navigation2'), 'maps', 'map_final_1.yaml')        
         map_yaml_data = yaml.full_load(open(map_yaml_file))
 
         # 맵 해상도(m/픽셀)와 맵의 원점 좌표 설정
@@ -86,11 +86,12 @@ class AStarPlanner:
         self.map_origin = map_yaml_data['origin']    # 맵의 원점 좌표 [x, y]
 
         # PGM 이미지 파일 경로를 설정
-        map_pgm_file = os.path.join(get_package_share_directory('my_robot_navigation'), 'maps', map_yaml_data['image'])
+        map_pgm_file = os.path.join(get_package_share_directory('minibot_navigation2'), 'maps', map_yaml_data['image'])
 
         # PGM 파일을 읽어들여 맵 데이터를 로드
         with open(map_pgm_file, 'rb') as pgmf:
-            pgm_data = pgmf.readlines()
+            # 파일의 모든 줄을 읽어와 주석 제거
+            pgm_data = [line for line in pgmf.readlines() if not line.startswith(b'#')]
             
             # PGM 파일의 크기(너비와 높이)를 설정
             map_width, map_height = map(int, pgm_data[1].split())

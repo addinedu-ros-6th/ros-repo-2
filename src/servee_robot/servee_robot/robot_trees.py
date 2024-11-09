@@ -13,32 +13,33 @@ from py_trees import logging as log_tree
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
 from servee_interfaces.msg import TaskGoalPose, ResPath
-from servee_robot.servee_behaviors import led_flasher, movement, request_path, response_path
+from servee_robot.servee_behaviors import led_flasher, movement, request_path, response_path, get_curr_pose, receive_goal
+from geometry_msgs.msg import PoseWithCovarianceStamped
 
 
 
-def receive_goal():
+def receive_goal_node():
     """
     목적지를 전송받는다.
     """
-    goal2bb = py_trees_ros.subscribers.ToBlackboard(
-        name="Receive Goal",
-        topic_name= "servee/task_goal_pose",
-        topic_type= TaskGoalPose,
-        blackboard_variables= "goal_pose",
-        qos_profile=py_trees_ros.utilities.qos_profile_latched(),
-    )
+    # goal2bb = py_trees_ros.subscribers.ToBlackboard(
+    #     name="Receive Goal",
+    #     topic_name= "servee/task_goal_pose",
+    #     topic_type= TaskGoalPose,
+    #     blackboard_variables= "goal_pose",
+    #     qos_profile=py_trees_ros.utilities.qos_profile_latched(),
+    # )
+    
+    receive_goal_behavior = receive_goal.ReceiveGoal("receive_goal_node")
     
     def is_robot_idle_or_home(blackboard):
-        te = blackboard.robot_state in ['idle', 'home']
-        console.logerror(f"에러 메시지입니다. {te}")
-        return te
+        return blackboard.robot_state in ['idle', 'home']
     
     goal_node = decorators.EternalGuard(
         name="Can Task?",
         condition=is_robot_idle_or_home,
         blackboard_keys={"robot_state"},
-        child= goal2bb
+        child= receive_goal_behavior
     )
     
     return goal_node
@@ -52,13 +53,14 @@ def create_path():
         - path
         - test_timer
     """
-    path = Sequence("Create Path", memory=True)
+    path = Parallel("Create Path", policy=ParallelPolicy.SuccessOnAll())
     
-    goal = receive_goal()
+    goal = receive_goal_node()
     req_path = request_path.RequestPath("reqeuest_path_node")
     res_path = response_path.ResponsePath("response_path_node")    
 
     # timer_node = py_trees.timers.Timer(name="time", duration=10.0)
+
     path.add_children([goal, req_path, res_path])
     return path
 
@@ -69,7 +71,7 @@ def move_to_goal():
     Move (Parallel - SuccessOnOne):
         - 
     """
-    move = Parallel("Move", policy=ParallelPolicy.SuccessOnOne())
+    move = Parallel("Movement", policy=ParallelPolicy.SuccessOnOne())
     move_robot = movement.Movement("robot_movement_node")
     
     # 여기서 맵에 끼였을때라던지 
@@ -81,14 +83,14 @@ def move_to_goal():
 
 def battery_low_alarm():
     """
-    배터리 상태를 파악하고 부족하면 LED로 알린다. 
+    배터리 상태를 파악하고 부족하면 LED로 알린다.
     """
-    better_low_alarm = led_flasher.LedFlasher("better_low_alarm") # 건전지가 부족하면 깜박이는 LED
+    better_low_alarm = led_flasher.LedFlasher("better_low_alarm")  # 배터리가 부족할 때 깜박이는 LED
 
+    # 조건 함수 정의: 배터리가 부족하면 False를 반환하도록 설정
     def check_battery_low_on_blackboard(blackboard: Blackboard):
         return blackboard.battery_low_warning
-    
-    # 건전지가 부족하면 실행.
+
     battery_emergency = decorators.EternalGuard(
         name="Battery Low?",
         condition=check_battery_low_on_blackboard,
@@ -112,8 +114,6 @@ def begin_tasks():
     
     move = move_to_goal() # 로봇을 이동시킨다.
     battery_alarm = battery_low_alarm()
-
-    
 
     tasks.add_children([battery_alarm, path, move])
     return tasks
@@ -144,14 +144,7 @@ def receive_topic2bb():
         threshold=30.0
     )
     
-    # 현재 위치
-    curr_pose2bb = py_trees_ros.subscribers.ToBlackboard(
-        name="Get Current Pose",
-        topic_name= "/odom",
-        topic_type= Odometry,
-        blackboard_variables= "curr_pose",
-        qos_profile=py_trees_ros.utilities.qos_profile_unlatched(),
-    ) 
+    cur_pose = get_curr_pose.GetCurrPose("get_curr_pose_node")
     
     # 레이저 스캔
     laser_scan2bb = py_trees_ros.subscribers.ToBlackboard(
@@ -162,7 +155,7 @@ def receive_topic2bb():
         qos_profile=py_trees_ros.utilities.qos_profile_unlatched(),
     )
     # laser_scan2bb
-    topic2bb.add_children([battery2bb, curr_pose2bb])
+    topic2bb.add_children([battery2bb, cur_pose])
     return topic2bb
 
 
@@ -196,11 +189,12 @@ def main():
         
         # 행동 트리를 설정하고 틱 반복을 시작
         tree.setup(timeout=15)
-        log_tree.level = log_tree.Level.DEBUG
+        # log_tree.level = log_tree.Level.DEBUG
         tree.tick_tock(period_ms=200.0)
         
         # ROS2 노드를 스핀하고 행동 트리를 실행
         rclpy.spin(tree.node)
+        
         
     except KeyboardInterrupt:
         pass
