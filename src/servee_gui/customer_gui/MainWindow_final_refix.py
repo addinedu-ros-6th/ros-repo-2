@@ -48,7 +48,7 @@ class MainWindow(QMainWindow):
         self.result_price=0
 
         self.dbm = MySQLConnection.getInstance()
-        self.dbm.db_connect("localhost", 3306, "SERVEE_DB", "root", "tjdudghks1")
+        self.dbm.db_connect("192.168.0.130", 3306, "SERVEE_DB", "yhc", "1234")
 
         self.client_thread = threading.Thread(target=self.update_state)
         self.client_thread.start()

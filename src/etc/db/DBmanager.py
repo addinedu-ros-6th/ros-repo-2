@@ -104,7 +104,7 @@ class MySQLConnection:
         current_time = datetime.now()
 
         sql_insert=f"""
-        INSERT INTO OrderCalls (table_id, ordercall_time)
+        INSERT INTO OrderCalls (table_id, call_time)
         VALUES (%s, %s);
         """
         self.cursor.execute(sql_insert, (table_id, current_time))
@@ -116,7 +116,7 @@ class MySQLConnection:
                 order_id
             FROM 
                 OrderCalls
-            ORDER BY ordercall_time DESC
+            ORDER BY call_time DESC
             LIMIT 1;
         """
         self.cursor.execute(sql_select)
