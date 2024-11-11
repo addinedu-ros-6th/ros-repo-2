@@ -7,83 +7,110 @@ print("Current Directory:", current_dir)
 relative_path = os.path.join(current_dir, '..','..')  # 상위 폴더로 이동
 
 sys.path.append(relative_path)
+import threading
+import time
 from etc.db.DBmanager import MySQLConnection
 
+class Vendor():
+    def __init__(self):
+        self.dbm = MySQLConnection.getInstance()
+        self.dbm.db_connect("localhost", 3306, "amrbase", "root", "tjdudghks1")
 
-def db_connection(data):
-    dbm = MySQLConnection.getInstance()
-    dbm.db_connect("localhost", 3306, "amrbase", "root", "tjdudghks1")
-
-    if "get_order_menu" in data:
-        data = data.split('/')
-        results = dbm.get_order_menu(data[1])
-
-    elif "get_order_detail_menu" in data:
-        data = data.split('/')   
-        results = dbm.get_order_detail_menu(data[1],data[2])
-
-    elif "select_store_menu_id"  in data:
-        order_id = None 
-
-        split_data = data.split('/')
+        self.vendor_manager = threading.Thread(target=self.state_confirm)
+        self.vendor_manager.start()  
+    def db_connection(self, data):
         
-        receive_data = split_data[1]
-        
-        list_result=ast.literal_eval(receive_data)
-        
-        for index ,value in enumerate(list_result):
-            print("주문내역 : ",value)
-            if index==0:
-                table_num = value
+
+        if "get_order_menu" in data:
+            data = data.split('/')
+            results = self.dbm.get_order_menu(data[1])
+
+        elif "get_order_detail_menu" in data:
+            data = data.split('/')   
+            results = self.dbm.get_order_detail_menu(data[1],data[2])
+
+        elif "select_store_menu_id"  in data:
+            order_id = None 
+
+            split_data = data.split('/')
+
+            receive_data = split_data[1]
+
+            list_result=ast.literal_eval(receive_data)
+
+            for index ,value in enumerate(list_result):
+                if index==0:
+                    table_num = value
+
+                    continue
                 
-                continue
-            
-            quantity = value[2]
-            
-            menu_id = dbm.select_store_menu_id(value[0],value[1])
-            print("테이블 넘버 : ", table_num)
-            print("수량 : ", quantity)
-            if order_id is None:
-                order_id = dbm.insert_ordercalls(menu_id[0][0])
+                quantity = value[2]
 
-            dbm.insert_orderdetails(order_id[0][0], table_num, quantity)
-            
+                menu_id = self.dbm.select_store_menu_id(value[0],value[1])
+                menu_id = menu_id[0][0]
+                print("테이블 넘버 : ", table_num)
+                print("수량 : ", quantity)
+                print("메뉴아이디 : ", menu_id)
+                if order_id is None:
+                    order_id=self.dbm.insert_ordercalls(menu_id)
+                final_order_id = order_id
 
-    dbm.disconnection()
-    return results    
+                self.dbm.insert_orderdetails(final_order_id,menu_id, quantity)
+
+        self.dbm.disconnection()
+        return results    
+
+    def state_confirm(self):
+        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server.bind(('localhost', 9990))
+        server.listen(5)
+        print("서버가 시작되었습니다. 연결을 기다립니다...")
+
+        while True:
+            try:
+                client_socket, addr = server.accept()
+                if client_socket:
+                    print(f"연결됨: {addr}")
+                    request_data = client_socket.recv(1024)
+                    
+                    data = request_data.decode('utf-8')
+                    result_data = f"{data}/서빙중"
+                    time.sleep(5)
+                    response = result_data
+                    client_socket.send(response.encode('utf-8'))
+                   
+
+            except Exception as e:
+                pass
+            finally:
+                client_socket.close()
+
+    def handle_client_connection(self,client_socket):
+
+        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        server.bind(('localhost', 9990))
+        server.listen(5)
+        print("서버가 시작되었습니다. 연결을 기다립니다...")
+
+        while True:
+            try:
+                client_socket, addr = server.accept()
+                if client_socket:
+                    print(f"연결됨: {addr}")
+                    request_data = client_socket.recv(1024)
+
+                    data = request_data.decode('utf-8')
+                    data_result=self.db_connection(data)
+
+            except Exception as e:
+                pass
+            finally:
+                client_socket.close()
 
 
-def handle_client_connection(client_socket):
-    request_data = client_socket.recv(1024)
-    
-    data = request_data.decode('utf-8')
-    data_result=db_connection(data)
 
-    # 결과를 문자열로 변환하여 클라이언트에 전송
-    response = str(data_result)
-    client_socket.send(response.encode('utf-8'))
-    client_socket.close()
-
-def main():
-   
-
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind(('localhost', 9990))
-    server.listen(5)
-    print("서버가 시작되었습니다. 연결을 기다립니다...")
-
-    while True:
-        try:
-            client_socket, addr = server.accept()
-            if client_socket:
-                print(f"연결됨: {addr}")
-                handle_client_connection(client_socket)
-
-        except Exception as e:
-            pass
-        finally:
-            client_socket.close()
-             
-            
 if __name__ == "__main__":
-    main() 
+    Vendor()
+
+

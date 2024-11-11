@@ -38,8 +38,8 @@ class ClientFormat(Node):
         self.client_socket.bind((self.host, self.port))
         # 서버에 연결
         #client_socket.connect((self.host, self.port))
-        data = b""
-        payload_size = struct.calcsize("Q")
+        #data = b""
+        #payload_size = struct.calcsize("Q")
         
         while True:
         #    # 패킷 수신

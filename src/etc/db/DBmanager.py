@@ -110,7 +110,6 @@ class MySQLConnection:
         self.cursor.execute(sql_insert, (table_id, current_time))
 
         self.connection.commit()
-        print("오더데이터 삽입 완료")
 
         sql_select = f"""
             SELECT 
@@ -122,21 +121,38 @@ class MySQLConnection:
         """
         self.cursor.execute(sql_select)
         get_results = self.cursor.fetchall()
-        print("get orderid : ", get_results)
-        return get_results
-        
+        order_id = get_results[0][0]
+        return order_id
+    
+    def insert_orderdetails(self,order_id, menu_id, quantity):
 
-    def insert_orderdetails(self, order_id,menu_id, quantity):
-        current_time = datetime.now()
-        print("디테일 들어가냐?")
         sql=f"""
-        INSERT INTO OrderCalls (table_id, ordercall_time)
+        INSERT INTO OrderDetails (order_id, menu_id, quantity)
         VALUES (%s, %s,%s);
         """
+
         self.cursor.execute(sql, (order_id, menu_id,quantity))
 
         self.connection.commit() 
-        print("데이터 삽입 완료")
+
+    def insert_servicecall(self,table_id):
+        current_time = datetime.now()
+
+        sql_select = f"""
+            SELECT 
+                foodcourt_id
+            FROM 
+                Servee_FoodCourt
+        """
+        self.cursor.execute(sql_select)
+        get_results = self.cursor.fetchall()
+        foodcourt_id = get_results[0][0]
+        sql=f"""
+        INSERT INTO AdminCalls (foodcourt_id,table_id, time)
+        VALUES (%s, %s,%s);
+        """
+        self.cursor.execute(sql, (int(foodcourt_id), table_id, current_time))
+        self.connection.commit()     
 
     def update_data(self, table, columns, params, where = None):
         set_clauses = [f"{column} = %s" for column in columns]
@@ -172,8 +188,8 @@ def main():
     dbm = MySQLConnection.getInstance()
     dbm.db_connect("localhost", 3306, "amrbase", "root", "tjdudghks1")
     
-    ss=dbm.select_store_menu_id('짜장의민족','짜장면')
-    print(ss)
+    dbm.insert_servicecall(1)
+    
 
 if __name__ == "__main__":
     main()
