@@ -57,7 +57,7 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <property name="elideMode">
      <enum>Qt::ElideNone</enum>
@@ -76,7 +76,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>짜장의민족</string>
+       <string>마파궁전</string>
       </property>
      </widget>
      <widget class="QPushButton" name="vendor_2_button">
@@ -89,7 +89,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>역대급짬뽕</string>
+       <string>차이니즈 키친</string>
       </property>
      </widget>
      <widget class="QScrollArea" name="scrollArea_1">
@@ -184,7 +184,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>나폴리맛피아</string>
+       <string>올리브 비스트로</string>
       </property>
      </widget>
      <widget class="QScrollArea" name="scrollArea_3">
@@ -237,19 +237,6 @@
         </rect>
        </property>
       </widget>
-     </widget>
-     <widget class="QPushButton" name="vendor_1_button_4">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>10</y>
-        <width>141</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>김밥지옥</string>
-      </property>
      </widget>
     </widget>
    </widget>

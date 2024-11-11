@@ -73,7 +73,7 @@ class MySQLConnection:
     def get_order_detail_menu(self, store_id, menu_id):
         sql= f"""
         SELECT 
-            Stores.store_name , Menus.name, Menus.price
+            Stores.name , Menus.name, Menus.price
         FROM 
             Menus
         RIGHT JOIN 
@@ -95,7 +95,7 @@ class MySQLConnection:
             JOIN 
                 `Stores` s ON m.store_id = s.store_id
             WHERE 
-                m.name = '{menu_name}' AND s.store_name = '{store_name}'
+                m.name = '{menu_name}' AND s.name = '{store_name}'
         """
         self.cursor.execute(sql)
         get_results = self.cursor.fetchall()

@@ -41,7 +41,7 @@ from functools import partial
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi("/home/yhseo/dev_ws/git_ws/ros-repo-2/src/servee_gui/customer_gui/servi_customer.ui",self)
+        uic.loadUi("./src/servee_gui/customer_gui/servi_customer.ui",self)
 
         self.setWindowTitle("SERVI GUI")
         self.cancel_index =0
