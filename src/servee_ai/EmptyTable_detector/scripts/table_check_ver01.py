@@ -1,3 +1,6 @@
+# table_check_ver01.py 파일을 실행하여 로컬 웹캠에서 실시간 테이블 상태를 읽고,
+# 그 상태를 table_status 토픽으로 게시. 이 노드가 테이블 상태를 감지하고 전송하는 메인 파일
+
 import cv2
 import numpy as np
 import tensorflow as tf
