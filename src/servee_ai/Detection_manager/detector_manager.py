@@ -18,42 +18,72 @@ sys.path.append(relative_path)
 
 from network.detector_manager_ROS_client_format import ClientFormat
 from network.detector_manager_ROS_server_format import ServerFormat
+
 data_queue_robot1 = queue.Queue()
 data_queue_robot2 = queue.Queue()
+data_queue_robot3 = queue.Queue()
+
 
 class ROS2SocketNode(Node):
     def __init__(self):
         super().__init__('ros2_detector_manager_node')
-        self.robot1_topic = "robot1"
-        self.robot2_topic = "robot2"
-        self.client_robot1 = ClientFormat("localhost", 9999, data_queue_robot1)
-        self.server_robot1 = ServerFormat("localhost", 9998, data_queue_robot1)
-        
-        self.client_robot2 = ClientFormat("localhost", 9996, data_queue_robot2)
-        self.server_robot2 = ServerFormat("localhost", 9997, data_queue_robot2)
+        #토픽 설정
+        self.robot1_topic = "robot1" # 서빙로봇1 의 토픽
+        self.robot2_topic = "robot2" # 서빙로봇2 의 토픽
+        self.robot3_topic = "robot3" # 회수로봇1 의 토픽
 
+        # 로봇 클라이언트 및 서버 인스턴스 추가
+        # 각 로봇은 ClientFormat을 통해 비디오 데이터를 받고, ServerFormat을 통해 데이터를 전송
+        # 로봇마다 고유한 포트가 할당
+        self.client_robot1 = ClientFormat("localhost", 9999, data_queue_robot1) #9999 포트로 데이터를 받고
+        self.server_robot1 = ServerFormat("localhost", 9998, data_queue_robot1) #9998 포트로 데이터를 보냄
+        
+        self.client_robot2 = ClientFormat("localhost", 9997, data_queue_robot2)
+        self.server_robot2 = ServerFormat("localhost", 9996, data_queue_robot2)
+
+        self.client_robot3 = ClientFormat("localhost", 9995, data_queue_robot3)
+        self.server_robot3 = ServerFormat("localhost", 9994, data_queue_robot3)
+
+        #토픽 구독 설정
         self.subscription_robot1= self.create_subscription(
             String,
             self.robot1_topic,
             self.listener_callback_robot1,
             10 # 큐 크기
         )
+
         self.subscription_robot2= self.create_subscription(
             String,
             self.robot2_topic,
             self.listener_callback_robot2,
             10 # 큐 크기
         )
+
+        self.robot3_topic = "robot3"
+        self.subscription_robot3 = self.create_subscription(
+            String,
+            self.robot3_topic,
+            self.listener_callback_robot3,
+            10
+        )
+
+
         self.subscription_robot1
         self.subscription_robot2  
+        self.subscription_robot3  
 
         # 소켓 서버 스레드 시작
-        self.socket_thread = threading.Thread(target=self.server_test)
-        self.socket_thread.start()
+        self.socket_thread_1 = threading.Thread(target=self.robot1_send_video)
+        self.socket_thread_1.start()
 
         time.sleep(1)
-        self.socket_thread_1 = threading.Thread(target=self.video_test)
-        self.socket_thread_1.start()
+        self.socket_thread_2 = threading.Thread(target=self.robot2_send_video)
+        self.socket_thread_2.start()
+
+        time.sleep(1)
+        self.socket_thread_3 = threading.Thread(target=self.robot3_send_video)
+        self.socket_thread_3.start()
+
 
         #로봇1번의 쓰레드
         time.sleep(1)
@@ -72,31 +102,42 @@ class ROS2SocketNode(Node):
         self.robot2_server_thread = threading.Thread(target=self.server_robot2.server_start)
         self.robot2_server_thread.start()
 
+        #로봇3번의 쓰레드
+        self.robot3_client_thread = threading.Thread(target=self.client_robot3.client_start)
+        self.robot3_client_thread.start()
 
+        time.sleep(1)
+        self.robot3_server_thread = threading.Thread(target=self.server_robot3.server_start)
+        self.robot3_server_thread.start()
+
+
+
+    #콜백 함수 추가
+    #각 로봇의 토픽을 구독하고, 수신된 메시지는 콜백 함수를 통해 출력
     def listener_callback_robot1(self, msg):
         # 수신한 메시지 출력
         self.get_logger().info(f'Received: "{msg.data}" topic: {self.robot1_topic}')
 
     def listener_callback_robot2(self, msg):
         # 수신한 메시지 출력
-        self.get_logger().info(f'Received: "{msg.data}" topic: {self.robot2_topic}')          
+        self.get_logger().info(f'Received: "{msg.data}" topic: {self.robot2_topic}')       
 
-    def server_test(self):
-        server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    def listener_callback_robot3(self, msg):
+        # 수신한 메시지 출력
+        self.get_logger().info(f'Received: "{msg.data}" topic: {self.robot3_topic}')
+   
+
+    def robot1_send_video(self):
+        robot1_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        robot1_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         host = 'localhost'  # Raspberry Pi의 IP 주소
         port = 9999
 
         # 소켓 바인딩 및 수신 대기 설정
-        server_socket.bind((host, port))
-        #server_socket.listen(1)
+        robot1_socket.bind((host, port))
         print(f"Listening on {host}:{port}...")
 
-        # 클라이언트 연결 수락
-        #client_socket, addr = server_socket.accept()
-        #print(f"Connection from {addr} established.")
-
-        # 카메라 연결
+        # 카메라 연결 로봇 1
         cap = cv2.VideoCapture(0)
 
         while cap.isOpened():
@@ -110,40 +151,54 @@ class ROS2SocketNode(Node):
             # JPG 형식으로 이미지 압축 (품질 설정: 90%)
             encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 90]
             result, frame_encoded = cv2.imencode('.jpg', frame_resized, encode_param)
-            
-            # 압축된 이미지를 직렬화하여 전송
-            #data = pickle.dumps(frame_encoded)
-            #message = struct.pack("Q", len(data)) + data
-            #server_socket.sendto(message,(host, port))
-            server_socket.sendto(frame_encoded,(host, port))
-            #frame = cv2.imdecode(frame_encoded, cv2.IMREAD_COLOR)
-#
-            #if frame is not None:
-            #    # Display the frame on the client side
-            #    cv2.imshow('Client - Receiving Video', frame)
-            #    
-            #    # Exit on 'q' key press
-            #    if cv2.waitKey(1) & 0xFF == ord('q'):
-            #        break
+
+            robot1_socket.sendto(frame_encoded,(host, port))
 
         # 연결 종료
         cap.release()
-        server_socket.close()
+        robot1_socket.close()
 
-    def video_test(self):
-        video_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        video_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    def robot2_send_video(self):
+        robot2_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        robot2_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         host = 'localhost'  # Raspberry Pi의 IP 주소
         port = 9996
 
         # 소켓 바인딩 및 수신 대기 설정
-        video_socket.bind((host, port))
-        #video_socket.listen(1)
+        robot2_socket.bind((host, port))
         print(f"Listening on {host}:{port}...")
 
-        # 클라이언트 연결 수락
-        #v_client_socket, addr = video_socket.accept()
-        #print(f"Connection from {addr} established.")
+        # 카메라 연결 로봇 2
+        cap = cv2.VideoCapture(1)
+
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if not ret:
+                break
+            
+            # 이미지 크기 조정 (50% 크기로 축소)
+            frame_resized = cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
+            
+            # JPG 형식으로 이미지 압축 (품질 설정: 90%)
+            encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 90]
+            result, frame_encoded = cv2.imencode('.jpg', frame_resized, encode_param)
+           
+            robot2_socket.sendto(frame_encoded.tobytes(),(host, port))
+
+        # 연결 종료
+        cap.release()
+        #v_client_socket.close()
+        robot2_socket.close()    
+
+    def robot3_send_video(self):
+        robot3_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        robot3_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        host = 'localhost'  # Raspberry Pi의 IP 주소
+        port = 9994  # 로봇3의 비디오 전송 포트
+
+        # 소켓 바인딩 및 수신 대기 설정
+        robot3_socket.bind((host, port))
+        print(f"Listening on {host}:{port}...")
 
         # 카메라 연결
         cap = cv2.VideoCapture(2)
@@ -161,36 +216,40 @@ class ROS2SocketNode(Node):
             result, frame_encoded = cv2.imencode('.jpg', frame_resized, encode_param)
             
             # 압축된 이미지를 직렬화하여 전송
-            #data = pickle.dumps(frame_encoded)
-            #message = struct.pack("Q", len(data)) + data
-           
-            video_socket.sendto(frame_encoded.tobytes(),(host, port))
+            robot3_socket.sendto(frame_encoded.tobytes(), (host, port))
 
         # 연결 종료
         cap.release()
-        #v_client_socket.close()
-        video_socket.close()    
+        robot3_socket.close()
+
 
 def main(args=None):
     rclpy.init(args=args)
     node = ROS2SocketNode()
 
     try:
-
         rclpy.spin(node)
        
     except KeyboardInterrupt:
         pass
     finally:
-        node.socket_thread.join()
-        node.socket_thread_1.join()   # 올바른 쓰레드 종료 대기
+        node.socket_thread_1.join()
+        node.socket_thread_2.join()   
+        node.socket_thread_3.join()# 올바른 쓰레드 종료 대기
         node.robot1_client_thread.join()
         node.robot1_server_thread.join()
         node.robot2_client_thread.join()
         node.robot2_server_thread.join()
+        node.robot3_client_thread.join()
+        node.robot3_server_thread.join()
         node.destroy_node()
         rclpy.shutdown()       
 
-
 if __name__ == "__main__":
     main()
+
+# 실행 흐름
+# ROS2SocketNode 객체가 생성되면서 토픽 구독, 클라이언트 및 서버 설정, 비디오 전송 스레드가 동시에 시작됩니다.
+# 각 로봇의 비디오 전송 스레드는 독립적으로 비디오 데이터를 소켓을 통해 전송하며, ROS2 노드에서 구독하는 메시지를 로깅합니다.
+# main 함수는 ROS2 노드가 종료될 때 모든 스레드가 종료되도록 관리합니다.
+# 이 코드로 세 대의 로봇이 서로 독립적으로 데이터를 송수신하며 비디오 스트림을 전송할 수 있습니다.
