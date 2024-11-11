@@ -10,7 +10,8 @@ from rclpy.node import Node
 from std_msgs.msg import String
 
 # 학습된 모델 로드
-model = tf.keras.models.load_model('./servee_ai/EmptyTable_detector/scripts/table_check_model_ver01.keras')
+# model = tf.keras.models.load_model('./servee_ai/EmptyTable_detector/scripts/table_check_model_ver01.keras')
+model = tf.keras.models.load_model('/home/heechun/dev_ws/ros-repo-2/src/servee_ai/EmptyTable_detector/scripts/table_check_model_ver01.keras')
 
 # 테이블 ROI 설정: (x, y, width, height) 형식으로 4개의 테이블 지정
 table_rois = {
@@ -88,3 +89,11 @@ if __name__ == '__main__':
 # ROS2 노드 설정: TableCheckNode 클래스를 추가하여 테이블 상태를 주기적으로 감지하고, 결과를 table_status라는 ROS2 토픽으로 전송
 # 타이머 콜백: timer_callback 함수를 통해 주기적으로 각 테이블 상태를 예측하고, 해당 상태를 ROS2 메시지로 게시
 # 웹캠 연결 및 프레임 표시: 개별 노트북의 웹캠을 통해 실시간으로 프레임을 가져오며, 상태를 GUI에 표시하고 ESC 키를 통해 종료할 수 있도록 구현
+
+# [INFO] [1731299198.417671473] [table_check_node]: Published: Table 1 Status: Not Empty
+# 1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 14ms/step
+# [INFO] [1731299198.456117654] [table_check_node]: Published: Table 2 Status: Not Empty
+# 1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 13ms/step
+# [INFO] [1731299198.494262766] [table_check_node]: Published: Table 3 Status: Not Empty
+# 1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 12ms/step
+# [INFO] [1731299198.533956621] [table_check_node]: Published: Table 4 Status: Not Empty
