@@ -114,6 +114,7 @@ class ROS2SocketNode(Node):
 
     #콜백 함수 추가
     #각 로봇의 토픽을 구독하고, 수신된 메시지는 콜백 함수를 통해 출력
+    # --> 이 부분 로봇에다가 구현
     def listener_callback_robot1(self, msg):
         # 수신한 메시지 출력
         self.get_logger().info(f'Received: "{msg.data}" topic: {self.robot1_topic}')
@@ -125,7 +126,7 @@ class ROS2SocketNode(Node):
     def listener_callback_robot3(self, msg):
         # 수신한 메시지 출력
         self.get_logger().info(f'Received: "{msg.data}" topic: {self.robot3_topic}')
-   
+   # --> 이 부분 로봇에다가 구현
 
     def robot1_send_video(self):
         robot1_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -162,7 +163,7 @@ class ROS2SocketNode(Node):
         robot2_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         robot2_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         host = 'localhost'  # Raspberry Pi의 IP 주소
-        port = 9996
+        port = 9997
 
         # 소켓 바인딩 및 수신 대기 설정
         robot2_socket.bind((host, port))
@@ -194,7 +195,7 @@ class ROS2SocketNode(Node):
         robot3_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         robot3_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         host = 'localhost'  # Raspberry Pi의 IP 주소
-        port = 9994  # 로봇3의 비디오 전송 포트
+        port = 9995  # 로봇3의 비디오 전송 포트
 
         # 소켓 바인딩 및 수신 대기 설정
         robot3_socket.bind((host, port))
