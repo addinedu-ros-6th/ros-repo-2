@@ -35,7 +35,10 @@ class WallAvoidance(Node):
 
         self.wall_collision_timer = self.create_timer(0.1, self.check_for_wall_collision)
 
-        self.vel_pub = self.create_publisher(Twist, '/base_controller/cmd_vel_unstamped', 10)
+        self.vel_pub = self.create_publisher(
+            Twist, 
+            '/base_controller/cmd_vel_unstamped', 
+            10)
     
     def __del__(self):  # 여기 없어도 되려나? 어쩌피 빠져나가면 주행으로 가잖나
         stop = Twist()
@@ -46,6 +49,7 @@ class WallAvoidance(Node):
     
     def pose_callback(self):
         try:
+            # 로봇 좌표
             self.robot1_pose = self.tf_buffer.lookup_transform('map', 'base_link', rclpy.time.Time())
         except Exception as e:
             self.get_logger().warn(f"Could not transform: {str(e)}")

@@ -32,8 +32,8 @@ class RobotRotate(Behaviour):
         
         # 추후에 파라미터로 뺄 것
         self.max_angular_speed = 0.25  
-        self.blackboard.odom_yaw_error = 0
-        self.odom_yaw_threshold = math.radians(1) 
+        self.blackboard.odom_yaw_error = 0.0
+        self.odom_yaw_threshold = math.radians(0.01) 
         self.absolute_yaw_threshold = math.radians(5) 
         self.smooth_turn_tolerance = math.radians(3)
         self.cmd_vel_publisher = self.node.create_publisher(Twist, '/base_controller/cmd_vel_unstamped', 10)
@@ -52,9 +52,8 @@ class RobotRotate(Behaviour):
             return Status.FAILURE
                
         
-        # odom으로 계산한 오차가 yaw_tolerance보다 작은지 확인.
-        # 허용 오차보다 작다면.
-        if abs(self.blackboard.odom_yaw_error) <= self.odom_yaw_threshold:
+        # waypoin인덱스가 변경될때만 절대좌표로 위치 확인
+        if abs(self.blackboard.odom_yaw_error) == 0.0:
             
             # 목표 방향으로 회전해야 하는 각도 계산
             target_yaw = self.calculate_target_angle()

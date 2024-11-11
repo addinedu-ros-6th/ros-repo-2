@@ -40,7 +40,6 @@ class MoveForward(Behaviour):
         # 현재 위치를 이전 위치로 업데이트
         self.prev_position = curr_position
         
-        
         cmd_msg = Twist()
         cmd_msg.linear.x = self.max_linear_speed
         self.cmd_vel_publisher.publish(cmd_msg)

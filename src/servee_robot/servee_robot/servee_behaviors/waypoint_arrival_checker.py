@@ -55,7 +55,7 @@ class WaypointArrivalChecker(Behaviour):
         else:
             # 다음 웨이포인트로
             self.blackboard.waypoint += 1
-            self.blackboard.odom_yaw_error = 0
+            self.blackboard.odom_yaw_error = 0.0
             self.blackboard.next_pose = self.path.poses[self.blackboard.waypoint]
             self.blackboard.target_distance = self.calculate_target_distance_absolute()
   
