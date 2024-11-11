@@ -3,7 +3,6 @@ import cv2
 import numpy as np
 import sys
 import time
-import mediapipe as mp
 import math
 import os
 
@@ -34,7 +33,10 @@ class ROS2SocketNode(Node):
         self.result=""
         self.robot_1_motion_client = ClientFormat(host="localhost",port=9998,topic="robot1",nodeName="robot1_pub_node")
        
-        self.robot_2_motion_client = ClientFormat(host="localhost",port=9997,topic="robot2",nodeName="robot2_pub_node")
+        self.robot_2_motion_client = ClientFormat(host="localhost",port=9996,topic="robot2",nodeName="robot2_pub_node")
+
+        self.robot_3_motion_client = ClientFormat(host="localhost",port=9994,topic="robot3",nodeName="robot3_pub_node")
+
 
         # 소켓 서버 스레드 시작
         robot1_thread = threading.Thread(target=self.robot_1_motion_client.client_start)
@@ -42,6 +44,9 @@ class ROS2SocketNode(Node):
         
         robot2_thread = threading.Thread(target=self.robot_2_motion_client.client_start)
         robot2_thread.start()
+
+        robot3_thread = threading.Thread(target=self.robot_3_motion_client.client_start)
+        robot3_thread.start()
 
 
 def main(args=None):
