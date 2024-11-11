@@ -464,6 +464,11 @@
       <string>상태</string>
      </property>
     </column>
+    <column>
+     <property name="text">
+      <string>order_id</string>
+     </property>
+    </column>
    </widget>
    <widget class="QLabel" name="label_payment_2">
     <property name="geometry">
@@ -510,8 +515,8 @@
    <widget class="QPushButton" name="button_service_call">
     <property name="geometry">
      <rect>
-      <x>570</x>
-      <y>10</y>
+      <x>220</x>
+      <y>560</y>
       <width>141</width>
       <height>51</height>
      </rect>
@@ -574,6 +579,41 @@
     <property name="text">
      <string>그릇 회수</string>
     </property>
+   </widget>
+   <widget class="QComboBox" name="table_comboBox">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>10</y>
+      <width>111</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>테이블선택</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>테이블 1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>테이블 2</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>테이블 3</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>테이블 4</string>
+     </property>
+    </item>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
