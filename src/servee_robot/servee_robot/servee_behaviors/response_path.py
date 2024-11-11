@@ -1,4 +1,6 @@
 from typing import Any
+
+import numpy as np
 from py_trees.behaviour import Behaviour
 from py_trees.common import Status, Access
 
@@ -17,6 +19,11 @@ class ResponsePath(Behaviour):
         self.blackboard = self.attach_blackboard_client(name=self.name)
         self.blackboard.register_key(key="path", access=Access.WRITE)
         self.blackboard.register_key(key="robot_state", access=Access.WRITE)
+        self.blackboard.register_key(key="waypoint", access=Access.WRITE)
+        self.blackboard.register_key(key="next_pose", access=Access.WRITE)
+        self.blackboard.register_key(key="next_pose", access=Access.READ)
+        self.blackboard.register_key(key="curr_pose", access=Access.READ)
+        self.blackboard.register_key(key="target_distance", access=Access.WRITE)
         
     def setup(self, **kwargs: Any) -> None:
         self.node: Node = kwargs['node']
@@ -36,8 +43,25 @@ class ResponsePath(Behaviour):
     def callback(self, msg):
         self.node.get_logger().debug(f"msg {msg}")
         self.blackboard.path = msg.path
+        
+        self.blackboard.waypoint = 0
+        self.blackboard.next_pose = msg.path.poses[self.blackboard.waypoint]
+        self.blackboard.target_distance = self.calculate_target_distance_absolute()
+        
+        
         self.blackboard.robot_state = "task"
         
+    def calculate_target_distance_absolute(self):
+        """
+        목적지와 현재 위치의 절대 좌표를 기준으로 거리를 계산한다.
+        """
+        goal_position = np.array([self.blackboard.next_pose.position.x, self.blackboard.next_pose.position.y])
+        curr_position = np.array([self.blackboard.curr_pose.position.x, self.blackboard.curr_pose.position.y])
+        
+        distance_vector = goal_position - curr_position
+        distance = np.linalg.norm(distance_vector) 
+        
+        return distance
                 
 
         
