@@ -15,13 +15,16 @@ class RobotRotate(Behaviour):
         super(RobotRotate, self).__init__(name)
         self.blackboard = self.attach_blackboard_client(name=self.name)
         self.blackboard.register_key(key="robot_state", access=Access.READ)
-        self.blackboard.register_key(key="goal_pose", access=Access.READ)
+        self.blackboard.register_key(key="next_pose", access=Access.READ)
         self.blackboard.register_key(key="curr_pose", access=Access.READ)
         self.blackboard.register_key(key="odom_pose", access=Access.READ)
         self.blackboard.register_key(key='path', access=Access.READ)
         self.blackboard.register_key(key='yaw', access=Access.READ)
         
         self.blackboard.register_key(key='waypoint', access=Access.READ)
+        
+        self.blackboard.register_key(key='odom_yaw_error', access=Access.READ)
+        self.blackboard.register_key(key='odom_yaw_error', access=Access.WRITE)
 
     def setup(self, **kwargs: Any) -> None:
         self.node: Node = kwargs['node']
@@ -29,10 +32,10 @@ class RobotRotate(Behaviour):
         
         # 추후에 파라미터로 뺄 것
         self.max_angular_speed = 0.25  
-        self.odom_yaw_error = 0.0
-        self.odom_yaw_threshold = math.radians(3) 
-        self.absolute_yaw_threshold = math.radians(10) 
-        
+        self.blackboard.odom_yaw_error = 0
+        self.odom_yaw_threshold = math.radians(1) 
+        self.absolute_yaw_threshold = math.radians(5) 
+        self.smooth_turn_tolerance = math.radians(3)
         self.cmd_vel_publisher = self.node.create_publisher(Twist, '/base_controller/cmd_vel_unstamped', 10)
         
         self.prev_time = None 
@@ -50,26 +53,27 @@ class RobotRotate(Behaviour):
                
         
         # odom으로 계산한 오차가 yaw_tolerance보다 작은지 확인.
-        if abs(self.odom_yaw_error) <= self.odom_yaw_threshold:
-            # 상대 좌표 관련 변수 초기화
-            self.reset_values()
+        # 허용 오차보다 작다면.
+        if abs(self.blackboard.odom_yaw_error) <= self.odom_yaw_threshold:
             
             # 목표 방향으로 회전해야 하는 각도 계산
             target_yaw = self.calculate_target_angle()
             yaw_error = target_yaw - self.blackboard.yaw
             yaw_error = (yaw_error + math.pi) % (2 * math.pi) - math.pi
-            self.node.get_logger().info(f"목표 방향과 내가 바라보는 방향의 차이 : {yaw_error}, waypoint:  {self.blackboard.waypoint}")
+            # self.node.get_logger().info(f"목표 방향과 내가 바라보는 방향의 차이 : {yaw_error}, waypoint:  {self.blackboard.waypoint}")
              
+            # 오차가 허용범위보다 큰 경우 
             if abs(yaw_error) >= self.absolute_yaw_threshold:
-                self.odom_yaw_error = yaw_error
-                # self.node.get_logger().info(f"절대 오차를 odom_yaw_error에 추가: {self.odom_yaw_error}")
+                self.blackboard.odom_yaw_error = yaw_error
+                self.node.get_logger().info(f"절대 오차를 odom_yaw_error에 추가: {self.blackboard.odom_yaw_error:.3f} way {self.blackboard.waypoint}")
                 return Status.FAILURE
 
             else:
                 # yaw 오차 없음. 
-                # self.node.get_logger().info(f"yaw 오차가 없다구? {self.odom_yaw_error}")
+                self.node.get_logger().info(f"yaw 오차가 없다구? {self.blackboard.odom_yaw_error:.3f} way {self.blackboard.waypoint}")
                 return Status.SUCCESS   
-                
+        
+        # 상대좌표로 계산한 값이 허용범위보다 크다면.        
         else:            
             # 회전하며 self.odom_yaw_error값 줄이기
             current_time = self.node.get_clock().now()
@@ -81,27 +85,33 @@ class RobotRotate(Behaviour):
             else:
                 dt = (current_time - self.prev_time).nanoseconds * 1e-9  # 초 단위로 변환
             
-            # 현재 yaw 값 계산
+            # 현재 odom yaw 값 계산
             curr_yaw = PoseUtils.get_yaw_from_quaternion(self.blackboard.odom_pose.orientation)
             
             if self.prev_yaw is not None:
                 yaw_difference = curr_yaw - self.prev_yaw
                 yaw_difference = (yaw_difference + math.pi) % (2 * math.pi) - math.pi
-                self.odom_yaw_error -= yaw_difference
-                self.node.get_logger().info(f"현재 odom yaw 오차 {self.odom_yaw_error}")
+                self.blackboard.odom_yaw_error -= yaw_difference
+                
+                # self.node.get_logger().info(f"현재 odom yaw 오차 {self.odom_yaw_error}")
             
 
                             
-            angular_speed = max(min(self.pid.compute(self.odom_yaw_error, dt), self.max_angular_speed), -self.max_angular_speed)
+            angular_speed = max(min(self.pid.compute(self.blackboard.odom_yaw_error, dt), self.max_angular_speed), -self.max_angular_speed)
             self.twist_publish(angular_speed)
-            
+                        
             self.prev_yaw = curr_yaw
             self.prev_time = current_time
             
-            return Status.FAILURE
+            
+            if abs(self.blackboard.odom_yaw_error) > self.smooth_turn_tolerance:
+                # self.node.get_logger().info(f"너무 큰 오차 {self.blackboard.odom_yaw_error:.3f} way {self.blackboard.waypoint}")
+                return Status.FAILURE
+            
+            else:
+                # self.node.get_logger().info(f"작은 오차 {self.blackboard.odom_yaw_error:.3f} way {self.blackboard.waypoint}")
+                return Status.SUCCESS
                 
-
-    
     
     def twist_publish(self, angular_speed):
         cmd_msg = Twist()
@@ -112,12 +122,12 @@ class RobotRotate(Behaviour):
     def calculate_target_angle(self):
         curr_pose_x = self.blackboard.curr_pose.position.x
         curr_pose_y = self.blackboard.curr_pose.position.y
-        goal_pose_x = self.blackboard.goal_pose.position.x
-        goal_pose_y = self.blackboard.goal_pose.position.y
+        next_pose_x = self.blackboard.next_pose.position.x
+        next_pose_y = self.blackboard.next_pose.position.y
         
-        error = math.atan2(goal_pose_y - curr_pose_y, goal_pose_x - curr_pose_x)
+        error = math.atan2(next_pose_y - curr_pose_y, next_pose_x - curr_pose_x)
         
-        self.node.get_logger().info(f"현재 위치: {self.blackboard.curr_pose} 목표위치: {self.blackboard.goal_pose} 오차 각도: {error}")
+        # self.node.get_logger().info(f"현재 위치: {self.blackboard.curr_pose} 목표위치: {self.blackboard.next_pose} 바라봐야 하는 방향(ra): {error}")
         
         return error
         

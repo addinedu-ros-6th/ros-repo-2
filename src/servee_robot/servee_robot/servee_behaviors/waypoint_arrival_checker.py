@@ -12,8 +12,8 @@ class WaypointArrivalChecker(Behaviour):
     def __init__(self, name: str):
         super(WaypointArrivalChecker, self).__init__(name)
         self.blackboard = self.attach_blackboard_client(name=self.name)
-        self.blackboard.register_key(key="goal_pose", access=Access.READ)
-        self.blackboard.register_key(key="goal_pose", access=Access.WRITE)
+        self.blackboard.register_key(key="next_pose", access=Access.READ)
+        self.blackboard.register_key(key="next_pose", access=Access.WRITE)
         self.blackboard.register_key(key="odom_pose", access=Access.READ)
         self.blackboard.register_key(key="curr_pose", access=Access.READ)
         
@@ -26,15 +26,17 @@ class WaypointArrivalChecker(Behaviour):
         self.blackboard.register_key(key="target_distance", access=Access.WRITE)
         
         self.blackboard.register_key(key="path", access=Access.READ)
+        self.blackboard.register_key(key='odom_yaw_error', access=Access.WRITE)
+        
+        
         
         self.blackboard.target_distance = 0.0
         self.blackboard.waypoint = -1
-        self.blackboard.target_distance = 0.0
         self.blackboard.robot_state = "idle"
         
     def setup(self, **kwargs: Any) -> None:
         self.node = kwargs['node']
-        self.tolerance_distance = 0.1
+        self.tolerance_distance = 0.2
         
         self.reset_values()
         
@@ -42,22 +44,24 @@ class WaypointArrivalChecker(Behaviour):
         self.blackboard.waypoint = 0
         self.blackboard.target_distance = 0.0
         self.blackboard.robot_state = "idle"
+        self.path = []
 
     def update_next_waypoint_info(self):
-        self.blackboard.waypoint += 1
         
-        if self.blackboard.waypoint>= len(self.path.poses): 
+        if self.blackboard.waypoint>= len(self.path.poses) -1: 
             # Path 완료
             self.reset_values()
             
         else:
             # 다음 웨이포인트로
-            self.blackboard.goal_pose = self.path.poses[self.blackboard.waypoint]
+            self.blackboard.waypoint += 1
+            self.blackboard.odom_yaw_error = 0
+            self.blackboard.next_pose = self.path.poses[self.blackboard.waypoint]
             self.blackboard.target_distance = self.calculate_target_distance_absolute()
-            
+  
             
     def update(self) -> Status:
-        
+    
         # 경로가 없는 경우
         if self.blackboard.exists('path') == False:
             return Status.FAILURE
@@ -66,7 +70,8 @@ class WaypointArrivalChecker(Behaviour):
         if self.blackboard.robot_state not in ['task', 'home']:
             return Status.FAILURE
             
-            
+        self.path = self.blackboard.path
+        
         # 로컬좌표로 계산된 타겟과의 거리과 오차 허용 범위 안이라면 
         if self.blackboard.target_distance <= self.tolerance_distance:
             
@@ -88,7 +93,7 @@ class WaypointArrivalChecker(Behaviour):
         """
         목적지와 현재 위치의 절대 좌표를 기준으로 거리를 계산한다.
         """
-        goal_position = np.array([self.blackboard.goal_pose.position.x, self.blackboard.goal_pose.position.y])
+        goal_position = np.array([self.blackboard.next_pose.position.x, self.blackboard.next_pose.position.y])
         curr_position = np.array([self.blackboard.curr_pose.position.x, self.blackboard.curr_pose.position.y])
         
         distance_vector = goal_position - curr_position

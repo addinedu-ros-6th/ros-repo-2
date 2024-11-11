@@ -52,10 +52,7 @@ class MoveForward(Behaviour):
         이동을 할 수 있는 상태인지 체크한다.
         1. 경로를 받아왔는지?
         2. robot_state가 move 인지?
-        """
-        if self.blackboard.exists('path') == False:
-            return False
-                
+        """               
         if self.blackboard.robot_state not in ["task", "home"]:
             return False
         
