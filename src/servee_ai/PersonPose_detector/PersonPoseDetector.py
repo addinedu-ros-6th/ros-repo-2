@@ -3,7 +3,6 @@ import cv2
 import numpy as np
 import sys
 import time
-import mediapipe as mp
 import math
 import os
 
