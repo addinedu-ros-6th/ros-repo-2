@@ -63,7 +63,7 @@ class MySQLConnection:
     
     #메뉴에서 메뉴 누르면 데이터 가져오기
     def get_order_menu(self, store_id):
-        sql= f"""SELECT menu_id,store_id,menu_name,menu_price,menu_image_location FROM Menus where store_id='{store_id}'"""
+        sql= f"""SELECT menu_id,store_id,name,price,menu_image_location FROM Menus where store_id='{store_id}'"""
         
         #print("select_data: ", sql)
         self.cursor.execute(sql)
@@ -73,7 +73,7 @@ class MySQLConnection:
     def get_order_detail_menu(self, store_id, menu_id):
         sql= f"""
         SELECT 
-            Stores.store_name , Menus.menu_name, Menus.menu_price
+            Stores.name , Menus.name, Menus.price
         FROM 
             Menus
         RIGHT JOIN 
@@ -95,7 +95,7 @@ class MySQLConnection:
             JOIN 
                 `Stores` s ON m.store_id = s.store_id
             WHERE 
-                m.menu_name = '{menu_name}' AND s.store_name = '{store_name}'
+                m.name = '{menu_name}' AND s.name = '{store_name}'
         """
         self.cursor.execute(sql)
         get_results = self.cursor.fetchall()

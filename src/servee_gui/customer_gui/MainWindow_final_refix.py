@@ -41,14 +41,14 @@ from functools import partial
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi("/home/yhseo/dev_ws/pyqt/Src/final_GUI/servi_customer.ui",self)
+        uic.loadUi("./src/servee_gui/customer_gui/servi_customer.ui",self)
 
         self.setWindowTitle("SERVI GUI")
         self.cancel_index =0
         self.result_price=0
 
         self.dbm = MySQLConnection.getInstance()
-        self.dbm.db_connect("localhost", 3306, "amrbase", "root", "tjdudghks1")
+        self.dbm.db_connect("localhost", 3306, "SERVEE_DB", "root", "tjdudghks1")
 
         self.client_thread = threading.Thread(target=self.update_state)
         self.client_thread.start()
@@ -56,7 +56,6 @@ class MainWindow(QMainWindow):
         self.scrollArea_1.setVisible(True)
         self.scrollArea_2.setVisible(False)
         self.scrollArea_3.setVisible(True)
-
 
 
         self.menu_list_make('scrollArea_1',1)
@@ -73,7 +72,10 @@ class MainWindow(QMainWindow):
         self.button_payment.clicked.connect(self.payment_alarm)
 
         self.button_service_call.clicked.connect(self.service_alarm)
-        #self.button_retrieve.clicked.connect(self.retrieve_alarm)
+        self.order_tableWidget.setColumnHidden(5, True)
+        self.button_retrieve.clicked.connect(self.retrieve_alarm)
+
+        self.button_retrieve.setEnabled(False)
 
         self.shopping_tableWidget.horizontalHeader().setStretchLastSection(True)  # 마지막 열이 남은 공간을 차지하도록 설정
         self.order_tableWidget.horizontalHeader().setStretchLastSection(True)
@@ -133,7 +135,7 @@ class MainWindow(QMainWindow):
 
                 text_label =QtWidgets.QLabel(f"{value[2]} : {value[3]}", self)  # 버튼 아래에s표시할 텍스트
                 text_label.setAlignment(Qt.AlignCenter) 
-                text_label.setAttribute(Qt.WA_TransparentForMouseEvents) 
+                text_label.setAttribute(Qt.WA_TransparentForMouseEvents)
 
                 if(index /3 ==0):
                     layout.addWidget(self.button,int(index /3),int(index%3))
@@ -267,6 +269,13 @@ class MainWindow(QMainWindow):
             else:
                 print("사용자가 NO를 선택했습니다.")
 
+    def retrieve_alarm(self):
+        msg = QMessageBox()     
+        msg.setIcon(QMessageBox.Information) 
+        msg.setText("그릇 회수 호출 하시겠습니까?")  # 메시지 텍스트 설정
+        msg.setWindowTitle("회수")  # 창 제목 설정
+        msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+
     def service_alarm(self):
         # 알람 메시지 박스 생성
         msg = QMessageBox()
@@ -282,6 +291,7 @@ class MainWindow(QMainWindow):
             print("사용자가 NO를 선택했습니다.")            
 
     def confirm_payment(self):
+        
         row_count = self.shopping_tableWidget.rowCount()
         column_count = self.shopping_tableWidget.columnCount()
         order_id = self.dbm.insert_ordercalls(self.table_num)
@@ -358,8 +368,18 @@ class MainWindow(QMainWindow):
 
     def update_ordertable(self,results):
         print(results)
-        row_count = self.shopping_tableWidget.rowCount()
-        column_count = self.shopping_tableWidget.columnCount()
+        
+        order_id = results.split('/')[0]
+        call_state = results.split('/')[1]
+        row_count = self.order_tableWidget.rowCount()
+        column_count = self.order_tableWidget.columnCount()
+
+        for row in range(row_count):
+            item = self.order_tableWidget.item(row, column_count-1).text()
+            print("item : ",item)
+            print("order_id : ",order_id)
+            if(item == order_id):
+                self.order_tableWidget.setItem(row, 4, QTableWidgetItem(call_state))
 
     def closeEvent(self, event):
             # 윈도우 종료 시 데이터베이스 연결 종료
