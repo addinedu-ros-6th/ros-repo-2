@@ -154,6 +154,9 @@ class MySQLConnection:
         self.cursor.execute(sql, (int(foodcourt_id), table_id, current_time))
         self.connection.commit()     
 
+    def insert_log(self, table_id):
+        print("일단 보류")
+
     def update_data(self, table, columns, params, where = None):
         set_clauses = [f"{column} = %s" for column in columns]
         set_clause_str = ', '.join(set_clauses)
