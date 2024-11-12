@@ -70,6 +70,31 @@ class MySQLConnection:
         get_results = self.cursor.fetchall()
         return get_results
     
+    def get_order_details(self, order_id):
+        sql= f"""
+        SELECT 
+            Menus.name,
+            od.quantity,
+            oc.call_time
+        FROM 
+            OrderCalls oc
+        JOIN 
+            OrderDetails od ON oc.order_id = od.order_id
+        JOIN 
+            Menus ON od.menu_id = Menus.menu_id
+        WHERE 
+            oc.order_id = '{order_id}'"""
+        
+        #print("select_data: ", sql)
+        cursor = self.connection.cursor()  # 새로운 커서 생성
+        try:
+            cursor.execute(sql)  # 파라미터 전달
+            get_results = cursor.fetchall()  # 결과를 모두 가져옴
+            return get_results
+        finally:
+            cursor.close()  
+        
+    
     def get_order_detail_menu(self, store_id, menu_id):
         sql= f"""
         SELECT 
@@ -189,10 +214,10 @@ class MySQLConnection:
 #    db.close_connection()
 def main():
     dbm = MySQLConnection.getInstance()
-    dbm.db_connect("localhost", 3306, "amrbase", "root", "tjdudghks1")
+    dbm.db_connect("localhost", 3306, "SERVEE_DB", "root", "tjdudghks1")
     
-    dbm.insert_servicecall(1)
-    
+    test= dbm.get_order_details(24)
+    print(test)
 
 if __name__ == "__main__":
     main()

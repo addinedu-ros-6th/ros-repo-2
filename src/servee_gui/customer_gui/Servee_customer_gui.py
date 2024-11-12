@@ -46,12 +46,14 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("SERVEE GUI")
         self.cancel_index =0
         self.result_price=0
+        self.tcp_port = 9993
+        self.tcp_ip = "192.168.0.130"
 
         self.dbm = MySQLConnection.getInstance()
-        self.dbm.db_connect("192.168.0.130", 3306, "SERVEE_DB", "yhc", "1234")
+        self.dbm.db_connect(self.tcp_ip , 3306, "SERVEE_DB", "yhc", "1234")
 
-        self.client_thread = threading.Thread(target=self.update_state)
-        self.client_thread.start()
+        #self.client_thread = threading.Thread(target=self.update_state)
+        #self.client_thread.start()
 
         self.scrollArea_1.setVisible(True)
         self.scrollArea_2.setVisible(False)
@@ -67,6 +69,9 @@ class MainWindow(QMainWindow):
         self.vendor_2_button.clicked.connect(self.china_scroallArea_2_show)
         self.vendor_3_button.clicked.connect(self.italy_scroallArea_3_show)
 
+        self.selected_item = self.table_comboBox.currentText()
+        self.selected_item  = self.selected_item .split(' ')
+        self.table_num = self.selected_item [1]
         self.table_comboBox.currentIndexChanged.connect(self.on_combobox_changed)
           
         
@@ -91,7 +96,7 @@ class MainWindow(QMainWindow):
     def data_select_receive(self, data):
         try:
             client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            client.connect(('localhost', 9990))
+            client.connect((self.tcp_ip, self.port))
             
             # 정수 전송
             client.send(str(data).encode('utf-8'))
@@ -344,7 +349,7 @@ class MainWindow(QMainWindow):
 
         self.label_total_price.setText((f"{str(self.result_price )}원"))
         self.label_predict_price.setText(f"0원")
-        
+
         #vendor manager와 통신 하기
         self.client_thread = threading.Thread(target=self.update_state, args=(order_id,))
         self.client_thread.start()
@@ -353,8 +358,8 @@ class MainWindow(QMainWindow):
     def update_state(self, order_id):
         try:
             client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            client.connect(('localhost', 9990))
-            
+            client.connect((self.tcp_ip, self.tcp_port))
+
             # 데이터 전송
             client.send(str(order_id).encode('utf-8'))
             # 서버로부터 응답 수신
@@ -365,7 +370,7 @@ class MainWindow(QMainWindow):
             pass
         finally:
             client.close()
-        return results
+        
 
     def update_ordertable(self,results):
         print(results)
