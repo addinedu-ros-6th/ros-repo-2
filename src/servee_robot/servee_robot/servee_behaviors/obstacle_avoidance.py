@@ -7,6 +7,8 @@ from py_trees.common import Status, Access
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
 
+import numpy as np
+
 
 class ObstacleAvoidanceMover(Behaviour):
     def __init__(self, name: str):
@@ -49,10 +51,11 @@ class ObstacleAvoidanceMover(Behaviour):
         num_segments = 4
         min_distances = [float('inf')] * num_segments
 
-        start_angle = 162  # 97
-        angle_step =  num_readings // num_segments
+        start_angle = 135  # 97
+        # angle_step =  num_readings // num_segments
+        angle_step = 360 // num_segments
         
-       
+        ranges_arr = np.array(ranges)
 
         for i in range(num_segments):
             # 각 세그먼트의 시작 각도와 인덱스 계산
@@ -61,21 +64,25 @@ class ObstacleAvoidanceMover(Behaviour):
             end_index = int(((angle + angle_step) / 360) * num_readings)
             
             # 해당 세그먼트 범위 가져오기
-            segment = ranges[start_index:end_index]
+            segment = ranges_arr[start_index:end_index]
             
             # 0.0을 제외한 유효한 거리 값만 필터링
-            valid_distances = [dist for dist in segment if dist > 0.0]
+            # valid_distances = [dist for dist in segment if dist > 0.0]
+            valid_indices = np.isfinite(segment)
+            valid_distances = segment[valid_indices]
+            self.node.get_logger().info(f"valid_distances: {valid_distances}")
             
             # 유효한 거리가 있으면 최소 거리 저장
-            if valid_distances:
+            if valid_distances.any():
                 min_distances[i] = min(valid_distances)
 
         # 회피 동작 수행
+        self.node.get_logger().info(f"min_distances: {min_distances}, type: {type(min_distances[3])}")
         if min(min_distances) < self.wall_threshold:
             closest_direction = min_distances.index(min(min_distances))
             self.node.get_logger().info(f"가까운 벽의 방향 인덱스: {closest_direction}")
             self.avoid(closest_direction)  # 인덱스를 전달하여 회피 동작 수행
-            self.node.get_logger().info(f"가장 가까운 인덱스: {ranges.index(min(ranges))}")
+            self.node.get_logger().info(f"가장 가까운 range 인덱스: {ranges.index(min(ranges))}, 값: {min(ranges)}")
 
         return Status.SUCCESS
 
