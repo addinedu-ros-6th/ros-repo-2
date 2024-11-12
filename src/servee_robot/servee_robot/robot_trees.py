@@ -9,12 +9,15 @@ from py_trees.common import ParallelPolicy
 from py_trees.composites import Parallel, Sequence, Selector
 from py_trees import decorators
 from py_trees import logging as log_tree
-
+from rclpy.qos import qos_profile_sensor_data
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
+import sensor_msgs.msg
 from servee_interfaces.msg import TaskGoalPose, ResPath
-from servee_robot.servee_behaviors import led_flasher, request_path, response_path, get_curr_pose, receive_goal, move_forward, robot_rotate, waypoint_arrival_checker
+from servee_robot.servee_behaviors import led_flasher, request_path, response_path, get_curr_pose, receive_goal, move_forward, robot_rotate, waypoint_arrival_checker, obstacle_avoidance, get_scan
 
+from rclpy.qos import QoSProfile
+from rclpy.qos import QoSReliabilityPolicy, QoSHistoryPolicy
 
 
 
@@ -75,9 +78,10 @@ def move_to_goal():
     waypoint_check = waypoint_arrival_checker.WaypointArrivalChecker("waypoint_check_node")
     rotate = robot_rotate.RobotRotate("robot_ratate_node")
     forward = move_forward.MoveForward("move_forward_node")
+    avoid = obstacle_avoidance.ObstacleAvoidanceMover("obstacle_avoidance_node")
     
     
-    move.add_children([waypoint_check, rotate, forward])
+    move.add_children([waypoint_check, rotate, avoid, forward])
     
     return move
 
@@ -145,18 +149,31 @@ def receive_topic2bb():
         threshold=30.0
     )
     
-    cur_pose = get_curr_pose.GetCurrPose("get_curr_pose_node")
     
     # 레이저 스캔
-    laser_scan2bb = py_trees_ros.subscribers.ToBlackboard(
-        name="Get Laser Scan",
-        topic_name="/scan",
-        topic_type=LaserScan,
-        blackboard_variables="laser_scan",
-        qos_profile=py_trees_ros.utilities.qos_profile_unlatched(),
-    )
+    # qos_profile_sensor_data = QoSProfile(
+    #         reliability=QoSReliabilityPolicy.BEST_EFFORT,
+    #         history=QoSHistoryPolicy.KEEP_LAST,
+    #         depth=10
+    #     )
+    
+    # laser_scan2bb = py_trees_ros.subscribers.ToBlackboard(
+    #     name="Get Laser Scan",
+    #     topic_name="/scan",
+    #     topic_type= sensor_msgs.msg.LaserScan,
+    #     blackboard_variables="scan",
+    #     qos_profile=qos_profile_sensor_data,
+    # )
+    
+    laser_scan2bb = get_scan.GetScan("get_scan_node")
+    
+    # 현재위치
+    cur_pose = get_curr_pose.GetCurrPose("get_curr_pose_node")
+    
+    # from sensor_msgs.msg import LaserScan
+    
     # laser_scan2bb
-    topic2bb.add_children([battery2bb, cur_pose])
+    topic2bb.add_children([battery2bb, cur_pose, laser_scan2bb])
     return topic2bb
 
 
