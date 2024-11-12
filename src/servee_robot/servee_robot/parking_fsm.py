@@ -231,6 +231,9 @@ class ParkingFSM(Node):
         time.sleep(0.1)
 
     def searching(self):
+        """
+        
+        """
         """Searching for the Aruco marker."""
         self.get_logger().info("Searching")
         while self.marker_detected:
