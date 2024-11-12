@@ -15,6 +15,9 @@ from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
 
 
 class GetScan(Behaviour):
+    """
+    lidar의 Scan데이터를 블랙보드의 key= scan에 저장한다. 
+    """
     def __init__(self, name:str):
         super(GetScan, self).__init__(name)
         self.blackboard = self.attach_blackboard_client(name=self.name)

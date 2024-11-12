@@ -74,6 +74,7 @@ class PicamProcessor(Node):
                 ], dtype=np.float32)
 
                 # Estimate the pose of the marker
+                # 마커의 자세 추정 (카메라 이미지의 2D 마커 좌표와 마커의 실제 3D 크기를 기반으로 마커의 위치와 방향을 계산)
                 success, rvec, tvec = cv2.solvePnP(
                     obj_points, corner[0], self.camera_matrix, self.dist_coeffs
                 )
