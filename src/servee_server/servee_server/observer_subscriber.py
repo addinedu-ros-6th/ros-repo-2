@@ -41,7 +41,7 @@ class ClientObserver:
                 except ConnectionResetError:
                     print("Connection lost. Attempting to reconnect...")
                     break
-
+                        
     def send_create_command(self, call_type, order_id=None, store_id=None, table_id=None):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
             client_socket.connect((self.host, self.port))

@@ -6,18 +6,24 @@ from functools import singledispatch
 class MySQLConnection:
     _instance = None
 
+    #def __init__(self):
+    #    if MySQLConnection._instance is not None:
+    #        raise Exception("이 클래스는 싱글톤입니다!")
+    #    else:
+    #        self.connection = None
+    #        MySQLConnection._instance = self
+#
+    #@classmethod
+    #def getInstance(cls):
+    #    if cls._instance is None:
+    #        cls._instance = cls()
+    #    return cls._instance
     def __init__(self):
-        if MySQLConnection._instance is not None:
-            raise Exception("이 클래스는 싱글톤입니다!")
-        else:
-            self.connection = None
-            MySQLConnection._instance = self
+        self.connection = None
+        self.cursor = None
+        #self.db_connect(host, port, database, user, password)
 
-    @classmethod
-    def getInstance(cls):
-        if cls._instance is None:
-            cls._instance = cls()
-        return cls._instance
+
 
     def db_connect(self, host,port, database, user, password):
         try:
@@ -64,10 +70,10 @@ class MySQLConnection:
     #메뉴에서 메뉴 누르면 데이터 가져오기
     def get_order_menu(self, store_id):
         sql= f"""SELECT menu_id,store_id,name,price,menu_image_location FROM Menus where store_id='{store_id}'"""
-        
+        cursor = self.connection.cursor() 
         #print("select_data: ", sql)
-        self.cursor.execute(sql)
-        get_results = self.cursor.fetchall()
+        cursor.execute(sql)
+        get_results = cursor.fetchall()
         return get_results
     
     def get_order_details(self, order_id):
@@ -83,16 +89,20 @@ class MySQLConnection:
         JOIN 
             Menus ON od.menu_id = Menus.menu_id
         WHERE 
-            oc.order_id = '{order_id}'"""
+            oc.order_id = %s"""
         
         #print("select_data: ", sql)
-        cursor = self.connection.cursor()  # 새로운 커서 생성
+        cursor = self.connection.cursor()# 새로운 커서 생성
         try:
-            cursor.execute(sql)  # 파라미터 전달
-            get_results = cursor.fetchall()  # 결과를 모두 가져옴
+            cursor = self.connection.cursor()
+            print("db내 오더아이디: ",order_id)
+            cursor.execute(sql, (order_id,))  # 파라미터 전달
+            get_results =  cursor.fetchall()
+            print("db내 결과: ",get_results)  # 결과를 모두 가져옴
             return get_results
-        finally:
-            cursor.close()  
+            
+        except Exception as e:
+            pass
         
     
     def get_order_detail_menu(self, store_id, menu_id):
@@ -106,9 +116,10 @@ class MySQLConnection:
         where 
             Menus.menu_id={menu_id} and Stores.store_id={store_id};"""
         
+        cursor = self.connection.cursor()
         #print("select_data: ", sql)
-        self.cursor.execute(sql)
-        get_results = self.cursor.fetchall()
+        cursor.execute(sql)
+        get_results = cursor.fetchall()
         return get_results
     
     def select_store_menu_id(self, store_name,menu_name):
@@ -122,17 +133,21 @@ class MySQLConnection:
             WHERE 
                 m.name = '{menu_name}' AND s.name = '{store_name}'
         """
-        self.cursor.execute(sql)
-        get_results = self.cursor.fetchall()
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        get_results = cursor.fetchall()
         return get_results
+    
     def insert_ordercalls(self, table_id):
+       
         current_time = datetime.now()
 
         sql_insert=f"""
         INSERT INTO OrderCalls (table_id, call_time)
         VALUES (%s, %s);
         """
-        self.cursor.execute(sql_insert, (table_id, current_time))
+        cursor = self.connection.cursor()
+        cursor.execute(sql_insert, (table_id, current_time))
 
         self.connection.commit()
 
@@ -144,22 +159,26 @@ class MySQLConnection:
             ORDER BY call_time DESC
             LIMIT 1;
         """
-        self.cursor.execute(sql_select)
-        get_results = self.cursor.fetchall()
+        cursor.execute(sql_select)
+        get_results = cursor.fetchall()
         order_id = get_results[0][0]
         return order_id
     
     def insert_orderdetails(self,order_id, menu_id, quantity):
-
+        
         sql=f"""
         INSERT INTO OrderDetails (order_id, menu_id, quantity)
         VALUES (%s, %s,%s);
         """
-
-        self.cursor.execute(sql, (order_id, menu_id,quantity))
+        cursor = self.connection.cursor()
+        cursor.execute(sql, (order_id, menu_id,quantity))
 
         self.connection.commit() 
 
+        resut=self.get_order_details(order_id)
+        print("바로 적용되었는지 확인 : ", resut)
+        
+       
     def insert_servicecall(self,table_id):
         current_time = datetime.now()
 
@@ -167,11 +186,13 @@ class MySQLConnection:
             SELECT 
                 foodcourt_id
             FROM 
-                Servee_FoodCourt
+                FoodCourt
         """
-        self.cursor.execute(sql_select)
-        get_results = self.cursor.fetchall()
+        cursor = self.connection.cursor()
+        cursor.execute(sql_select)
+        get_results = cursor.fetchall()
         foodcourt_id = get_results[0][0]
+        
         sql=f"""
         INSERT INTO AdminCalls (foodcourt_id,table_id, time)
         VALUES (%s, %s,%s);
@@ -213,12 +234,13 @@ class MySQLConnection:
 
 #    db.close_connection()
 def main():
-    dbm = MySQLConnection.getInstance()
+    dbm = MySQLConnection()
     dbm.db_connect("localhost", 3306, "SERVEE_DB", "root", "tjdudghks1")
     
-    test= dbm.get_order_details(24)
-    print(test)
-
+    #dbm.insert_orderdetails(90,1,2)
+    test=dbm.get_order_details(90)
+   
+    
 if __name__ == "__main__":
     main()
     
