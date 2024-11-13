@@ -14,7 +14,7 @@ from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
 import sensor_msgs.msg
 from servee_interfaces.msg import TaskGoalPose, ResPath
-from servee_robot.servee_behaviors import led_flasher, request_path, response_path, get_curr_pose, receive_goal, move_forward, robot_rotate, waypoint_arrival_checker, obstacle_avoidance, get_scan
+from servee_robot.servee_behaviors import led_flasher, request_path, response_path, get_curr_pose, receive_goal, move_forward, robot_rotate, waypoint_arrival_checker, obstacle_avoidance, get_scan, picam_to_blackboard, image_sender
 
 from rclpy.qos import QoSProfile
 from rclpy.qos import QoSReliabilityPolicy, QoSHistoryPolicy
@@ -77,11 +77,18 @@ def move_to_goal():
     move = Sequence("Movement", memory=False)
     waypoint_check = waypoint_arrival_checker.WaypointArrivalChecker("waypoint_check_node")
     rotate = robot_rotate.RobotRotate("robot_ratate_node")
+    
+
+    
+    
     forward = move_forward.MoveForward("move_forward_node")
     avoid = obstacle_avoidance.ObstacleAvoidanceMover("obstacle_avoidance_node")
     
+    go = Selector("Forward", memory=False)
+    go.add_children([avoid, forward])
     
-    move.add_children([waypoint_check, rotate, avoid, forward])
+    
+    move.add_children([waypoint_check, rotate, go])
     
     return move
 
@@ -176,6 +183,13 @@ def receive_topic2bb():
     topic2bb.add_children([battery2bb, cur_pose, laser_scan2bb])
     return topic2bb
 
+def sender_data():
+    sender = Sequence("sender", memory=True)
+    picam2bb = picam_to_blackboard.PicamToBlackboard("picam_to_blackboard_node")
+    picam_send = image_sender.ImageSender("image_sender_node")
+    sender.add_children([picam2bb, picam_send])
+    return sender
+
 
 def create_root_tree():
     """
@@ -192,6 +206,7 @@ def create_root_tree():
     )
     
     topic2bb = receive_topic2bb()
+    sender = sender_data()
     tasks = begin_tasks()
     root.add_children([topic2bb, tasks])
     return root

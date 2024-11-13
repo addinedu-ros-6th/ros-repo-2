@@ -1,0 +1,1 @@
+geometry_msgs/Pose[2] goal_poses

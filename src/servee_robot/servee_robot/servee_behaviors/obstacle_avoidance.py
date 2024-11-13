@@ -8,12 +8,13 @@ from rclpy.node import Node
 from geometry_msgs.msg import Twist
 
 
+
 class ObstacleAvoidanceMover(Behaviour):
     def __init__(self, name: str):
         super(ObstacleAvoidanceMover, self).__init__(name)
         self.blackboard = self.attach_blackboard_client(name=self.name)
         self.blackboard.register_key(key="scan", access=Access.READ)
-    
+        # self.blackboard.register_key(key="next_pose", access=Access.WRITE)
         
     def setup(self, **kwargs: Any) -> None:
         self.node: Node = kwargs['node']
@@ -21,9 +22,9 @@ class ObstacleAvoidanceMover(Behaviour):
         self.node.declare_parameters(
             namespace='',
             parameters=[
-                ('avoidance_lieaner', 0.8),
-                ('avoidance_angular', 1.2),
-                ('wall_threshold', 0.3),
+                ('avoidance_lieaner', 0.1),
+                ('avoidance_angular', 0.25),
+                ('wall_threshold', 0.18),
             ]
         )
         
@@ -41,7 +42,7 @@ class ObstacleAvoidanceMover(Behaviour):
              
     def update(self) -> Status:
         self.scan = self.blackboard.scan
-        ranges = self.scan.ranges
+        ranges = self.scan.ranges.tolist()
         num_readings = len(ranges)
         
         
@@ -49,10 +50,8 @@ class ObstacleAvoidanceMover(Behaviour):
         num_segments = 4
         min_distances = [float('inf')] * num_segments
 
-        start_angle = 162  # 97
-        angle_step =  num_readings // num_segments
-        
-       
+        start_angle = -45
+        angle_step = 360 // num_segments
 
         for i in range(num_segments):
             # 각 세그먼트의 시작 각도와 인덱스 계산
@@ -61,7 +60,10 @@ class ObstacleAvoidanceMover(Behaviour):
             end_index = int(((angle + angle_step) / 360) * num_readings)
             
             # 해당 세그먼트 범위 가져오기
-            segment = ranges[start_index:end_index]
+            if i == 0:
+                segment = ranges[start_index:] + ranges[:end_index]
+            else:
+                segment = ranges[start_index:end_index]
             
             # 0.0을 제외한 유효한 거리 값만 필터링
             valid_distances = [dist for dist in segment if dist > 0.0]
@@ -73,31 +75,39 @@ class ObstacleAvoidanceMover(Behaviour):
         # 회피 동작 수행
         if min(min_distances) < self.wall_threshold:
             closest_direction = min_distances.index(min(min_distances))
-            self.node.get_logger().info(f"가까운 벽의 방향 인덱스: {closest_direction}")
+            # self.node.get_logger().info(f"가까운 벽의 방향 인덱스: {closest_direction}")
             self.avoid(closest_direction)  # 인덱스를 전달하여 회피 동작 수행
-            self.node.get_logger().info(f"가장 가까운 인덱스: {ranges.index(min(ranges))}")
+            # self.node.get_logger().info(f"가장 가까운 range 인덱스: {valid_distances.index(min(valid_distances))}, 값: {min(valid_distances)}")
 
-        return Status.SUCCESS
-
+            return Status.SUCCESS # 회피 해야 함. 
+        
+        else:
+            return Status.FAILURE # 회피 안해도 됨. 
     
     
     def avoid(self, direction):
         """
         너무 근접한 벽으로부터 도망친다.
-        0: 정면
-        1: 왼쪽
-        2: 뒤쪽
-        3: 오른쪽
+        0: 뒤쪽
+        1: 오른쪽
+        2: 정면
+        3: 왼쪽
         """
+        # next_pose = self.blackboard.next_pose
+
         self.node.get_logger().info(f"회피 힘 앞뒤: {self.avoidance_lieaner}, 좌우 {self.avoidance_angular}, dir: {direction}") 
         void_twist = Twist()
         if direction % 2 == 0:
             # 앞뒤 회피
-            void_twist.linear.x = -self.avoidance_lieaner if direction == 0 else self.avoidance_lieaner
+            void_twist.linear.x = self.avoidance_lieaner if direction == 0 else -self.avoidance_lieaner
             # self.node.get_logger().info(f"앞 뒤: {direction} : {twist.linear.x}")
         else:
             # 좌우 회피
-            void_twist.angular.z = -self.avoidance_angular if direction == 1 else self.avoidance_angular
+            void_twist.angular.z = self.avoidance_angular if direction == 1 else -self.avoidance_angular
+            void_twist.linear.x = self.avoidance_lieaner - 0.02
+            
+            # self.blackboard.next_pose = next_pose
+            
             # self.node.get_logger().info(f"좌 우: {direction} : {twist.angular.z}")
             
         self.node.get_logger().info(f"좌 우: {direction}, {void_twist.angular.z}") 
