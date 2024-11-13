@@ -2,4 +2,4 @@ obstacle_avoidance_node:
   ros__parameters:
     avoidance_lieaner: 0.1
     avoidance_angular: 0.25
-    wall_threshold: 0.15
+    wall_threshold: 0.12

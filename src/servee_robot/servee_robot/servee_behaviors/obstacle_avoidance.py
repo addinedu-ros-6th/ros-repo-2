@@ -14,7 +14,7 @@ class ObstacleAvoidanceMover(Behaviour):
         super(ObstacleAvoidanceMover, self).__init__(name)
         self.blackboard = self.attach_blackboard_client(name=self.name)
         self.blackboard.register_key(key="scan", access=Access.READ)
-    
+        # self.blackboard.register_key(key="next_pose", access=Access.WRITE)
         
     def setup(self, **kwargs: Any) -> None:
         self.node: Node = kwargs['node']
@@ -82,7 +82,6 @@ class ObstacleAvoidanceMover(Behaviour):
             return Status.SUCCESS # 회피 해야 함. 
         
         else:
-            # 여기서 속도 0으로 바꾸기
             return Status.FAILURE # 회피 안해도 됨. 
     
     
@@ -94,6 +93,8 @@ class ObstacleAvoidanceMover(Behaviour):
         2: 정면
         3: 왼쪽
         """
+        # next_pose = self.blackboard.next_pose
+
         self.node.get_logger().info(f"회피 힘 앞뒤: {self.avoidance_lieaner}, 좌우 {self.avoidance_angular}, dir: {direction}") 
         void_twist = Twist()
         if direction % 2 == 0:
@@ -104,6 +105,9 @@ class ObstacleAvoidanceMover(Behaviour):
             # 좌우 회피
             void_twist.angular.z = self.avoidance_angular if direction == 1 else -self.avoidance_angular
             void_twist.linear.x = self.avoidance_lieaner - 0.02
+            
+            # self.blackboard.next_pose = next_pose
+            
             # self.node.get_logger().info(f"좌 우: {direction} : {twist.angular.z}")
             
         self.node.get_logger().info(f"좌 우: {direction}, {void_twist.angular.z}") 
