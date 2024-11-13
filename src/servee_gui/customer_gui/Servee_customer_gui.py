@@ -30,7 +30,7 @@ import matplotlib.dates as mdates
 
 #from etc.db.DBmanager import MySQLConnection
 from etc.db.dbtest_connpull import MySQLConnection
-from servee_server.servee_server.observer_subscriber import ClientObserver
+from servee_gui.observer_subscriber import ClientObserver
 
 from PyQt5.QtCore import Qt 
 import math
@@ -38,8 +38,10 @@ import math
 #import cv2
 from PyQt5 import QtWidgets, uic
 from functools import partial
+import queue
 ###########################################db sql 사용 규칙 ###########################################
 # .1 db에 요청을 날리는 경우에는 함수명을 첫번째 인덱스에 쓰고 뒤에 데이터를 넣는다
+
 
 
 class MainWindow(QMainWindow):
@@ -47,16 +49,18 @@ class MainWindow(QMainWindow):
         super().__init__()
         uic.loadUi("./src/servee_gui/customer_gui/servee_customer.ui",self)
 
-        
+        self.order_queue = queue.Queue()
 
+        
         self.setWindowTitle("SERVEE GUI")
         self.cancel_index =0
         self.result_price=0
-        self.tcp_port = 9993
-        self.tcp_ip = "192.168.0.130"
+        self.port = 9993
+        self.host = "192.168.0.130"
 
-        self.ob_client = ClientObserver(self.tcp_ip, self.tcp_port)
-
+        self.running =True
+        self.ob_client = ClientObserver(self.host, self.port, self.order_queue)
+        
         #self.dbm = MySQLConnection()
         #self.dbm.db_connect(self.tcp_ip , 3306, "SERVEE_DB", "yhc", "1234")
 
@@ -65,10 +69,16 @@ class MainWindow(QMainWindow):
         #self.client_thread = threading.Thread(target=self.update_state)
         #self.client_thread.start()
 
+        self.client_first_receive = threading.Thread(target=self.ob_client.receive_updates)
+        self.client_first_receive.start()
+
+        self.client_state_update = threading.Thread(target=self.receive_state)
+        self.client_state_update.start()
+
         self.scrollArea_1.setVisible(True)
         self.scrollArea_2.setVisible(False)
         self.scrollArea_3.setVisible(True)
-
+        self.button_retrieve.setEnabled(False) 
 
         self.menu_list_make('scrollArea_1',1)
         self.menu_list_make('scrollArea_2',2)
@@ -292,7 +302,10 @@ class MainWindow(QMainWindow):
         msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
         result = msg.exec_()
         if result == QMessageBox.Yes:
-            self.dbm.insert_log(self.table_num)
+            
+            self.ob_client.send_create_command("RV", table_id=self.table_num)
+            self.order_tableWidget.setRowCount(0)
+            self.button_retrieve.setEnabled(False) 
 
     def service_alarm(self):
         # 알람 메시지 박스 생성
@@ -324,13 +337,17 @@ class MainWindow(QMainWindow):
 
               # 특정 셀의 아이템 가져오기
             #    raw_data.append(item.text())  # 아이템의 텍스트 추가
-            menu_id=self.dbm.select_store_menu_id(store_name, menu_name)
-            menu_id =menu_id[0][0]
+            result=self.dbm.select_store_menu_id(store_name, menu_name)
+
+            store_id =result[0][0]
+            menu_id = result[0][1]
+            print("스토어아이디 : ", store_id)
             print("오더아이디 : ", order_id)
             print("테이블 넘버 : ", self.table_num)
             print("수량 : ", quantity)
             print("메뉴아이디 : ", menu_id)
             self.dbm.insert_orderdetails(order_id,menu_id, quantity)
+
 
         # 두 번째 테이블의 행 수를 업데이트
         current_row_count = self.order_tableWidget.rowCount()
@@ -362,45 +379,54 @@ class MainWindow(QMainWindow):
         self.label_predict_price.setText(f"0원")
 
         #vendor manager와 통신 하기
-        self.client_thread = threading.Thread(target=self.update_state, args=(order_id,))
+        self.client_thread = threading.Thread(target=self.ob_client.send_create_command, args=("SE", order_id, store_id,self.table_num))
         self.client_thread.start()
-
-
-    def update_state(self, order_id):
-        try:
-            client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            client.connect((self.tcp_ip, self.tcp_port))
-            
-            # 데이터 전송
-            client.send(str(order_id).encode('utf-8'))
-            # 서버로부터 응답 수신
-            results = client.recv(4096).decode('utf-8')
-            self.update_ordertable(results)
-            
-        except Exception as e:
-            pass
-        finally:
-            client.close()
+        #self.ob_client.send_create_command("SE", order_id, store_id,self.table_num)
         
+
+    def receive_state(self):
+
+        #데이터 수집
+        while self.running:
+            try:
+
+                results = self.order_queue.get()
+                #빈공간 제거 해야 함
+                if("UPDATE" in results):
+                    self.update_ordertable(results.replace(" ", ""))
+                else:
+                    pass
+            except queue.Empty:
+                time.sleep(0.03)   
 
     def update_ordertable(self,results):
+        time.sleep(2)
         print("업데이트 오더테이블 : ", results)
+
+        command_type = results.split(',')[0]
         
-        order_id = results.split('/')[0]
-        call_state = results.split('/')[1]
+        call_type = results.split(',')[1]
+        order_id = results.split(',')[2]
+        call_state = results.split(',')[3]
         row_count = self.order_tableWidget.rowCount()
         column_count = self.order_tableWidget.columnCount()
-
+        
         for row in range(row_count):
             item = self.order_tableWidget.item(row, column_count-1).text()
             print("item : ",item)
             print("order_id : ",order_id)
             if(item == order_id):
                 self.order_tableWidget.setItem(row, 4, QTableWidgetItem(call_state))
+        
+        for value in range(row_count):
+            state = self.order_tableWidget.item(value, 4).text()
+            if state == "서빙":
+                self.button_retrieve.setEnabled(True)
 
     def closeEvent(self, event):
-            # 윈도우 종료 시 데이터베이스 연결 종료
-        self.dbm.disconnection()
+        # 윈도우 종료 시 데이터베이스 연결 종료
+
+        #self.dbm.disconnection()
         event.accept()
 
 

@@ -166,7 +166,7 @@ class MySQLConnection:
 
         sql=f"""
             SELECT 
-                m.menu_id
+                s.store_id, m.menu_id 
             FROM 
                 `Menus` m
             JOIN 
@@ -341,7 +341,7 @@ def main():
     
     
     #dbm.insert_orderdetails(90,1,2)
-    test=dbm.get_order_menu(1)
+    test=dbm.select_store_menu_id("마파궁전","짬뽕")
     print(test)
     
 if __name__ == "__main__":
