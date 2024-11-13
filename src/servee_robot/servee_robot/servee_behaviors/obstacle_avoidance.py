@@ -22,7 +22,7 @@ class ObstacleAvoidanceMover(Behaviour):
         self.node.declare_parameters(
             namespace='',
             parameters=[
-                ('avoidance_lieaner', 0.1),
+                ('avoidance_lieaner', 0.08),
                 ('avoidance_angular', 0.25),
                 ('wall_threshold', 0.18),
             ]
@@ -104,10 +104,10 @@ class ObstacleAvoidanceMover(Behaviour):
             self.avoid(closest_direction)  # 인덱스를 전달하여 회피 동작 수행
             # self.node.get_logger().info(f"가장 가까운 range 인덱스: {valid_distances.index(min(valid_distances))}, 값: {min(valid_distances)}")
 
-            return Status.SUCCESS # 회피 해야 함. 
+            return Status.FAILURE # 회피 해야 함. 
         
         else:
-            return Status.FAILURE # 회피 안해도 됨. 
+            return Status.SUCCESS # 회피 안해도 됨. 
     
     
     def avoid(self, direction):
@@ -124,12 +124,13 @@ class ObstacleAvoidanceMover(Behaviour):
         void_twist = Twist()
         if direction % 2 == 0:
             # 앞뒤 회피
-            void_twist.linear.x = self.avoidance_lieaner if direction == 0 else -self.avoidance_lieaner
+            # void_twist.linear.x = 0
+            void_twist.linear.x = (self.avoidance_lieaner-0.01) if direction == 0 else -(self.avoidance_lieaner-0.01)
             # self.node.get_logger().info(f"앞 뒤: {direction} : {twist.linear.x}")
         else:
             # 좌우 회피
             void_twist.angular.z = self.avoidance_angular if direction == 1 else -self.avoidance_angular
-            void_twist.linear.x = self.avoidance_lieaner - 0.02
+            void_twist.linear.x = self.avoidance_lieaner
             
             # self.blackboard.next_pose = next_pose
             
