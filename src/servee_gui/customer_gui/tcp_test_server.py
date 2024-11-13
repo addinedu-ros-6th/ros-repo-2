@@ -14,8 +14,8 @@ import queue
 
 class Vendor():
     def __init__(self):
-        self.dbm = MySQLConnection.getInstance()
-        self.dbm.db_connect("localhost", 3306, "amrbase", "root", "tjdudghks1")
+        #self.dbm = MySQLConnection.getInstance()
+        #self.dbm.db_connect("localhost", 3306, "amrbase", "root", "tjdudghks1")
         self.tcp_ip = "192.168.0.130"
         self.vendor_tcp_port =9992
         self.customer_tcp_port =9993
@@ -72,24 +72,27 @@ class Vendor():
         return results    
 
     def client_send_orderid(self):
-        try:
-            order_id=self.orderid_queue.get()
-            print("큐에서 전달 odr : ", order_id)
-            client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            client.connect((self.tcp_ip, self.vendor_tcp_port))
-            # 정수 전송
-
-            client.send(order_id.encode('utf-8'))
-            print("서버에서 odr전달 : ", order_id)
-            # 서버로부터 응답 수신
-            response = client.recv(4096).decode('utf-8')
-            print(response)
-
-
-        except Exception as e:
-            pass
-        finally:
-            client.close()
+        while True:
+            try:
+                order_id=self.orderid_queue.get()
+                print("큐에서 전달 odr : ", order_id)
+                client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                client.connect((self.tcp_ip, self.vendor_tcp_port))
+                # 정수 전송
+    
+                client.send(order_id.encode('utf-8'))
+                print("서버에서 odr전달 : ", order_id)
+                # 서버로부터 응답 수신
+                response = client.recv(4096).decode('utf-8')
+                print(response)
+    
+            except queue.Empty:  # 큐가 비어있을 때의 예외 처리
+                print("큐가 비어있습니다. 잠시 대기합니다.")
+                time.sleep(1)
+            except Exception as e:
+                pass
+            finally:
+                client.close()
 
 
     def state_confirm(self):

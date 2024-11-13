@@ -27,7 +27,10 @@ import datetime
 from datetime import datetime
 import pandas as pd
 import matplotlib.dates as mdates
-from etc.db.DBmanager import MySQLConnection
+
+#from etc.db.DBmanager import MySQLConnection
+from etc.db.dbtest_connpull import MySQLConnection
+
 from PyQt5.QtCore import Qt 
 import math
 #from qt_material import apply_stylesheet
@@ -74,6 +77,7 @@ class Worker(QThread):
                 message = data.decode('utf-8')
                 
                 self.update_signal.emit(message)
+                print(message)
                 response = "ok"
                 client_socket.send(response.encode('utf-8')) #클라이언트에게 받은 데이터 그대로 송신
 
@@ -97,22 +101,26 @@ class MainWindow(QMainWindow):
         self.tcp_ip = "192.168.0.130"
         self.tcp_port = 9992
 
+        #self.dbm = MySQLConnection()
+        #self.dbm.db_connect(self.tcp_ip, 3306, "SERVEE_DB", "kjc", "1234")
+        
         self.dbm = MySQLConnection.getInstance()
-        self.dbm.db_connect(self.tcp_ip, 3306, "SERVEE_DB", "yhc", "1234")
 
         self.worker = Worker(self.tcp_ip, self.tcp_port)  # 서버 IP와 포트 설정
         self.worker.update_signal.connect(self.make_orderlist)  # 신호와 슬롯 연결
         self.worker.start()  # 스레드 시작
 
-
-
+        self.orderlist_tableWidget.setColumnHidden(6, True)  
         self.order_count=1
         self.robot_call_count=0
 
-        self.dbm = MySQLConnection.getInstance()
-        self.dbm.db_connect(self.tcp_ip, 3306, "SERVEE_DB", "yhc", "1234")
+        current_date = QDate.currentDate()
+        formatted_date = current_date.toString("yyyy년 MM월 dd일")
 
-        self.pushButton.clicked.connect(lambda: self.make_orderlist(order_id=40))
+        
+        self.day_label.setText(f"<b><center>Today</center>{formatted_date}</b>")
+
+
         self.orderlist_tableWidget.verticalHeader().setVisible(False)
         self.orderlist_tableWidget.horizontalHeader().setStretchLastSection(True)  # 마지막 열이 남은 공간을 차지하도록 설정
         
@@ -157,10 +165,17 @@ class MainWindow(QMainWindow):
 
 
     def make_orderlist(self,order_id=41):
+        
         row_index=0
-        order_results=self.dbm.get_order_details(order_id)
-        self.robot_call_count= self.robot_call_count+1
+        print("리스트 만드는 오더아이디 : ", order_id)
+        for i in range(3):
+            order_results=self.dbm.get_order_details(order_id)
+            if(order_results!=[]):
+                break
+            time.sleep(3)
 
+        #self.robot_call_count= self.robot_call_count+1
+        print(order_results)
         row_count = self.orderlist_tableWidget.rowCount()
 
         for row_index, row in enumerate(order_results):
@@ -169,7 +184,7 @@ class MainWindow(QMainWindow):
             self.orderlist_tableWidget.setItem(row_count+row_index, 0, QTableWidgetItem(str(self.order_count)))
             self.order_count = self.order_count+1
             for column_index, item in enumerate(row):
-                print(column_index, item)
+               
                 # 각 셀에 데이터 설정
                 self.orderlist_tableWidget.setItem(row_count+row_index, column_index+1, QTableWidgetItem(str(item)))
                 if(column_index==2):
@@ -180,12 +195,29 @@ class MainWindow(QMainWindow):
 
         self.orderlist_tableWidget.insertRow(row_count+row_index+1)      
         self.robot_call_button = QtWidgets.QPushButton("로봇호출", self)
-        self.robot_call_button.setObjectName("button_menu_" + str(self.robot_call_count))
+        self.robot_call_button.setObjectName("button_serve_" + str(order_id))
+        self.robot_call_button.clicked.connect(partial(self.cal_robot_serve, order_id))
         self.orderlist_tableWidget.setCellWidget(row_count+row_index+1, 5, self.robot_call_button)
-
+        self.orderlist_tableWidget.setItem(row_count+row_index+1, 6, QTableWidgetItem(str(order_id)))
         self.orderlist_tableWidget.setColumnHidden(6, True)                
         self.center_text_in_cells()
 
+    def cal_robot_serve(self ,order_id):
+        # QTableWidget의 모든 셀 텍스트를 흐리게 설정
+        for i in range(self.orderlist_tableWidget.rowCount()):
+
+            if self.orderlist_tableWidget.item(i, 6).text()==order_id:
+                for j in range(self.orderlist_tableWidget.columnCount()):
+                    item = self.orderlist_tableWidget.item(i, j)
+                    if item:
+                        # 글꼴 두께를 줄이기
+                        font = item.font()
+                        font.setWeight(QFont.Light)
+                        item.setFont(font)  
+                        # 색상을 변경하여 흐리게 보이게 설정 (옵션)
+                        item.setForeground(Qt.gray)
+            robot_call_button = self.findChild(QPushButton, "button_serve_" + str(order_id))            
+            robot_call_button.setEnabled(False)             
 
     def center_text_in_cells(self):
         row_count = self.orderlist_tableWidget.rowCount()
@@ -201,7 +233,7 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event):
             # 윈도우 종료 시 데이터베이스 연결 종료
-        self.dbm.disconnection()
+        
         event.accept()
 
 

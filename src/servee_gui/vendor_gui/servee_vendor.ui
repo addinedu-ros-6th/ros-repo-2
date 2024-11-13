@@ -59,17 +59,30 @@
      </property>
     </column>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QLabel" name="day_label">
     <property name="geometry">
      <rect>
-      <x>0</x>
+      <x>30</x>
       <y>10</y>
+      <width>131</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="sales_pushButton">
+    <property name="geometry">
+     <rect>
+      <x>860</x>
+      <y>20</y>
       <width>89</width>
       <height>25</height>
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>매출현황</string>
     </property>
    </widget>
   </widget>

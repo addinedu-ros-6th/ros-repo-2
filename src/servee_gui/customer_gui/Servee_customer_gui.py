@@ -27,7 +27,11 @@ import datetime
 from datetime import datetime
 import pandas as pd
 import matplotlib.dates as mdates
-from etc.db.DBmanager import MySQLConnection
+
+#from etc.db.DBmanager import MySQLConnection
+from etc.db.dbtest_connpull import MySQLConnection
+from servee_server.servee_server.observer_subscriber import ClientObserver
+
 from PyQt5.QtCore import Qt 
 import math
 #from qt_material import apply_stylesheet
@@ -43,14 +47,20 @@ class MainWindow(QMainWindow):
         super().__init__()
         uic.loadUi("./src/servee_gui/customer_gui/servee_customer.ui",self)
 
+        
+
         self.setWindowTitle("SERVEE GUI")
         self.cancel_index =0
         self.result_price=0
         self.tcp_port = 9993
         self.tcp_ip = "192.168.0.130"
 
+        self.ob_client = ClientObserver(self.tcp_ip, self.tcp_port)
+
+        #self.dbm = MySQLConnection()
+        #self.dbm.db_connect(self.tcp_ip , 3306, "SERVEE_DB", "yhc", "1234")
+
         self.dbm = MySQLConnection.getInstance()
-        self.dbm.db_connect(self.tcp_ip , 3306, "SERVEE_DB", "yhc", "1234")
 
         #self.client_thread = threading.Thread(target=self.update_state)
         #self.client_thread.start()
@@ -316,6 +326,7 @@ class MainWindow(QMainWindow):
             #    raw_data.append(item.text())  # 아이템의 텍스트 추가
             menu_id=self.dbm.select_store_menu_id(store_name, menu_name)
             menu_id =menu_id[0][0]
+            print("오더아이디 : ", order_id)
             print("테이블 넘버 : ", self.table_num)
             print("수량 : ", quantity)
             print("메뉴아이디 : ", menu_id)
@@ -359,7 +370,7 @@ class MainWindow(QMainWindow):
         try:
             client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             client.connect((self.tcp_ip, self.tcp_port))
-
+            
             # 데이터 전송
             client.send(str(order_id).encode('utf-8'))
             # 서버로부터 응답 수신
@@ -373,7 +384,7 @@ class MainWindow(QMainWindow):
         
 
     def update_ordertable(self,results):
-        print(results)
+        print("업데이트 오더테이블 : ", results)
         
         order_id = results.split('/')[0]
         call_state = results.split('/')[1]
