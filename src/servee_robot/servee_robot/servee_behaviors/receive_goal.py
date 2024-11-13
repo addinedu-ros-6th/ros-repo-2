@@ -3,7 +3,7 @@ import rclpy
 from rclpy.node import Node
 from py_trees.behaviour import Behaviour
 from py_trees.common import Status, Access
-from servee_interfaces.msg import TaskGoalPose
+from servee_interfaces.msg import TaskGoalPose, TaskGoalPoses
 
 class ReceiveGoal(Behaviour):
     
@@ -17,8 +17,8 @@ class ReceiveGoal(Behaviour):
     def setup(self, **kwargs: Any) -> None:
         self.node: Node = kwargs['node']
         self.node.create_subscription(
-            TaskGoalPose,
-            '/servee/task_goal_pose',
+            TaskGoalPoses,
+            '/servee/task_goal_poses',
             self.callback,
             10
         )
@@ -31,7 +31,15 @@ class ReceiveGoal(Behaviour):
             return Status.RUNNING
         
     def callback(self, msg):
-        self.blackboard.goal_pose = msg.goal_pose
+
+            
+        self.blackboard.goal_poses = msg.goal_poses
+        self.node.get_logger().info(f"배열로 받은 목적지 {self.blackboard.goal_poses}")
+        self.blackboard.goal_pose = self.blackboard.goal_poses.poses[0]
         self.blackboard.robot_state = "receive_goal"
+        
+        
+        # self.blackboard.goal_pose = msg.goal_pose
+        # self.blackboard.robot_state = "receive_goal"
         
         

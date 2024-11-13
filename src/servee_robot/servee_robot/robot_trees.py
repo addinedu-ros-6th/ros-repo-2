@@ -74,23 +74,20 @@ def move_to_goal():
     Move (Parallel - SuccessOnOne):
         - 
     """
-    move = Sequence("Movement", memory=False)
+    movement = Sequence("Movement", memory=False)
     waypoint_check = waypoint_arrival_checker.WaypointArrivalChecker("waypoint_check_node")
+        
     rotate = robot_rotate.RobotRotate("robot_ratate_node")
-    
-
-    
     
     forward = move_forward.MoveForward("move_forward_node")
     avoid = obstacle_avoidance.ObstacleAvoidanceMover("obstacle_avoidance_node")
     
-    go = Selector("Forward", memory=False)
-    go.add_children([avoid, forward])
+    go = Sequence("Forward", memory=False)
+    go.add_children([avoid, rotate, forward])
     
+    movement.add_children([waypoint_check, go])
     
-    move.add_children([waypoint_check, rotate, go])
-    
-    return move
+    return movement
 
 
 def battery_low_alarm():

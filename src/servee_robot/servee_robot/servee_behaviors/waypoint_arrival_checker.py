@@ -28,29 +28,22 @@ class WaypointArrivalChecker(Behaviour):
         self.blackboard.register_key(key="path", access=Access.READ)
         self.blackboard.register_key(key='odom_yaw_error', access=Access.WRITE)
         
-        
-        
         self.blackboard.target_distance = 0.0
         self.blackboard.waypoint = -1
         self.blackboard.robot_state = "idle"
         
+        
     def setup(self, **kwargs: Any) -> None:
         self.node = kwargs['node']
-        self.tolerance_distance = 0.2
-        
-        self.reset_values()
-        
-    def reset_values(self):
-        self.blackboard.waypoint = 0
-        self.blackboard.target_distance = 0.0
-        self.blackboard.robot_state = "idle"
+        self.tolerance_distance = 0.2 # 허용 거리
         self.path = []
 
     def update_next_waypoint_info(self):
         
         if self.blackboard.waypoint>= len(self.path.poses) -1: 
-            # Path 완료
-            self.reset_values()
+            # Path 완료 
+            # 추후에 path가 array로 전달되면 다 돌았는지 체크한 뒤에 parking으로 돌려야 한다.
+            self.blackboard.robot_state = "idle" 
             
         else:
             # 다음 웨이포인트로
@@ -62,13 +55,19 @@ class WaypointArrivalChecker(Behaviour):
             
     def update(self) -> Status:
     
+        # 주차중 상태라면 빠르게 tree를 건너 뛴다.
+        if self.blackboard.robot_state == "aruco":
+            return Status.SUCCESS
+    
         # 경로가 없는 경우
         if self.blackboard.exists('path') == False:
             return Status.FAILURE
         
         # 로봇이 이동 상태가 아닌 경우
-        if self.blackboard.robot_state not in ['task', 'home']:
+        if self.blackboard.robot_state not in ['task', 'home', 'parking']:
             return Status.FAILURE
+        
+        
             
         self.path = self.blackboard.path
         

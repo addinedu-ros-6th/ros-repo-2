@@ -31,6 +31,7 @@ class MoveForward(Behaviour):
         
         curr_position = self.blackboard.odom_pose.position
         
+        # 이전 위치와 현재 위치의 차이를 구합니다.
         if self.prev_position is not None:
             dx = curr_position.x - self.prev_position.x
             dy = curr_position.y - self.prev_position.y
@@ -52,7 +53,7 @@ class MoveForward(Behaviour):
         1. 경로를 받아왔는지?
         2. robot_state가 move 인지?
         """               
-        if self.blackboard.robot_state not in ["task", "home"]:
+        if self.blackboard.robot_state not in ["task", "home", "parking"]:
             return False
         
         return True

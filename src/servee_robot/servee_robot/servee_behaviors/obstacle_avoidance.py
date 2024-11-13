@@ -22,7 +22,7 @@ class ObstacleAvoidanceMover(Behaviour):
         self.node.declare_parameters(
             namespace='',
             parameters=[
-                ('avoidance_lieaner', 0.1),
+                ('avoidance_lieaner', 0.08),
                 ('avoidance_angular', 0.25),
                 ('wall_threshold', 0.18),
             ]
@@ -50,15 +50,40 @@ class ObstacleAvoidanceMover(Behaviour):
         num_segments = 4
         min_distances = [float('inf')] * num_segments
 
-        start_angle = -45
-        angle_step = 360 // num_segments
+        # start_angle = -45
+        # angle_step = 360 // num_segments
 
+        # for i in range(num_segments):
+        #     # 각 세그먼트의 시작 각도와 인덱스 계산
+        #     angle = start_angle + i * angle_step
+        #     start_index = int((angle / 360) * num_readings)
+        #     end_index = int(((angle + angle_step) / 360) * num_readings)
+            
+        #     # 해당 세그먼트 범위 가져오기
+        #     if i == 0:
+        #         segment = ranges[start_index:] + ranges[:end_index]
+        #     else:
+        #         segment = ranges[start_index:end_index]
+            
+        #     # 0.0을 제외한 유효한 거리 값만 필터링
+        #     valid_distances = [dist for dist in segment if dist > 0.0]
+            
+        #     # 유효한 거리가 있으면 최소 거리 저장
+        #     if valid_distances:
+        #         min_distances[i] = min(valid_distances)
+        
+        start_angle = -15
+        angle_step = 30
         for i in range(num_segments):
             # 각 세그먼트의 시작 각도와 인덱스 계산
-            angle = start_angle + i * angle_step
+            if i % 2 == 0:  # 앞, 뒤일 경우
+                angle = start_angle + 5*i * angle_step
+            else:  # 좌, 우일 경우
+                angle = start_angle + ((i-1)*3+1) * angle_step
+
             start_index = int((angle / 360) * num_readings)
-            end_index = int(((angle + angle_step) / 360) * num_readings)
-            
+            end_index = int(((angle + 30) / 360) * num_readings)
+
             # 해당 세그먼트 범위 가져오기
             if i == 0:
                 segment = ranges[start_index:] + ranges[:end_index]
@@ -67,7 +92,7 @@ class ObstacleAvoidanceMover(Behaviour):
             
             # 0.0을 제외한 유효한 거리 값만 필터링
             valid_distances = [dist for dist in segment if dist > 0.0]
-            
+
             # 유효한 거리가 있으면 최소 거리 저장
             if valid_distances:
                 min_distances[i] = min(valid_distances)
@@ -79,10 +104,10 @@ class ObstacleAvoidanceMover(Behaviour):
             self.avoid(closest_direction)  # 인덱스를 전달하여 회피 동작 수행
             # self.node.get_logger().info(f"가장 가까운 range 인덱스: {valid_distances.index(min(valid_distances))}, 값: {min(valid_distances)}")
 
-            return Status.SUCCESS # 회피 해야 함. 
+            return Status.FAILURE # 회피 해야 함. 
         
         else:
-            return Status.FAILURE # 회피 안해도 됨. 
+            return Status.SUCCESS # 회피 안해도 됨. 
     
     
     def avoid(self, direction):
@@ -99,12 +124,13 @@ class ObstacleAvoidanceMover(Behaviour):
         void_twist = Twist()
         if direction % 2 == 0:
             # 앞뒤 회피
-            void_twist.linear.x = self.avoidance_lieaner if direction == 0 else -self.avoidance_lieaner
+            # void_twist.linear.x = 0
+            void_twist.linear.x = (self.avoidance_lieaner-0.01) if direction == 0 else -(self.avoidance_lieaner-0.01)
             # self.node.get_logger().info(f"앞 뒤: {direction} : {twist.linear.x}")
         else:
             # 좌우 회피
             void_twist.angular.z = self.avoidance_angular if direction == 1 else -self.avoidance_angular
-            void_twist.linear.x = self.avoidance_lieaner - 0.02
+            void_twist.linear.x = self.avoidance_lieaner
             
             # self.blackboard.next_pose = next_pose
             
