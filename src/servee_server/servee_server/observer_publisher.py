@@ -184,6 +184,8 @@ class ServingInstance: # 서빙 인스턴스
         self.status = "1" #초기 상태
         self.table_location = "0-0-0/0-0-0-0" #table_id 로 위치 접근, 추후 DB 연동
         self.store_location = "0-0-0/0-0-0-0" #store_id 로 위치 접근, 추후 DB 연동
+        self.task_start_time = None
+        self.task_end_time = None
 
 class RetrievalInstance: # 회수 인스턴스
     def __init__(self, store_id, table_id, call_time):
@@ -193,3 +195,5 @@ class RetrievalInstance: # 회수 인스턴스
         self.status = "1" #초기 상태
         self.table_location = "0-0-0/0-0-0-0" #table_id 로 위치 접근, 추후 DB 연동
         self.retrieval_location = "0-0-0/0-0-0-0" #stoe_id 로 위치 접근, 추후 DB 연동
+        self.task_start_time = None
+        self.task_end_time = None
