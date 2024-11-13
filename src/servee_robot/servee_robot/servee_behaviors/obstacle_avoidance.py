@@ -50,15 +50,40 @@ class ObstacleAvoidanceMover(Behaviour):
         num_segments = 4
         min_distances = [float('inf')] * num_segments
 
-        start_angle = -45
-        angle_step = 360 // num_segments
+        # start_angle = -45
+        # angle_step = 360 // num_segments
 
+        # for i in range(num_segments):
+        #     # 각 세그먼트의 시작 각도와 인덱스 계산
+        #     angle = start_angle + i * angle_step
+        #     start_index = int((angle / 360) * num_readings)
+        #     end_index = int(((angle + angle_step) / 360) * num_readings)
+            
+        #     # 해당 세그먼트 범위 가져오기
+        #     if i == 0:
+        #         segment = ranges[start_index:] + ranges[:end_index]
+        #     else:
+        #         segment = ranges[start_index:end_index]
+            
+        #     # 0.0을 제외한 유효한 거리 값만 필터링
+        #     valid_distances = [dist for dist in segment if dist > 0.0]
+            
+        #     # 유효한 거리가 있으면 최소 거리 저장
+        #     if valid_distances:
+        #         min_distances[i] = min(valid_distances)
+        
+        start_angle = -15
+        angle_step = 30
         for i in range(num_segments):
             # 각 세그먼트의 시작 각도와 인덱스 계산
-            angle = start_angle + i * angle_step
+            if i % 2 == 0:  # 앞, 뒤일 경우
+                angle = start_angle + 5*i * angle_step
+            else:  # 좌, 우일 경우
+                angle = start_angle + ((i-1)*3+1) * angle_step
+
             start_index = int((angle / 360) * num_readings)
-            end_index = int(((angle + angle_step) / 360) * num_readings)
-            
+            end_index = int(((angle + 30) / 360) * num_readings)
+
             # 해당 세그먼트 범위 가져오기
             if i == 0:
                 segment = ranges[start_index:] + ranges[:end_index]
@@ -67,7 +92,7 @@ class ObstacleAvoidanceMover(Behaviour):
             
             # 0.0을 제외한 유효한 거리 값만 필터링
             valid_distances = [dist for dist in segment if dist > 0.0]
-            
+
             # 유효한 거리가 있으면 최소 거리 저장
             if valid_distances:
                 min_distances[i] = min(valid_distances)
