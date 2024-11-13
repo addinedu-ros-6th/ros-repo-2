@@ -1,1 +1,1 @@
-geometry_msgs/Pose[2] goal_poses
+geometry_msgs/PoseArray goal_poses

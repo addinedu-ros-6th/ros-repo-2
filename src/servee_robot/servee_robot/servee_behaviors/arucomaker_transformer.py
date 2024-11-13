@@ -19,7 +19,8 @@ class ArucoMakerTransformer(Behaviour):
         
         self.blackboard = self.attach_blackboard_client(name=self.name)
         self.blackboard.register_key(key="picam_raw_image", access=Access.READ)
-        self.blackboard.register_key(key="aruco_maker_result")
+        self.blackboard.register_key(key="aruco_maker_result", access=Access.WRITE)
+        self.blackboard.register_key(key="marker_detected_time", access=Access.WRITE)
 
     def setup(self, **kwargs: Any) -> None:
         self.node: Node = kwargs['node']
@@ -116,6 +117,7 @@ class ArucoMakerTransformer(Behaviour):
         if marker_data:
             closest_marker = min(marker_data, key=lambda x: x["distance"])
             self.blackboard.aruco_maker_result = closest_marker
+            self.blackboard.marker_detected_time = self.node.get_clock().now()
             
             self.node.get_logger().info(
                 f"Published Marker ID: {closest_marker['id']:.2f}, "

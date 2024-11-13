@@ -21,29 +21,33 @@ class RobotRotate(Behaviour):
         self.blackboard.register_key(key='path', access=Access.READ)
         self.blackboard.register_key(key='yaw', access=Access.READ)
         
-        self.blackboard.register_key(key='waypoint', access=Access.READ)
+        self.blackboard.register_key(key='waypoint', access=Access.READ) # 디버깅을 위한 용도
         
         self.blackboard.register_key(key='odom_yaw_error', access=Access.READ)
         self.blackboard.register_key(key='odom_yaw_error', access=Access.WRITE)
-
+        
+        self.blackboard.register_key(key='max_angular_speed', access=Access.WRITE)
+        self.blackboard.register_key(key='max_angular_speed', access=Access.READ)
+        self.blackboard.max_angular_speed = 0.25
+        
     def setup(self, **kwargs: Any) -> None:
         self.node: Node = kwargs['node']
         self.pid = RobotPIDController(1, 0.3, 0.05)
         
-        # 추후에 파라미터로 뺄 것
-        self.max_angular_speed = 0.25  
+        
+        self.max_angular_speed = self.blackboard.max_angular_speed
         self.blackboard.odom_yaw_error = 0.0
         self.odom_yaw_threshold = math.radians(0.01) 
-        self.absolute_yaw_threshold = math.radians(5) 
-        self.smooth_turn_tolerance = math.radians(3)
+        self.absolute_yaw_threshold = math.radians(10) 
+        self.smooth_turn_tolerance = math.radians(5)
         self.cmd_vel_publisher = self.node.create_publisher(Twist, '/base_controller/cmd_vel_unstamped', 10)
         
         self.prev_time = None 
         self.prev_yaw = None  
      
     def reset_values(self):
-         self.prev_yaw = None
-         self.prev_time = None
+        self.prev_yaw = None
+        self.prev_time = None
                 
                 
     def update(self) -> Status:
@@ -64,13 +68,14 @@ class RobotRotate(Behaviour):
             # 오차가 허용범위보다 큰 경우 
             if abs(yaw_error) >= self.absolute_yaw_threshold:
                 self.blackboard.odom_yaw_error = yaw_error
-                self.node.get_logger().info(f"절대 오차를 odom_yaw_error에 추가: {self.blackboard.odom_yaw_error:.3f} way {self.blackboard.waypoint}")
+                self.node.get_logger().warn(f"절대 오차를 odom_yaw_error에 추가: {self.blackboard.odom_yaw_error:.3f} way {self.blackboard.waypoint}")
                 return Status.FAILURE
 
             else:
                 # yaw 오차 없음. 
-                self.node.get_logger().info(f"yaw 오차가 없다구? {self.blackboard.odom_yaw_error:.3f} way {self.blackboard.waypoint}")
+                self.node.get_logger().warn(f"yaw 오차가 없다구? {self.blackboard.odom_yaw_error:.3f} way {self.blackboard.waypoint}")
                 return Status.SUCCESS   
+        
         
         # 상대좌표로 계산한 값이 허용범위보다 크다면.        
         else:            
@@ -93,9 +98,7 @@ class RobotRotate(Behaviour):
                 self.blackboard.odom_yaw_error -= yaw_difference
                 
                 # self.node.get_logger().info(f"현재 odom yaw 오차 {self.odom_yaw_error}")
-            
-
-                            
+         
             angular_speed = max(min(self.pid.compute(self.blackboard.odom_yaw_error, dt), self.max_angular_speed), -self.max_angular_speed)
             self.twist_publish(angular_speed)
                         
@@ -103,12 +106,14 @@ class RobotRotate(Behaviour):
             self.prev_time = current_time
             
             
+            # 제자리 회전
             if abs(self.blackboard.odom_yaw_error) > self.smooth_turn_tolerance:
-                # self.node.get_logger().info(f"너무 큰 오차 {self.blackboard.odom_yaw_error:.3f} way {self.blackboard.waypoint}")
+                self.node.get_logger().warn(f"너무 큰 오차 {self.blackboard.odom_yaw_error:.3f} way {self.blackboard.waypoint}")
                 return Status.FAILURE
             
+            # 선회하며 회전
             else:
-                # self.node.get_logger().info(f"작은 오차 {self.blackboard.odom_yaw_error:.3f} way {self.blackboard.waypoint}")
+                self.node.get_logger().warn(f"작은 오차 {self.blackboard.odom_yaw_error:.3f} way {self.blackboard.waypoint}")
                 return Status.SUCCESS
                 
     
@@ -134,8 +139,8 @@ class RobotRotate(Behaviour):
     def are_you_ready(self):
         # 경로가 없는 경우
         if self.blackboard.exists('path') == False:
-            return Status.FAILURE
+            return False
         
         # 로봇이 이동 상태가 아닌 경우
-        if self.blackboard.robot_state not in ['task', 'home']:
-            return Status.FAILURE
+        if self.blackboard.robot_state not in ['task', 'home', 'parking']:
+            return False

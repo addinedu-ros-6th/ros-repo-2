@@ -35,13 +35,14 @@ class ResponsePath(Behaviour):
         )
     
     def update(self) -> Status:
-        if self.blackboard.robot_state in ["task", "home"]:
+        if self.blackboard.robot_state in ["task", "home", "parking"]:
             return Status.SUCCESS
         
         return Status.FAILURE
     
     def callback(self, msg):
         self.node.get_logger().debug(f"msg {msg}")
+        self.blackboard.set("path", None)
         self.blackboard.path = msg.path
         
         self.blackboard.waypoint = 0

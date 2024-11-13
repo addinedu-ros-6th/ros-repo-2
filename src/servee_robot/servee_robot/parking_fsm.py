@@ -125,6 +125,7 @@ class ParkingFSM(Node):
         valid_indices = np.isfinite(ranges)
         angles = angles[valid_indices]
         ranges = ranges[valid_indices]
+        
         # 극좌표를 직교좌표로 변환
         x = ranges * np.cos(angles)
         y = ranges * np.sin(angles)
@@ -138,33 +139,39 @@ class ParkingFSM(Node):
         img = np.zeros((img_size, img_size), dtype=np.uint8)
         offset = img_size // 2
 
+        # (x, y) 좌표들을 수직으로 쌓아서 포인트 배열을 생성
         points = np.vstack((x, y)).T
-        points = np.int32(points * self.scale + offset)  # Adjust scale and offset
+        points = np.int32(points * self.scale + offset)  # 스케일 조정 및 오프셋 적용
         for point in points:
             if 0 <= point[0] < img_size and 0 <= point[1] < img_size:
-                cv2.circle(img, tuple(point), 1, 255, -1)
+                cv2.circle(img, tuple(point), 1, 255, -1)  # 해당 위치에 흰색 점을 그림
         
-        # Hough transform
+        # 허프 변환을 사용하여 직선을 검출합니다.
         lines = cv2.HoughLines(img, 1, np.pi / 180, self.hough_threshold)
 
         if lines is not None:
             adjusted_lines = []
+            
+            # 검출된 각 직선에 대해 처리
             for line in lines:
                 rho, theta = line[0]
+                
+                # 각도 범위를 -π/2 ~ π/2로 조정
                 if theta > np.pi / 2:
                     theta -= np.pi
                 elif theta < -np.pi / 2:
                     theta += np.pi
                 adjusted_lines.append([rho, theta])
 
-            # Filter lines within the desired angle range
+            # 특정 각도 범위(-1 ~ 1 라디안) 내의 직선만 필터링
             filtered_lines = [line for line in adjusted_lines if -1 <= line[1] <= 1]
 
             if filtered_lines:
-                # Find the closest line within the angle range
+                # 가장 가까운 직선을 찾습니다.
                 closest_line = min(filtered_lines, key=lambda line: abs(line[0]))
-                self.closest_line_distance = closest_line[0]
-                self.closest_line_angle = closest_line[1] 
+                self.closest_line_distance = closest_line[0] # 직선까지의 거리 저장
+                self.closest_line_angle = closest_line[1]    # 직선의 각도 저장
+                
         #         # Log information
         #         self.get_logger().info(f"Closest line with distance: {self.closest_line_distance:.2f}, angle: {self.closest_line_angle:.2f}")
         #     else:
@@ -172,8 +179,13 @@ class ParkingFSM(Node):
         # else:
         #     self.get_logger().info("No lines detected")
 
+
     def rotate_by_angle(self, target_angle):
+        
         twist = Twist()
+        """
+        odometry를 이용해서 target_angle 만큼 회전한다.
+        """
         if self.initial_yaw is None:
             self.initial_yaw = self.current_yaw
         yaw_error = target_angle - (self.current_yaw - self.initial_yaw)
@@ -185,20 +197,32 @@ class ParkingFSM(Node):
             self.twist_pub.publish(twist)
             self.initial_yaw = None  # Reset for next rotation
 
+
     def move_by_distance(self, target_distance):
+        """
+        odometry를 이용해서 target_distance 만큼 직진한다. 
+        """
         twist = Twist()
+        
+        # 초기 위치를 설정합니다.
         if self.initial_position is None:
             self.initial_position = (self.current_x, self.current_y)
+            
+        # 현재 위치와 초기 위치 간의 변위를 계산합니다.
         dx = self.current_x - self.initial_position[0]
         dy = self.current_y - self.initial_position[1]
         dist_moved = math.hypot(dx, dy)
+        
+        # 목표 거리(target_distance)까지 이동이 완료되지 않은 경우 전진합니다.
         if dist_moved < target_distance:
             twist.linear.x = self.lin_vel
             self.twist_pub.publish(twist)
+                
+        # 목표 거리에 도달한 경우 이동을 멈추고 초기 위치를 재설정합니다.
         else:
             twist.linear.x = 0.0
             self.twist_pub.publish(twist)
-            self.initial_position = None  # Reset for next movement
+            self.initial_position = None  # 다음 이동을 위해 초기 위치 초기화
 
     def check_marker_timeout(self):
         """Check if the marker has not been detected for over 3 second."""
@@ -231,11 +255,10 @@ class ParkingFSM(Node):
         time.sleep(0.1)
 
     def searching(self):
-        """
-        
-        """
         """Searching for the Aruco marker."""
         self.get_logger().info("Searching")
+        
+        # 마커가 검출된 동안 반복하여 로봇을 회전시켜 정렬을 시도합니다.
         while self.marker_detected:
             if abs(self.marker_centerline_error) > self.centerline_error_tolerance:
                 twist = Twist()
@@ -245,17 +268,21 @@ class ParkingFSM(Node):
                 self.state = 'ALIGNING'      
                 time.sleep(0.1)
                 break
+            
+        # 마커가 검출되지 않은 경우 로봇을 회전하며 마커를 찾습니다.
         else:
             twist = Twist()
             twist.angular.z = self.ang_vel
             self.twist_pub.publish(twist)
             self.rotation_count += 1
+            
             # rotation count 가 500 이상이 되면 STANDBY 상태로 전환
             if self.rotation_count >= 500:  
                 self.rotation_count = 0
                 self.state = 'STANDBY'
                 time.sleep(0.1)
                 self.get_logger().info("Marker not found. Returning to Standby.")
+
 
     #ALIGNING 상태: aruco marker 의 법선와 로봇의 시선으로 작도한 직각삼각형의 내접원의 중심으로 이동
     def aligning(self):
@@ -264,14 +291,21 @@ class ParkingFSM(Node):
 
         while self.marker_detected:
             self.check_marker_timeout()
+            
+            # 거리가 만족인 경우
             if math.hypot(self.marker_x, self.marker_z) < self.distance_tolerance:
                 self.state = 'YAWING'
                 time.sleep(0.1)
                 break
+            
+            # 바라보는 방향이 만족인 경우
             elif abs(self.marker_yaw) < self.yaw_tolerance:
                 self.state = 'APPROACHING'
                 time.sleep(0.1)
                 break
+            
+            
+            # 마커와 정렬되지 않은 경우 회전해서 각도 조정.
             else:
                 self.rotate_by_angle(-self.marker_theta / 2)
                 distance = (self.marker_x * self.marker_z) / (
@@ -296,17 +330,27 @@ class ParkingFSM(Node):
         self.get_logger().info("Approaching")
 
         while self.marker_detected:
+            # 마커 검출 시간 초과 여부 확인
             self.check_marker_timeout()
             twist = Twist()
+            
+            
+            # 허용 오처 범위 밖이라면 
             if math.hypot(self.marker_x, self.marker_z) > self.distance_tolerance:
+                # 중심점에서 벗어났다면
                 if abs(self.marker_centerline_error) > self.centerline_error_tolerance:
                     twist.linear.x = 0.0
                     twist.angular.z = -self.ang_vel * np.sign(self.marker_centerline_error)
+                    
+                # 전진
                 else:
                     twist.linear.x = self.lin_vel
                     twist.angular.z = 0.0
+                    
                 self.twist_pub.publish(twist)
                 self.get_logger().info("Approaching Aruco marker...")
+                
+            # 마커와의 거리가 허용 오차 이내인 경우 상태를 'YAWING'으로 전환
             else:
                 twist.linear.x = 0.0
                 twist.angular.z = 0.0
@@ -314,6 +358,7 @@ class ParkingFSM(Node):
                 self.state = 'YAWING'
                 time.sleep(0.1)
                 break
+            
         else:
             self.get_logger().info("Marker not found. Returning to Searching.")
             self.state = 'SEARCHING'
@@ -327,10 +372,13 @@ class ParkingFSM(Node):
         print("has scan attribute : ", hasattr(self, 'scan_data'))
 
         twist = Twist()
+        
+         # 라이다로 검출한 벽의 각도가 허용 오차를 초과하는 경우, 각도를 조정합니다.
         if abs(self.closest_line_angle) > self.closest_line_angle_tolerance:
             twist.angular.z = self.ang_vel * np.sign(self.closest_line_angle)
             self.twist_pub.publish(twist)
         else:
+            # 각도가 허용 오차 이내라면 회전을 멈추고 상태를 'STANDBY'로 전환합니다.
             twist.angular.z = 0.0
             self.twist_pub.publish(twist)
 
