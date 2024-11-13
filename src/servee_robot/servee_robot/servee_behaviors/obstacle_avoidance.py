@@ -22,7 +22,7 @@ class ObstacleAvoidanceMover(Behaviour):
         self.node.declare_parameters(
             namespace='',
             parameters=[
-                ('avoidance_lieaner', 0.08),
+                ('avoidance_lieaner', 0.05),
                 ('avoidance_angular', 0.25),
                 ('wall_threshold', 0.18),
             ]

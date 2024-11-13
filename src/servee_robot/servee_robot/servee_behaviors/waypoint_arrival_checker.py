@@ -29,13 +29,13 @@ class WaypointArrivalChecker(Behaviour):
         self.blackboard.register_key(key='odom_yaw_error', access=Access.WRITE)
         
         self.blackboard.target_distance = 0.0
-        self.blackboard.waypoint = -1
+        self.blackboard.waypoint = 0
         self.blackboard.robot_state = "idle"
         
         
     def setup(self, **kwargs: Any) -> None:
-        self.node = kwargs['node']
-        self.tolerance_distance = 0.2 # 허용 거리
+        self.node: Node = kwargs['node']
+        self.tolerance_distance = 0.08 # 허용 거리
         self.path = []
 
     def update_next_waypoint_info(self):
@@ -67,7 +67,7 @@ class WaypointArrivalChecker(Behaviour):
         if self.blackboard.robot_state not in ['task', 'home', 'parking']:
             return Status.FAILURE
         
-        
+        # self.node.get_logger().warn(f"way {self.blackboard.waypoint}, next: {self.blackboard.next_pose}")
             
         self.path = self.blackboard.path
         

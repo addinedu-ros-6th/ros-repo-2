@@ -14,12 +14,24 @@ from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
 import sensor_msgs.msg
 from servee_interfaces.msg import TaskGoalPose, ResPath
-from servee_robot.servee_behaviors import led_flasher, request_path, response_path, get_curr_pose, receive_goal, move_forward, robot_rotate, waypoint_arrival_checker, obstacle_avoidance, get_scan, picam_to_blackboard, image_sender
+from servee_robot.servee_behaviors import led_flasher, request_path, response_path, get_curr_pose, receive_goal, move_forward, robot_rotate, waypoint_arrival_checker, obstacle_avoidance, get_scan, picam_to_blackboard, image_sender, aruco_search
 
 from rclpy.qos import QoSProfile
 from rclpy.qos import QoSReliabilityPolicy, QoSHistoryPolicy
 
 
+
+def parking_selector_tree():
+    """
+    목적지에 도착하면 주차를 시도합니다.
+    """
+    parking = Selector("Parking", memory=False)
+    search = aruco_search.ArucoSearch()
+    parking.add_children([search])
+    
+    
+    return parking
+    
 
 def receive_goal_node():
     """

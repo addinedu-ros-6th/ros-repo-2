@@ -24,6 +24,7 @@ class ResponsePath(Behaviour):
         self.blackboard.register_key(key="next_pose", access=Access.READ)
         self.blackboard.register_key(key="curr_pose", access=Access.READ)
         self.blackboard.register_key(key="target_distance", access=Access.WRITE)
+        self.blackboard.register_key(key='odom_yaw_error', access=Access.WRITE)
         
     def setup(self, **kwargs: Any) -> None:
         self.node: Node = kwargs['node']
@@ -42,10 +43,10 @@ class ResponsePath(Behaviour):
     
     def callback(self, msg):
         self.node.get_logger().debug(f"msg {msg}")
-        self.blackboard.set("path", None)
         self.blackboard.path = msg.path
         
         self.blackboard.waypoint = 0
+        self.blackboard.odom_yaw_error = 0.0
         self.blackboard.next_pose = msg.path.poses[self.blackboard.waypoint]
         self.blackboard.target_distance = self.calculate_target_distance_absolute()
         

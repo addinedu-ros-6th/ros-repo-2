@@ -17,8 +17,8 @@ class ReceiveGoal(Behaviour):
     def setup(self, **kwargs: Any) -> None:
         self.node: Node = kwargs['node']
         self.node.create_subscription(
-            TaskGoalPoses,
-            '/servee/task_goal_poses',
+            TaskGoalPose,
+            '/servee/task_goal_pose',
             self.callback,
             10
         )
@@ -33,13 +33,12 @@ class ReceiveGoal(Behaviour):
     def callback(self, msg):
 
             
-        self.blackboard.goal_poses = msg.goal_poses
-        self.node.get_logger().info(f"배열로 받은 목적지 {self.blackboard.goal_poses}")
-        self.blackboard.goal_pose = self.blackboard.goal_poses.poses[0]
-        self.blackboard.robot_state = "receive_goal"
-        
-        
-        # self.blackboard.goal_pose = msg.goal_pose
+        # self.blackboard.goal_poses = msg.goal_poses
+        # self.node.get_logger().info(f"배열로 받은 목적지 {self.blackboard.goal_poses}")
+        # self.blackboard.goal_pose = self.blackboard.goal_poses.poses[0]
         # self.blackboard.robot_state = "receive_goal"
+        
+        self.blackboard.goal_pose = msg.goal_pose
+        self.blackboard.robot_state = "receive_goal"
         
         

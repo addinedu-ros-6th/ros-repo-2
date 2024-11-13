@@ -21,6 +21,8 @@ class ArucoSearch(Behaviour):
         self.blackboard.register_key(key="aruco_maker_result", access=Access.READ)
         self.blackboard.register_key(key='max_angular_speed', access=Access.READ)
         
+        self.blackboard.register_key(key="robot_state", access=Access.WRITE)
+        
         self.blackboard.register_key(key='aruco_state', access=Access.WRITE)
         self.blackboard.register_key(key='aruco_state', access=Access.READ)
         
@@ -83,7 +85,8 @@ class ArucoSearch(Behaviour):
             # path의 마지막 목적지로 다시 한번 이동시킨다. 일단 테스트해보고 상황에 발생하면 추가할 예정. 
             if self.rotation_count >= 500:  
                 self.rotation_count = 0
-                self.node.get_logger().info("Marker not found. Returning to Standby.")
+                self.node.get_logger().warn("Marker not found. Returning to Standby.")
+                self.blackboard.robot_state = "task"
                 
             return Status.SUCCESS
         
