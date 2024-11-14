@@ -144,8 +144,9 @@ class RobotRotate(Behaviour):
     def are_you_ready(self):
         # 경로가 없는 경우
         if self.blackboard.exists('path') == False:
+            self.node.get_logger().error(f"경로가 없습니다.: rotate")
             return False
         
         # 로봇이 이동 상태가 아닌 경우
-        if self.blackboard.robot_state not in ['task', 'home', 'parking']:
+        if self.blackboard.robot_state not in ['task', 'home', 'aruco']:
             return False

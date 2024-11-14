@@ -93,6 +93,7 @@ class ArucoYawing(Behaviour):
                 closest_line = min(filtered_lines, key=lambda line: abs(line[0]))
                 self.closest_line_distance = closest_line[0] # 직선까지의 거리 저장
                 self.closest_line_angle = closest_line[1]    # 직선의 각도 저장
+                self.node.get_logger().fatal(f"closest_line_angle: {self.closest_line_angle}, closest_line_distance: {self.closest_line_distance}")
         
     
     def yawing(self):
@@ -103,14 +104,17 @@ class ArucoYawing(Behaviour):
          # 라이다로 검출한 벽의 각도가 허용 오차를 초과하는 경우, 각도를 조정합니다.
         if abs(self.closest_line_angle) > self.closest_line_angle_tolerance:
             twist.angular.z = self.ang_vel * np.sign(self.closest_line_angle)
+            self.node.get_logger().fatal(f"yawing 이동: {twist.angular.z}")
             self.twist_pub.publish(twist)
+            return Status.FAILURE
             
         else:
             # 각도가 허용 오차 이내라면 회전을 멈추고 상태를 'STANDBY'로 전환합니다.
             twist.angular.z = 0.0
             self.twist_pub.publish(twist)
-            self.node.get_logger().error("Parking accomplished")
+            self.node.get_logger().fatal("주차 완료")
             self.blackboard.aruco_state = 'search'
             self.blackboard.robot_state = 'idle'
+            return Status.SUCCESS
             
     

@@ -32,7 +32,7 @@ class ArucoSearch(Behaviour):
     def setup(self, **kwargs: Any) -> None:
         
         self.node:Node = kwargs['node']
-        self.ang_vel = (self.blackboard.max_angular_speed - 0.25)
+        self.ang_vel = (self.blackboard.max_angular_speed - 0.35)
         self.rotation_count = 0
         self.centerline_error_tolerance = 50
 
@@ -55,7 +55,7 @@ class ArucoSearch(Behaviour):
     def update(self) -> Status:
         
         if self.blackboard.aruco_state != "search":
-            return Status.SUCCESS
+            return Status.FAILURE
         
         self.node.get_logger().warn(f"아루코 마커를 찾아서! {self.blackboard.marker_detected}")
         
@@ -75,6 +75,9 @@ class ArucoSearch(Behaviour):
             else:
                 self.blackboard.aruco_state = "align"
                 self.rotation_count = 0
+                twist = Twist()
+                twist.angular.z = 0.0
+                self.twist_pub.publish(twist)
                 self.node.get_logger().fatal(f"마커를 정면에서 보는 중 {self.rotation_count}")
                 return Status.FAILURE
             
@@ -88,10 +91,14 @@ class ArucoSearch(Behaviour):
             # self.node.get_logger().warn(f"마커를 찾는 중 {self.rotation_count}")
             # 시도를 했지만 결국 마커를 못 찾는 경우
             
-            if self.rotation_count >= 500:  
+            if self.rotation_count >= 50:  
+                twist.angular.z = 0.0
+                self.twist_pub.publish(twist)
                 self.rotation_count = 0
-                self.node.get_logger().fatal("결국 마커를 찾지 못 했습니다.")
+                
                 self.blackboard.robot_state = "task"
+                self.node.get_logger().fatal("결국 마커를 찾지 못 했습니다.")
+                
                 
             return Status.SUCCESS
         

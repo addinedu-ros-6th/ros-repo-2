@@ -14,6 +14,7 @@ class ObstacleAvoidanceMover(Behaviour):
         super(ObstacleAvoidanceMover, self).__init__(name)
         self.blackboard = self.attach_blackboard_client(name=self.name)
         self.blackboard.register_key(key="scan", access=Access.READ)
+        self.blackboard.register_key(key="robot_state", access=Access.READ)
         # self.blackboard.register_key(key="next_pose", access=Access.WRITE)
         
     def setup(self, **kwargs: Any) -> None:
@@ -41,6 +42,10 @@ class ObstacleAvoidanceMover(Behaviour):
      
              
     def update(self) -> Status:
+        
+        if self.blackboard.robot_state in ['parking', 'idle', 'aruco']:
+            return Status.SUCCESS
+        
         self.scan = self.blackboard.scan
         ranges = self.scan.ranges.tolist()
         num_readings = len(ranges)
@@ -113,7 +118,7 @@ class ObstacleAvoidanceMover(Behaviour):
             
             # self.node.get_logger().info(f"좌 우: {direction} : {twist.angular.z}")
             
-        self.node.get_logger().warn(f"{direction}, {void_twist.angular.z}") 
+        self.node.get_logger().warn(f"{direction}, {void_twist.angular.z}, {self.blackboard.robot_state}") 
         self.cmd_vel.publish(void_twist)
         
                 

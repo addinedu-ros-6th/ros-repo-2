@@ -36,7 +36,7 @@ class ResponsePath(Behaviour):
         )
     
     def update(self) -> Status:
-        if self.blackboard.robot_state in ["task", "home", "parking"]:
+        if self.blackboard.robot_state in ["aruco","task", "home", "parking"]:
             return Status.SUCCESS
         
         return Status.FAILURE
