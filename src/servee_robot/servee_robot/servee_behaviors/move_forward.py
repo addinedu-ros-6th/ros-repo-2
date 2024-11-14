@@ -15,7 +15,8 @@ class MoveForward(Behaviour):
         self.blackboard.register_key(key="target_distance", access=Access.WRITE)
         self.blackboard.register_key(key="odom_pose", access=Access.READ)
 
-    
+        self.blackboard.register_key(key="debug", access=Access.WRITE)
+        self.blackboard.debug = 0
     def setup(self, **kwargs: Any) -> None:
         self.node: Node = kwargs['node']
         self.cmd_vel_publisher =self.node.create_publisher(
@@ -23,7 +24,7 @@ class MoveForward(Behaviour):
             '/base_controller/cmd_vel_unstamped',
             10)
         self.prev_position = None  # 이전 위치 저장용 변수
-        self.max_linear_speed = 0.1 
+        self.max_linear_speed = 0.08 
         
     def update(self) -> Status:
         if self.are_you_ready() == False:

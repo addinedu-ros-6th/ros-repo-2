@@ -85,6 +85,16 @@
      <string>매출현황</string>
     </property>
    </widget>
+   <widget class="QComboBox" name="store_comboBox">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>20</y>
+      <width>86</width>
+      <height>25</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

@@ -37,6 +37,7 @@ class ImageSender(Behaviour):
         
         # UDP를 통해 인코딩된 프레임 전송
         self.udp_socket.sendto(frame_data, self.client_address)
+        return Status.SUCCESS
         
     def shutdown(self) -> None:
         self.udp_socket.close()

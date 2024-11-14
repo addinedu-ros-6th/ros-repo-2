@@ -11,7 +11,7 @@ from rclpy.qos import QoSProfile, QoSHistoryPolicy, QoSDurabilityPolicy, QoSReli
 class PathPlanner(Node):
     def __init__(self):
         super().__init__("path_planner_node")
-        self.astar_plan = AStarPlanner(resolution=1, rr=0.35, padding=2)
+        self.astar_plan = AStarPlanner(resolution=1, rr=0.4, padding=2)
         
         # qos_profile = QoSProfile(depth=1)
         # qos_profile.durability = QoSDurabilityPolicy.TRANSIENT_LOCAL

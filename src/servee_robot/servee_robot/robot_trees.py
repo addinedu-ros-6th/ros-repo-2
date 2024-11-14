@@ -14,12 +14,27 @@ from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
 import sensor_msgs.msg
 from servee_interfaces.msg import TaskGoalPose, ResPath
-from servee_robot.servee_behaviors import led_flasher, request_path, response_path, get_curr_pose, receive_goal, move_forward, robot_rotate, waypoint_arrival_checker, obstacle_avoidance, get_scan, picam_to_blackboard, image_sender
+from servee_robot.servee_behaviors import led_flasher, request_path, response_path, get_curr_pose, receive_goal, move_forward, robot_rotate, waypoint_arrival_checker, obstacle_avoidance, get_scan, picam_to_blackboard, image_sender, arucomaker_transformer,aruco_search
 
 from rclpy.qos import QoSProfile
 from rclpy.qos import QoSReliabilityPolicy, QoSHistoryPolicy
 
 
+
+def parking_selector_tree():
+    """
+    목적지에 도착하면 주차를 시도합니다.
+    """
+    parking = Selector("Parking", memory=False)
+    
+    aruco_transform = arucomaker_transformer.ArucoMakerTransformer("aruco_transform_node")
+    
+    search = aruco_search.ArucoSearch("aruco_search")
+    parking.add_children([aruco_transform, search])
+    
+    
+    return parking
+    
 
 def receive_goal_node():
     """
@@ -120,11 +135,11 @@ def begin_tasks():
     tasks = Selector("Tasks", memory=False)
     
     path = create_path() # 경로를 요청한다. 
-    
+    parking = parking_selector_tree()
     move = move_to_goal() # 로봇을 이동시킨다.
     battery_alarm = battery_low_alarm()
 
-    tasks.add_children([battery_alarm, path, move])
+    tasks.add_children([battery_alarm, path, move, parking])
     return tasks
 
 
@@ -152,23 +167,7 @@ def receive_topic2bb():
         qos_profile=utilities.qos_profile_unlatched(),
         threshold=30.0
     )
-    
-    
-    # 레이저 스캔
-    # qos_profile_sensor_data = QoSProfile(
-    #         reliability=QoSReliabilityPolicy.BEST_EFFORT,
-    #         history=QoSHistoryPolicy.KEEP_LAST,
-    #         depth=10
-    #     )
-    
-    # laser_scan2bb = py_trees_ros.subscribers.ToBlackboard(
-    #     name="Get Laser Scan",
-    #     topic_name="/scan",
-    #     topic_type= sensor_msgs.msg.LaserScan,
-    #     blackboard_variables="scan",
-    #     qos_profile=qos_profile_sensor_data,
-    # )
-    
+
     laser_scan2bb = get_scan.GetScan("get_scan_node")
     
     # 현재위치
@@ -205,7 +204,7 @@ def create_root_tree():
     topic2bb = receive_topic2bb()
     sender = sender_data()
     tasks = begin_tasks()
-    root.add_children([topic2bb, tasks])
+    root.add_children([topic2bb, sender, tasks])
     return root
     
 def main():
