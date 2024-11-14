@@ -28,11 +28,12 @@ class ArucoSearch(Behaviour):
         
         self.blackboard.aruco_state = "search"
         
+        
     def setup(self, **kwargs: Any) -> None:
         
         self.node:Node = kwargs['node']
-        self.blackboard.marker_detected = self.blackboard.marker_detected
-        self.ang_vel = self.blackboard.max_angular_speed
+        self.marker_detected = self.blackboard.marker_detected
+        self.ang_vel = (self.blackboard.max_angular_speed - 0.3)
         self.rotation_count = 0
         
 
@@ -41,9 +42,9 @@ class ArucoSearch(Behaviour):
                 Twist, 
                 '/base_controller/cmd_vel_unstamped',
                 10)
-    
-    
-    def initialise(self) -> None:
+
+   
+    def set_marker_data(self):
         self.marker_id = self.blackboard.aruco_maker_result['id']
         self.marker_x = self.blackboard.aruco_maker_result['x']
         self.marker_z = self.blackboard.aruco_maker_result['z'] / 2
@@ -52,6 +53,7 @@ class ArucoSearch(Behaviour):
 
         self.marker_detected = self.blackboard.marker_detected
         self.marker_theta = math.atan2(self.marker_z, self.marker_x)
+   
     
     def update(self) -> Status:
         
@@ -61,31 +63,35 @@ class ArucoSearch(Behaviour):
         
         # 마커가 검출된 동안 반복하여 로봇을 회전시켜 정렬을 시도합니다.
         if self.marker_detected == True:
+            self.set_marker_data()
             
             # 마커와 로봇이 정면으로 마주보도록 회전한다.
             if abs(self.marker_centerline_error) > self.centerline_error_tolerance:
                 twist = Twist()
                 twist.angular.z = -self.ang_vel if self.marker_centerline_error > 0 else self.ang_vel
                 self.twist_pub.publish(twist)
+                self.node.get_logger().warn(f"마커를 정면에서 보게 한다. {self.rotation_count}")
                 return Status.SUCCESS
 
             else:
                 self.blackboard.aruco_state = "align"
                 self.rotation_count = 0
+                self.node.get_logger().warn(f"마커를 정면에서 보는 중 {self.rotation_count}")
                 return Status.FAILURE
             
         # 마커가 안 보인다면 회전하며 마커를 찾는다.  
         else:
+            self.node.get_logger().warn("마커 탐색 중")
             twist = Twist()
             twist.angular.z = self.ang_vel
-            self.twist_pub.publish(twist)
+            # self.twist_pub.publish(twist)
             self.rotation_count += 1
-            
+            self.node.get_logger().warn(f"마커를 찾는 중 {self.rotation_count}")
             # 시도를 했지만 결국 마커를 못 찾는 경우
             # path의 마지막 목적지로 다시 한번 이동시킨다. 일단 테스트해보고 상황에 발생하면 추가할 예정. 
             if self.rotation_count >= 500:  
                 self.rotation_count = 0
-                self.node.get_logger().warn("Marker not found. Returning to Standby.")
+                self.node.get_logger().warn("결국 마커를 찾지 못 했습니다.")
                 self.blackboard.robot_state = "task"
                 
             return Status.SUCCESS

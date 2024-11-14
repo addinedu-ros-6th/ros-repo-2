@@ -21,7 +21,11 @@ class ArucoMakerTransformer(Behaviour):
         self.blackboard.register_key(key="picam_raw_image", access=Access.READ)
         self.blackboard.register_key(key="aruco_maker_result", access=Access.WRITE)
         self.blackboard.register_key(key="marker_detected_time", access=Access.WRITE)
-
+        self.blackboard.register_key(key='marker_detected', access=Access.WRITE)
+        self.blackboard.register_key(key='aruco_state', access=Access.WRITE)
+        self.blackboard.register_key(key="robot_state", access=Access.READ)
+        self.blackboard.marker_detected  = False
+        
     def setup(self, **kwargs: Any) -> None:
         self.node: Node = kwargs['node']
         
@@ -44,9 +48,17 @@ class ArucoMakerTransformer(Behaviour):
         self.detector = cv2.aruco.ArucoDetector(aruco_dict)
     
     def update(self) -> Status:
+        
+        if self.blackboard.robot_state not in ["aruco", "parking"]:
+            # self.node.get_logger().warn(f"{self.blackboard.robot_state}")
+            return Status.SUCCESS
+        
+        
         frame = self.blackboard.picam_raw_image
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         corners, ids, _ = self.detector.detectMarkers(gray) # Aruco 마커 검출
+        
+        # cv2.imshow("test", frame)
         
         marker_data = []  # 검출된 각 마커의 데이터를 저장할 임시 테이블
         # 카메라 중심 정의
@@ -121,13 +133,18 @@ class ArucoMakerTransformer(Behaviour):
             
             self.node.get_logger().info(
                 f"Published Marker ID: {closest_marker['id']:.2f}, "
-                f"Distance: {closest_marker.distance['distance']:.2f}m, "
-                f"Centerline Error: {closest_marker.centerline_error:.2f}, "
+                f"Distance: {closest_marker['distance']:.2f}m, "
+                f"Centerline Error: {closest_marker['centerline_error']:.2f}, "
                 f"X: {closest_marker['x']:.2f}m, Y: {closest_marker['y']:.2f}m, Z: {closest_marker['z']:.2f}m, "
                 f"Yaw: {closest_marker['yaw']:.2f}°, Pitch: {closest_marker['pitch']:.2f}°, Roll: {closest_marker.roll:.2f}°"
             )  
-             
-            return Status.SUCCESS
+            self.blackboard.marker_detected  = True
+            self.blackboard.aruco_state = "search"
+            self.node.get_logger().warn("아루코마커 검출 완료")
+            return Status.FAILURE
         
         else:
+            self.blackboard.marker_detected  = False
+            self.node.get_logger().warn("아루코마커 검출 실패")
+            self.blackboard.aruco_state = "search"
             return Status.FAILURE

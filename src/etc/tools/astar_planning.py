@@ -57,6 +57,9 @@ class AStarPlanner:
         self.x_width, self.y_width = 0, 0
         self.motion = self.get_motion_model() # 이동할 수 있는 방향 설정. ( 4방향으로 설정되어 있다.)
 
+        self.resolution = 1
+        self.map_resolution = 1
+        self.map_origin = (0, 0)
         ox, oy = self.load_map() # 장애물 좌표를 가져온다.
 
         self.calc_obstacle_map(ox, oy)

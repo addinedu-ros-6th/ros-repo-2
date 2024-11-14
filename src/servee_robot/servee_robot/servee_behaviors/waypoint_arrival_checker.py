@@ -35,7 +35,7 @@ class WaypointArrivalChecker(Behaviour):
         
     def setup(self, **kwargs: Any) -> None:
         self.node: Node = kwargs['node']
-        self.tolerance_distance = 0.08 # 허용 거리
+        self.tolerance_distance = 0.2 # 허용 거리
         self.path = []
 
     def update_next_waypoint_info(self):
@@ -43,14 +43,17 @@ class WaypointArrivalChecker(Behaviour):
         if self.blackboard.waypoint>= len(self.path.poses) -1: 
             # Path 완료 
             # 추후에 path가 array로 전달되면 다 돌았는지 체크한 뒤에 parking으로 돌려야 한다.
-            self.blackboard.robot_state = "idle" 
+            self.blackboard.robot_state = "aruco" 
+            self.node.get_logger().warn(f"path 완료 {self.blackboard.robot_state}")
             
         else:
             # 다음 웨이포인트로
+            
             self.blackboard.waypoint += 1
             self.blackboard.odom_yaw_error = 0.0
             self.blackboard.next_pose = self.path.poses[self.blackboard.waypoint]
             self.blackboard.target_distance = self.calculate_target_distance_absolute()
+            self.node.get_logger().warn(f"다음 Waypoint로 {self.blackboard.waypoint}")
   
             
     def update(self) -> Status:
@@ -76,13 +79,16 @@ class WaypointArrivalChecker(Behaviour):
             
             # 절대 좌표로도 확인해보고 
             distance_error = self.calculate_target_distance_absolute()
+            self.node.get_logger().warn(f"허용 범위 체크 {distance_error}")
             
             # 허용 범위 안 이라면. 
             if distance_error <=  self.tolerance_distance:
+                # self.node.get_logger().warn(f"허용 범위 체크 {self.distance_error}")
                 self.update_next_waypoint_info()
                 
             # 허용 범위 밖이라면 더 이동시킨다
             else:
+                # self.node.get_logger().warn(f"허용 범위 밖 {self.distance_error}")
                 self.blackboard.target_distance = distance_error
         
         return Status.SUCCESS
