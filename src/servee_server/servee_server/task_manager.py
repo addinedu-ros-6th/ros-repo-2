@@ -22,8 +22,8 @@ class Robot:
     def __init__(self, name, robot_type):
         self.name = name
         self.robot_type = robot_type
-        self.state = 'charging'
-        self.prev_state = 'charging'
+        self.state = 'idle'
+        self.prev_state = 'idle'
         self.assigned_task_id = None
         self.pose = None
         self.executed_tasks = 0
@@ -62,17 +62,14 @@ class RobotTask(Node):
 
         # ! code for communication test
         self.robots = {'robot': Robot('robot', 'Server')}
+        # self.robots = {'robot': Robot('robot', 'Retriever')}
+
         self.task_publishers = self.init_publishers()
         self.create_subscription(Pose, 'pose', self.robot_pose_callback('robot'), 10, callback_group=self.group1)
         self.create_subscription(String, 'state', self.robot_state_callback('robot'), 10, callback_group=self.group4)
         
+        time.sleep(3)
         self.create_timer(0.5, self.assign_tasks)
-
-        time.sleep(5)
-
-        command = CreateInstanceCommand(call_type="CREATE", order_id=9876, store_id=876,
-                                        table_id=76, call_time="2024-11-14 12:00:00")
-        command.execute(self.server)
 
     def init_publishers(self):
         publishers = { 
@@ -100,17 +97,17 @@ class RobotTask(Node):
         return callback
 
     def robot_state_callback(self, robot_name):
-        # ? robot state type : "idle", "running1", "standby1", "running2", "standy2", "returning_home", "low_battery" 
+        # * robot state type : "idle", "running1", "standby1", "running2", "standy2", "returning_home", "low_battery" 
         def callback(msg):
             robot = self.robots[robot_name]
             robot.prev_state = robot.state
             robot.state = msg.data
-            if robot.prev_state in ['idle', 'low_battery'] and robot.state == 'running1':
+            if robot.prev_state in ['idle','returning_home','low_battery'] and robot.state == 'running1':
                 if robot.robot_type == 'Server':
                     command = UpdateStatusCommand(call_type='SE', order_id=robot.assigned_task_id, 
                                                   new_status='waiting_handover')
                 elif robot.robot_type == 'Retriever':
-                    command = UpdateStatusCommand(call_type='RV', order_id=robot.assigned_task_id, 
+                    command = UpdateStatusCommand(call_type='RV', table_id=robot.assigned_task_id, 
                                                   new_status='start_retrieving')
                 command.execute(self.server)
                 time.sleep(1)
@@ -119,7 +116,7 @@ class RobotTask(Node):
                     command = UpdateStatusCommand(call_type='SE', order_id=robot.assigned_task_id, 
                                                   new_status='waiting_handover')
                 elif robot.robot_type == 'Retriever':
-                    command = UpdateStatusCommand(call_type='RV', order_id=robot.assigned_task_id, 
+                    command = UpdateStatusCommand(call_type='RV', table_id=robot.assigned_task_id, 
                                                   new_status='waiting_handover')
                 command.execute(self.server)
                 time.sleep(1)
@@ -128,7 +125,7 @@ class RobotTask(Node):
                     command = UpdateStatusCommand(call_type='SE', order_id=robot.assigned_task_id, 
                                                   new_status='serving')
                 elif robot.robot_type == 'Retriever':
-                    command = UpdateStatusCommand(call_type='RV', order_id=robot.assigned_task_id, 
+                    command = UpdateStatusCommand(call_type='RV', table_id=robot.assigned_task_id, 
                                                   new_status='retrieving')
                 command.execute(self.server)
                 time.sleep(1)
@@ -137,7 +134,7 @@ class RobotTask(Node):
                     command = UpdateStatusCommand(call_type='SE', order_id=robot.assigned_task_id, 
                                                   new_status='done_serving')
                 elif robot.robot_type == 'Retriever':
-                    command = UpdateStatusCommand(call_type='RV', order_id=robot.assigned_task_id, 
+                    command = UpdateStatusCommand(call_type='RV', table_id=robot.assigned_task_id, 
                                                   new_status='done_retrieving')
                 command.execute(self.server)
                 time.sleep(1)
@@ -145,7 +142,7 @@ class RobotTask(Node):
                 if robot.robot_type == 'Server':
                     command = DeleteInstanceCommand(call_type='SE', order_id=robot.assigned_task_id)
                 elif robot.robot_type == 'Retriever':
-                    command = DeleteInstanceCommand(call_type='RV', order_id=robot.assigned_task_id)
+                    command = DeleteInstanceCommand(call_type='RV', table_id=robot.assigned_task_id)
                 command.execute(self.server)
                 time.sleep(1)
                 print(robot.name, " finished task ", robot.assigned_task_id)
@@ -153,7 +150,7 @@ class RobotTask(Node):
         return callback
 
     def location_parser(self, location_data_string):
-        # ? data_string = "x:1.2, y:3.4, z:5.6, qx:0.1, qy:0.2, qz:0.3, qw:0.4"
+        # * data_string = "x:1.2, y:3.4, z:5.6, qx:0.1, qy:0.2, qz:0.3, qw:0.4"
         try:
             pattern = r"x:(-?\d+\.?\d*), y:(-?\d+\.?\d*), z:(-?\d+\.?\d*), qx:(-?\d+\.?\d*), qy:(-?\d+\.?\d*), qz:(-?\d+\.?\d*), qw:(-?\d+\.?\d*)"
             match = re.search(pattern, location_data_string)
@@ -170,16 +167,9 @@ class RobotTask(Node):
         available_serverbots = [r for r in self.robots.values() if r.robot_type == 'Server' and r.state in ['idle', 'returning_home']]
         available_retrieverbots = [r for r in self.robots.values() if r.robot_type == 'Retriever' and r.state in ['idle', 'returning_home']]
         
-        # print("print queue!")
-        # print("serving queue : ", list(self.serving_task_queue.queue))
-        # print("retrieving queue : ",list(self.retrieving_task_queue.queue))
-        # print(available_serverbots)
-        # print(available_retrieverbots)  
-        
         if self.serving_task_queue and available_serverbots:
-
             order = self.serving_task_queue.get()  # Get the position of the first task
-            print("order id: ", order.order_id)
+            print("Assigning order ", order.order_id)
    
             # ! code for communication test
             store_data_string = "x:1.2, y:3.4, z:5.6, qx:0.1, qy:0.2, qz:0.3, qw:0.4"
@@ -193,35 +183,28 @@ class RobotTask(Node):
 
             if store_goalpose and table_goalpose:
                 closest_serverbot = min(available_serverbots, key=lambda r: r.calculate_distance(store_goalpose[:2]))
-                
-                # print(f"Assigning task {order.order_id} to {closest_serverbot.name}")
-                print("Finding closest serverbot...")
-
+                print("Task assigned to : ", closest_serverbot.name)
                 self.assign_task_to_robot(closest_serverbot, order.order_id, store_goalpose, table_goalpose)
 
-                # print("print queue!")
-                # print("serving queue : ", list(self.serving_task_queue.queue))
-                # print("retrieving queue : ",list(self.retrieving_task_queue.queue))
-                # print(available_serverbots)
-                # print(available_retrieverbots)  
-
         if self.retrieving_task_queue and available_retrieverbots:
-            table_id = self.retrieving_task_queue[0]  # Get the position of the first task
+            retrieval = self.retrieving_task_queue.get()  # Get the position of the first task
+            print("Assigning retrieval ", retrieval.table_id)
 
-            store_data_string = self.server.RV_instances[table_id].store_loaction
-            table_data_string = self.server.RV_instances[table_id].table_loaction
+            # ! code for communication test
+            store_data_string = "x:1.2, y:3.4, z:5.6, qx:0.1, qy:0.2, qz:0.3, qw:0.4"
+            table_data_string = "x:9.2, y:9.4, z:9.6, qx:9.1, qy:9.2, qz:9.3, qw:9.4"
+
+            # ? actual code
+            # store_data_string = retrieval.store_loaction
+            # table_data_string = retrieval.table_loaction
+
             store_goalpose = self.location_parser(store_data_string)
             table_goalpose = self.location_parser(table_data_string)
 
             if store_goalpose and table_goalpose:
                 closest_retrieverbot = min(available_retrieverbots, key=lambda r: r.calculate_distance(table_goalpose[:2]))
-                self.assign_task_to_robot(closest_retrieverbot, table_id, table_goalpose, store_goalpose)
-
-                # print("print queue!")
-                # print("serving queue : ", list(self.serving_task_queue.queue))
-                # print("retrieving queue : ",list(self.retrieving_task_queue.queue))
-                # print(available_serverbots)
-                # print(available_retrieverbots)  
+                print("Task assigned to : ", closest_retrieverbot.name)
+                self.assign_task_to_robot(closest_retrieverbot, retrieval.table_id, table_goalpose, store_goalpose)
 
     def assign_task_to_robot(self, robot, task_id, first_goalpose, second_goalpose):
         
@@ -256,12 +239,14 @@ class RobotTask(Node):
         task_goal_poses.goal_poses = pose_array
 
         # 퍼블리시
-        while not robot.state in ["idle", "returning_home"]:
+        while True:
             print(f"Assigning task {task_id} to {robot.name}")
             self.task_publishers[robot.name].publish(task_goal_poses)
-            time.sleep(0.5)
-        print(f"Assigned successfully!")
+            time.sleep(0.2)
+            if robot.state == 'running1':
+                break
 
+        print(f"Assigned successfully!")
 
         robot.task_id = task_id
         try:

@@ -135,11 +135,13 @@ class CreateInstanceCommand(Command):
             server.SE_instances[self.order_id] = instance
             server.notify_observers(f"CREATE,{self.call_type},{self.order_id},{server.SE_instances[self.order_id].status}")
             print(f"SE Instance {self.order_id} created.")
+            server.manage_queue(instance)
         elif self.call_type == 'RV':
             instance = RetrievalInstance(self.store_id, self.table_id, self.call_time)
             server.RV_instances[self.table_id] = instance
             server.notify_observers(f"CREATE,{self.call_type},{self.table_id},{server.RV_instances[self.table_id].status}")
             print(f"RV Instance {self.table_id} created.")
+            server.manage_queue(instance)
 
 class UpdateStatusCommand(Command):
     def __init__(self, new_status, call_type, order_id=None, table_id=None):
@@ -198,7 +200,7 @@ class RetrievalInstance: # 회수 인스턴스
         self.store_id = store_id
         self.table_id = table_id
         self.call_time = call_time
-        self.status = "1" #초기 상태
+        self.status = "call_complete" #초기 상태
         self.table_location = "0-0-0/0-0-0-0" #table_id 로 위치 접근, 추후 DB 연동
         self.retrieval_location = "0-0-0/0-0-0-0" #stoe_id 로 위치 접근, 추후 DB 연동
         self.task_start_time = None
