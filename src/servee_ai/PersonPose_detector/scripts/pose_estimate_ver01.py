@@ -9,12 +9,12 @@ from sklearn.preprocessing import LabelEncoder
 class YoloPose:
     def __init__(self):
     # YOLOv8 Pose 모델 로드
-        # self.yolo_model = YOLO('./servee_ai/PersonPose_detector/scripts/yolov8n-pose.pt')
-        self.yolo_model = YOLO('/home/heechun/dev_ws/ros-repo-2/src/servee_ai/PersonPose_detector/scripts/yolov8n-pose.pt')
-    
+        self.yolo_model = YOLO('./src/servee_ai/PersonPose_detector/scripts/yolov8n-pose.pt')
+        
+        
         # 학습된 LSTM 모델 로드
-        # self.lstm_model = tf.keras.models.load_model('./servee_ai/PersonPose_detector/scripts/pose_model_ver01.keras')
-        self.lstm_model = tf.keras.models.load_model('/home/heechun/dev_ws/ros-repo-2/src/servee_ai/PersonPose_detector/scripts/pose_model_ver01.keras')
+        self.lstm_model = tf.keras.models.load_model('./src/servee_ai/PersonPose_detector/scripts/pose_model_ver01.keras')
+        
     
         # LabelEncoder 객체 생성 및 클래스에 맞게 fit
         self.label_encoder = LabelEncoder()

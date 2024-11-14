@@ -1,13 +1,17 @@
 import socket
 from datetime import datetime
+import queue
 
 class ClientObserver:
-    def __init__(self, host, port):
+    def __init__(self, host, port, shared_queue=None):
         self.host = host
         self.port = port
         self.running = True  # Control flag for the receive loop
 
+        self.shared_queue = shared_queue
+        
     def parse_message(self, message):
+        result =""
         parts = message.split(',')
         if len(parts) < 3:
             print("Invalid message format")
@@ -20,9 +24,11 @@ class ClientObserver:
         try:
             if command_type in ["CREATE", "UPDATE"] and call_type in ["SE", "RV"]:
                 status = parts[3]  # new_status value
-                print(f"{command_type}, {call_type}, {instance_id}, {status}")
+                result = f"{command_type}, {call_type}, {instance_id}, {status}"
+                return result
             elif command_type == "DELETE" and call_type in ["SE", "RV"]:
-                print(f"{command_type}, {call_type}, {instance_id}")
+                result = f"{command_type}, {call_type}, {instance_id}"
+                return result
             else:
                 print("Unknown command type or call type")
         except Exception as e:
@@ -37,7 +43,8 @@ class ClientObserver:
                 try:
                     message = client_socket.recv(1024).decode('utf-8')
                     if message:
-                        self.parse_message(message)
+                        result = self.parse_message(message)
+                        self.shared_queue.put(result)
                 except ConnectionResetError:
                     print("Connection lost. Attempting to reconnect...")
                     break

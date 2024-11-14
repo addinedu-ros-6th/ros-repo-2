@@ -6,10 +6,10 @@ import tensorflow as tf
 from sklearn.preprocessing import LabelEncoder
 
 # YOLOv8 Pose 모델 로드
-yolo_model = YOLO('./servee_ai/PersonPose_detector/scripts/yolov8n-pose.pt')
+yolo_model = YOLO('./src/servee_ai/PersonPose_detector/scripts/yolov8n-pose.pt')
 
 # 학습된 LSTM 모델 로드
-lstm_model = tf.keras.models.load_model('./servee_ai/PersonPose_detector/scripts/pose_model_ver01.keras')
+lstm_model = tf.keras.models.load_model('./src/servee_ai/PersonPose_detector/scripts/pose_model_ver01.keras')
 
 # LabelEncoder 객체 생성 및 클래스에 맞게 fit
 label_encoder = LabelEncoder()

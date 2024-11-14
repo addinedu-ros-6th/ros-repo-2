@@ -30,6 +30,8 @@ import matplotlib.dates as mdates
 
 #from etc.db.DBmanager import MySQLConnection
 from etc.db.dbtest_connpull import MySQLConnection
+from servee_gui.observer_subscriber import ClientObserver
+import queue
 
 from PyQt5.QtCore import Qt 
 import math
@@ -38,54 +40,42 @@ import math
 from PyQt5 import QtWidgets, uic
 from functools import partial
 
+
+
 ###########################################db sql 사용 규칙 ###########################################
 # .1 db에 요청을 날리는 경우에는 함수명을 첫번째 인덱스에 쓰고 뒤에 데이터를 넣는다
+
+order_queue = queue.Queue()
+
 class Worker(QThread):
     update_signal = pyqtSignal(str)  # 메인 스레드로 메시지 전달 신호
 
-    def __init__(self, host="192.168.0.130", port=9992):
+    def __init__(self):
         super().__init__()
-        self.host = host
-        self.port = port
+     
         self.running = True
-
-    def run(self):
-        # TCP 서버 소켓 생성
-        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server_socket.bind((self.host, self.port))
-        server_socket.listen(5)
-        print(f"Listening on {self.host}:{self.port}")
-
-       
-        try:
-            while self.running:
-                client_socket, addr = server_socket.accept()  # 클라이언트 연결 수락
-                print(f"연결됨 {addr}")
-                self.handle_client(client_socket)  # 클라이언트 처리
-        except Exception as e:
-            print(f"Error accepting connection: {e}")
-        finally:
-            server_socket.close()
         
 
-    def handle_client(self, client_socket):
-        try:
-            while self.running:
-                data = client_socket.recv(1024)
-                if not data:
-                    break  # 연결이 끊어졌다면 루프 종료
-                message = data.decode('utf-8')
-                
-                self.update_signal.emit(message)
-                print(message)
-                response = "ok"
-                client_socket.send(response.encode('utf-8')) #클라이언트에게 받은 데이터 그대로 송신
+    def run(self):
+        self.receive_state()
+        
 
-        except Exception as e:
-            print(f"Error handling client: {e}")
-        finally:
-            client_socket.close() 
+    def receive_state(self):
 
+        #데이터 수집
+        while self.running:
+            try:
+
+                results = order_queue.get()
+
+                #빈공간 제거 해야 함
+                if("SE" in results):
+
+                    self.update_signal.emit(results.replace(" ", ""))
+                else:
+                    pass
+            except queue.Empty:
+                time.sleep(0.03) 
 
     def stop(self):
         self.running = False    
@@ -95,20 +85,30 @@ class MainWindow(QMainWindow):
         super().__init__()
         uic.loadUi("./src/servee_gui/vendor_gui/servee_vendor.ui",self)
 
+        
+
         self.setWindowTitle("SERVEE GUI")
         self.cancel_index =0
         self.result_price=0
-        self.tcp_ip = "192.168.0.130"
-        self.tcp_port = 9992
-
+        self.host = "192.168.0.130"
+        self.port = 9993
+        self.running = True
         #self.dbm = MySQLConnection()
         #self.dbm.db_connect(self.tcp_ip, 3306, "SERVEE_DB", "kjc", "1234")
-        
+        self.ob_client = ClientObserver(self.host, self.port,order_queue)
         self.dbm = MySQLConnection.getInstance()
 
-        self.worker = Worker(self.tcp_ip, self.tcp_port)  # 서버 IP와 포트 설정
+
+
+        self.client_first_receive = threading.Thread(target=self.ob_client.receive_updates)
+        self.client_first_receive.start()
+        
+        self.worker = Worker()  # 서버 IP와 포트 설정
         self.worker.update_signal.connect(self.make_orderlist)  # 신호와 슬롯 연결
         self.worker.start()  # 스레드 시작
+
+        #self.client_order_update = threading.Thread(target=self.receive_state)
+        #self.client_order_update.start()
 
         self.orderlist_tableWidget.setColumnHidden(6, True)  
         self.order_count=1
@@ -135,72 +135,48 @@ class MainWindow(QMainWindow):
                                          "QTableWidget::item { border: none;}")
         
 
+    def make_orderlist(self,result):
+        #command_type = results.split(',')[0]
+        #call_type = results.split(',')[1]
+        print("vendor 오더테이블 : ", result)
+        if("CREATE" in result):
 
-    def receive_orderid(self):
-        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server.bind((self.tcp_ip, self.tcp_port))
-        server.listen(5)
-        print("서버가 시작되었습니다. 연결을 기다립니다...")
-
-        while True:
-            try:
-                client_socket, addr = server.accept()
-                if client_socket:
-                    print(f"연결됨: {addr}")
-                    request_data = client_socket.recv(1024)
-                    
-                    order_id = request_data.decode('utf-8')
-
-                    order_results=self.dbm.get_order_details(order_id)
-                    
-                    self.make_orderlist(order_results,order_id)
-                    response = "ok"
-                    client_socket.send(response.encode('utf-8'))
-
-
-            except Exception as e:
-                pass
-            finally:
-                client_socket.close()
-
-
-    def make_orderlist(self,order_id=41):
-        
-        row_index=0
-        print("리스트 만드는 오더아이디 : ", order_id)
-        for i in range(3):
-            order_results=self.dbm.get_order_details(order_id)
-            if(order_results!=[]):
-                break
-            time.sleep(3)
-
-        #self.robot_call_count= self.robot_call_count+1
-        print(order_results)
-        row_count = self.orderlist_tableWidget.rowCount()
-
-        for row_index, row in enumerate(order_results):
+            order_id = result.split(',')[2]
+            #call_state = results.split(',')[3]
+            row_index=0
             
-            self.orderlist_tableWidget.insertRow(row_count+row_index)
-            self.orderlist_tableWidget.setItem(row_count+row_index, 0, QTableWidgetItem(str(self.order_count)))
-            self.order_count = self.order_count+1
-            for column_index, item in enumerate(row):
-               
-                # 각 셀에 데이터 설정
-                self.orderlist_tableWidget.setItem(row_count+row_index, column_index+1, QTableWidgetItem(str(item)))
-                if(column_index==2):
-                    item = str(item).split(' ')[1]
+            print("리스트 만드는 오더아이디 : ", order_id)
+            for i in range(3):
+                order_results=self.dbm.get_order_details(order_id)
+    
+    
+            #self.robot_call_count= self.robot_call_count+1
+            print(order_results)
+            row_count = self.orderlist_tableWidget.rowCount()
+    
+            for row_index, row in enumerate(order_results):
+                
+                self.orderlist_tableWidget.insertRow(row_count+row_index)
+                self.orderlist_tableWidget.setItem(row_count+row_index, 0, QTableWidgetItem(str(self.order_count)))
+                self.order_count = self.order_count+1
+                for column_index, item in enumerate(row):
+                
+                    # 각 셀에 데이터 설정
                     self.orderlist_tableWidget.setItem(row_count+row_index, column_index+1, QTableWidgetItem(str(item)))
-            self.orderlist_tableWidget.setItem(row_count+row_index, 4, QTableWidgetItem("조리중"))
-            self.orderlist_tableWidget.setItem(row_count+row_index, 6, QTableWidgetItem(str(order_id)))  
-
-        self.orderlist_tableWidget.insertRow(row_count+row_index+1)      
-        self.robot_call_button = QtWidgets.QPushButton("로봇호출", self)
-        self.robot_call_button.setObjectName("button_serve_" + str(order_id))
-        self.robot_call_button.clicked.connect(partial(self.cal_robot_serve, order_id))
-        self.orderlist_tableWidget.setCellWidget(row_count+row_index+1, 5, self.robot_call_button)
-        self.orderlist_tableWidget.setItem(row_count+row_index+1, 6, QTableWidgetItem(str(order_id)))
-        self.orderlist_tableWidget.setColumnHidden(6, True)                
-        self.center_text_in_cells()
+                    if(column_index==2):
+                        item = str(item).split(' ')[1]
+                        self.orderlist_tableWidget.setItem(row_count+row_index, column_index+1, QTableWidgetItem(str(item)))
+                self.orderlist_tableWidget.setItem(row_count+row_index, 4, QTableWidgetItem("조리중"))
+                self.orderlist_tableWidget.setItem(row_count+row_index, 6, QTableWidgetItem(str(order_id)))  
+    
+            self.orderlist_tableWidget.insertRow(row_count+row_index+1)      
+            self.robot_call_button = QtWidgets.QPushButton("로봇호출", self)
+            self.robot_call_button.setObjectName("button_serve_" + str(order_id))
+            self.robot_call_button.clicked.connect(partial(self.cal_robot_serve, order_id))
+            self.orderlist_tableWidget.setCellWidget(row_count+row_index+1, 5, self.robot_call_button)
+            self.orderlist_tableWidget.setItem(row_count+row_index+1, 6, QTableWidgetItem(str(order_id)))
+            self.orderlist_tableWidget.setColumnHidden(6, True)                
+            self.center_text_in_cells()
 
     def cal_robot_serve(self ,order_id):
         # QTableWidget의 모든 셀 텍스트를 흐리게 설정
@@ -217,7 +193,10 @@ class MainWindow(QMainWindow):
                         # 색상을 변경하여 흐리게 보이게 설정 (옵션)
                         item.setForeground(Qt.gray)
             robot_call_button = self.findChild(QPushButton, "button_serve_" + str(order_id))            
-            robot_call_button.setEnabled(False)             
+            robot_call_button.setEnabled(False)
+
+        self.ob_client.send_update_command("SE",order_id,"서빙중") 
+
 
     def center_text_in_cells(self):
         row_count = self.orderlist_tableWidget.rowCount()
