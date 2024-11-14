@@ -6,7 +6,7 @@ import time
 import math
 import os
 
-from sympy import false
+#from sympy import false
 #from ultralytics import YOLO
 import socket
 import struct
@@ -31,7 +31,7 @@ class ROS2SocketNode(Node):
        #변수 선언
         
         self.result=""
-        self.robot_1_motion_client = ClientFormat(host="localhost",port=9998,topic="robot1",nodeName="robot1_pub_node")
+        self.robot_1_motion_client = ClientFormat(host="192.168.0.130",port=9998,topic="robot1",nodeName="robot1_pub_node")
        
         self.robot_2_motion_client = ClientFormat(host="localhost",port=9996,topic="robot2",nodeName="robot2_pub_node")
 
@@ -42,11 +42,11 @@ class ROS2SocketNode(Node):
         robot1_thread = threading.Thread(target=self.robot_1_motion_client.client_start)
         robot1_thread.start()
         
-        robot2_thread = threading.Thread(target=self.robot_2_motion_client.client_start)
-        robot2_thread.start()
-
-        robot3_thread = threading.Thread(target=self.robot_3_motion_client.client_start)
-        robot3_thread.start()
+        #robot2_thread = threading.Thread(target=self.robot_2_motion_client.client_start)
+        #robot2_thread.start()
+#
+        #robot3_thread = threading.Thread(target=self.robot_3_motion_client.client_start)
+        #robot3_thread.start()
 
 
 def main(args=None):
