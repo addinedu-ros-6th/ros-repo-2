@@ -14,7 +14,7 @@ from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
 import sensor_msgs.msg
 from servee_interfaces.msg import TaskGoalPose, ResPath
-from servee_robot.servee_behaviors import led_flasher, request_path, response_path, get_curr_pose, receive_goal, move_forward, robot_rotate, waypoint_arrival_checker, obstacle_avoidance, get_scan, picam_to_blackboard, image_sender, arucomaker_transformer,aruco_search, aruco_aligning
+from servee_robot.servee_behaviors import led_flasher, request_path, response_path, get_curr_pose, receive_goal, move_forward, robot_rotate, waypoint_arrival_checker, obstacle_avoidance, get_scan, picam_to_blackboard, image_sender, arucomaker_transformer,aruco_search, aruco_aligning, aruco_yawing
 
 from rclpy.qos import QoSProfile
 from rclpy.qos import QoSReliabilityPolicy, QoSHistoryPolicy
@@ -31,7 +31,8 @@ def parking_selector_tree():
     
     search = aruco_search.ArucoSearch("aruco_search")
     aligning = aruco_aligning.ArucoAligning("aruco_aligning")
-    parking.add_children([aruco_transform, search, aligning])
+    yawing = aruco_yawing.ArucoYawing("aruco_yawing")
+    parking.add_children([aruco_transform, search, aligning, yawing])
     
     
     return parking

@@ -18,11 +18,11 @@ class ArucoAligning(Behaviour):
         self.blackboard = self.attach_blackboard_client(name=self.name)
         self.blackboard.register_key(key="marker_detected", access=Access.READ)
         self.blackboard.register_key(key="aruco_maker_result", access=Access.READ)
-        
+        self.blackboard.register_key(key="yaw", access=Access.READ)
         self.blackboard.register_key(key="path", access=Access.READ)
         self.blackboard.register_key(key="path", access=Access.WRITE)
-        
         self.blackboard.register_key(key="curr_pose", access=Access.READ)
+        self.blackboard.register_key(key="odom_pose", access=Access.READ)
         
         self.blackboard.register_key(key="robot_state", access=Access.WRITE)
         self.blackboard.register_key(key='aruco_state', access=Access.WRITE)
@@ -31,9 +31,12 @@ class ArucoAligning(Behaviour):
      
     def setup(self, **kwargs: Any) -> None:
         self.node:Node = kwargs['node']   
-        self.distance_tolerance = 0.6
-        self.yaw_tolerance = 1.0
-        
+        self.distance_tolerance = 0.2
+        self.yaw_tolerance = 0.3
+        self.initial_position = None
+        self.initial_yaw = None
+        self.ang_vel = 0.3
+        self.lin_vel = 0.08
         self.twist_pub = \
             self.node.create_publisher(
                 Twist, 
@@ -61,13 +64,13 @@ class ArucoAligning(Behaviour):
             # 거리
             if math.hypot(self.marker_x, self.marker_z) < self.distance_tolerance:
                 self.blackboard.aruco_state = "yawing"
-                self.node.get_logger().fatal("Yawing 상태로 넘어갑니다.")
+                self.node.get_logger().fatal(f"Yawing 상태로 넘어갑니다. {math.hypot(self.marker_x, self.marker_z)}")
                 return Status.FAILURE
                 
             # 방향
             elif abs(self.marker_yaw) < self.yaw_tolerance:
                 self.blackboard.aruco_state = "approach"
-                self.node.get_logger().fatal("approach 상태로 넘어갑니다.")
+                self.node.get_logger().fatal(f"approach 상태로 넘어갑니다.{self.marker_yaw}")
                 return Status.FAILURE
                 
             # 마커와 정렬되지 않은 경우 회전해서 각도 조정.
@@ -82,17 +85,55 @@ class ArucoAligning(Behaviour):
                 goal_pose = Pose()
                 goal_pose.position.x = curr_x + distance * math.cos(self.marker_theta)
                 goal_pose.position.y = curr_y + distance * math.sin(self.marker_theta)
+                self.robot_move(goal_pose.position.x, goal_pose.position.y)
                 
-                path = self.blackboard.path
-                path.poses.append(goal_pose)
+                # path = self.blackboard.path
+                # path.poses.append(goal_pose)
+                # self.blackboard.path = path
+                # self.blackboard.aruco_state = "search"
+                # self.blackboard.robot_state = "parking"
                 
-                self.blackboard.path = path
-                self.blackboard.aruco_state = "search"
-                self.blackboard.robot_state = "parking"
                 self.node.get_logger().fatal(f"마커와 정렬되지 않아 다시 이동합니다.{distance}, {math.hypot(self.marker_x, self.marker_z)}, {abs(self.marker_yaw)}")
                     
                     
         else:
             self.blackboard.aruco_state = "search"
             self.node.get_logger().info("Marker not found. Returning to Searching.")
+    
         
+    def robot_move(self, angle, distance):
+        twist = Twist()
+        
+        if self.initial_yaw is None:
+            self.initial_yaw = self.blackboard.yaw
+            
+        yaw_error = angle - (self.blackboard.yaw - self.initial_yaw)
+        
+        if abs(yaw_error) > 0.1:
+            twist.angular.z = self.ang_vel if yaw_error > 0 else -self.ang_vel
+        else:
+            twist.angular.z = 0.0
+            self.initial_yaw = None  # Reset for next rotation
+            
+        curr_x = self.blackboard.odom_pose.position.x
+        curr_y = self.blackboard.odom_pose.position.y
+        
+        if self.initial_position is None:
+            self.initial_position = (curr_x, curr_y)
+            
+            
+        # 현재 위치와 초기 위치 간의 변위를 계산합니다.
+        dx = curr_x - self.initial_position[0]
+        dy = curr_y - self.initial_position[1]
+        dist_moved = math.hypot(dx, dy)
+        
+        # 목표 거리(target_distance)까지 이동이 완료되지 않은 경우 전진합니다.
+        if dist_moved < distance:
+            twist.linear.x = self.lin_vel
+                
+        # 목표 거리에 도달한 경우 이동을 멈추고 초기 위치를 재설정합니다.
+        else:
+            twist.linear.x = 0.0
+            self.initial_position = None  # 다음 이동을 위해 초기 위치 초기화
+            
+        self.twist_pub.publish(twist)

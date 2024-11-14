@@ -32,6 +32,10 @@ class ArucoYawing(Behaviour):
         self.closest_line_angle_tolerance = self.node.get_parameter('closest_line_angle_tolerance').get_parameter_value().double_value
         self.closest_line_distance =100
         self.closest_line_angle = 100
+        self.scale = 700  # 기본값 설정
+        self.hough_threshold = 60
+        self.ang_vel = 0.3
+        self.lin_vel = 0.08
         
     def update(self):
         
