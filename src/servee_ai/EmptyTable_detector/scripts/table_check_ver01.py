@@ -14,11 +14,18 @@ from std_msgs.msg import String
 model = tf.keras.models.load_model('/home/heechun/dev_ws/ros-repo-2/src/servee_ai/EmptyTable_detector/scripts/table_check_model_ver01.keras')
 
 # 테이블 ROI 설정: (x, y, width, height) 형식으로 4개의 테이블 지정
+# table_rois = {
+#     1: (50, 50, 200, 200),    # 테이블 1
+#     2: (300, 50, 200, 200),   # 테이블 2
+#     3: (50, 300, 200, 200),   # 테이블 3
+#     4: (300, 300, 200, 200)   # 테이블 4
+# }
+
 table_rois = {
-    1: (50, 50, 200, 200),    # 테이블 1
-    2: (300, 50, 200, 200),   # 테이블 2
-    3: (50, 300, 200, 200),   # 테이블 3
-    4: (300, 300, 200, 200)   # 테이블 4
+    1: (110, 70, 150, 90),    # 테이블 1 (x, y, x2 = x1+w, y2 = y1+h)
+    2: (410, 70, 140, 90),   # 테이블 2
+    3: (40, 270, 190, 140),   # 테이블 3
+    4: (430, 280, 190, 130)   # 테이블 4
 }
 
 # 최근 예측 결과를 저장할 큐
@@ -35,7 +42,7 @@ class TableCheckNode(Node):
     def __init__(self):
         super().__init__('table_check_node')
         self.publisher_ = self.create_publisher(String, 'table_status', 10)
-        self.cap = cv2.VideoCapture(0)  # 로컬 웹캠 연결
+        self.cap = cv2.VideoCapture(2)  # 로컬 웹캠 연결
         self.timer = self.create_timer(0.1, self.timer_callback)  # 주기적 콜백
 
     def timer_callback(self):
