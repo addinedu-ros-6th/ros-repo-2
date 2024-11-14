@@ -27,11 +27,11 @@ class MySQLConnection:
             cls._instance = cls(
                 pool_name="mypool",
                 pool_size=5,  # 원하는 풀의 크기 설정
-                host="localhost",
+                host="192.168.0.130",
                 port=3306,
                 database="SERVEE_DB",
-                user="root",
-                password="tjdudghks1"
+                user="kjy",
+                password="1234"
             )
         return cls._instance
 
@@ -319,6 +319,158 @@ class MySQLConnection:
         self.cursor.execute(sql, params)
 
         self.connection.commit() 
+
+    ########################################
+    ### Manager GUI ###
+
+    def get_robots(self):
+        '''
+        로봇 리스트
+        '''
+        db_pool = MySQLConnection.getInstance()
+        connection = db_pool.get_connection()
+        cursor = connection.cursor()
+
+        sql=f"""
+            select robot_id from Robots;
+        """
+        try:
+            cursor.execute(sql)
+            results = cursor.fetchall()
+            return results
+        except Exception as e:
+            print(f"쿼리 실행 중 오류: {e}")
+        finally:
+            cursor.close()  # 커서 닫기
+            connection.close() 
+
+    def get_stores(self):
+        '''
+        매점 리스트
+        '''
+        db_pool = MySQLConnection.getInstance()
+        connection = db_pool.get_connection()
+        cursor = connection.cursor()
+
+        sql=f"""
+            select name from Stores;
+        """
+        try:
+            cursor.execute(sql)
+            results = cursor.fetchall()
+            return results
+        except Exception as e:
+            print(f"쿼리 실행 중 오류: {e}")
+        finally:
+            cursor.close()  # 커서 닫기
+            connection.close() 
+    
+    def total_orders_today(self):
+        '''
+        매점당 금일 주문 건수
+        '''
+        db_pool = MySQLConnection.getInstance()
+        connection = db_pool.get_connection()
+        cursor = connection.cursor()
+
+        sql=f"""
+            SELECT M.store_id, COUNT(DISTINCT OC.order_id) AS order_count
+            FROM OrderCalls OC
+            JOIN OrderDetails OD ON OC.order_id = OD.order_id
+            JOIN Menus M ON OD.menu_id = M.menu_id
+            WHERE DATE(OC.call_time) = CURDATE()
+            GROUP BY M.store_id;
+        """
+        try:
+            cursor.execute(sql)
+            results = cursor.fetchall()
+            return results
+        except Exception as e:
+            print(f"쿼리 실행 중 오류: {e}")
+        finally:
+            cursor.close()  # 커서 닫기
+            connection.close() 
+
+    def total_earning_today(self):
+        '''
+        매점당 금일 매출
+        '''
+        db_pool = MySQLConnection.getInstance()
+        connection = db_pool.get_connection()
+        cursor = connection.cursor()
+
+        sql=f"""
+            SELECT M.store_id, SUM(M.price * OD.quantity) AS total_sales
+            FROM OrderCalls OC
+            JOIN OrderDetails OD ON OC.order_id = OD.order_id
+            JOIN Menus M ON OD.menu_id = M.menu_id
+            WHERE DATE(OC.call_time) = CURDATE()
+            GROUP BY M.store_id;
+        """
+        try:
+            cursor.execute(sql)
+            results = cursor.fetchall()
+            return results
+        except Exception as e:
+            print(f"쿼리 실행 중 오류: {e}")
+        finally:
+            cursor.close()  # 커서 닫기
+            connection.close() 
+    
+    def get_store_id(self, store_name):
+        '''
+        매점 이름으로 매점 id 얻기
+        '''
+        db_pool = MySQLConnection.getInstance()
+        connection = db_pool.get_connection()
+        cursor = connection.cursor()
+
+        sql=f"""
+            SELECT store_id where name = {store_name}
+        """
+        try:
+            cursor.execute(sql)
+            results = cursor.fetchall()
+            return results
+        except Exception as e:
+            print(f"쿼리 실행 중 오류: {e}")
+        finally:
+            cursor.close()  # 커서 닫기
+            connection.close() 
+    
+    def order_status(self, store_id):
+        '''
+        매점당 금일 주문 형황
+        '''
+        db_pool = MySQLConnection.getInstance()
+        connection = db_pool.get_connection()
+        cursor = connection.cursor()
+
+        sql=f"""
+            SELECT 
+                M.name AS menu_name,
+                OD.quantity,
+                OC.call_time
+            FROM 
+                OrderCalls OC
+            JOIN 
+                OrderDetails OD ON OC.order_id = OD.order_id
+            JOIN 
+                Menus M ON OD.menu_id = M.menu_id
+            WHERE 
+                M.store_id = {store_id} and DATE(OC.call_time) = CURDATE();
+        """
+        try:
+            cursor.execute(sql)
+            results = cursor.fetchall()
+            return results
+        except Exception as e:
+            print(f"쿼리 실행 중 오류: {e}")
+        finally:
+            cursor.close()  # 커서 닫기
+            connection.close() 
+
+
 # 사용 예시
 #def main():
     #db = MySQLConnection.getInstance()
