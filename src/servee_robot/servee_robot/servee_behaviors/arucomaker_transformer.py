@@ -22,7 +22,6 @@ class ArucoMakerTransformer(Behaviour):
         self.blackboard.register_key(key="aruco_maker_result", access=Access.WRITE)
         self.blackboard.register_key(key="marker_detected_time", access=Access.WRITE)
         self.blackboard.register_key(key='marker_detected', access=Access.WRITE)
-        self.blackboard.register_key(key='aruco_state', access=Access.WRITE)
         self.blackboard.register_key(key="robot_state", access=Access.READ)
         self.blackboard.marker_detected  = False
         
@@ -136,15 +135,13 @@ class ArucoMakerTransformer(Behaviour):
                 f"Distance: {closest_marker['distance']:.2f}m, "
                 f"Centerline Error: {closest_marker['centerline_error']:.2f}, "
                 f"X: {closest_marker['x']:.2f}m, Y: {closest_marker['y']:.2f}m, Z: {closest_marker['z']:.2f}m, "
-                f"Yaw: {closest_marker['yaw']:.2f}°, Pitch: {closest_marker['pitch']:.2f}°, Roll: {closest_marker.roll:.2f}°"
+                f"Yaw: {closest_marker['yaw']:.2f}°, Pitch: {closest_marker['pitch']:.2f}°, Roll: {closest_marker['roll']:.2f}°"
             )  
             self.blackboard.marker_detected  = True
-            self.blackboard.aruco_state = "search"
-            self.node.get_logger().warn("아루코마커 검출 완료")
+            # self.node.get_logger().warn("아루코마커 검출 완료")
             return Status.FAILURE
         
         else:
             self.blackboard.marker_detected  = False
-            self.node.get_logger().warn("아루코마커 검출 실패")
-            self.blackboard.aruco_state = "search"
+            # self.node.get_logger().warn("아루코마커 검출 실패")
             return Status.FAILURE

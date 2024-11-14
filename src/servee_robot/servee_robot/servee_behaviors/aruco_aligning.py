@@ -28,43 +28,46 @@ class ArucoAligning(Behaviour):
         self.blackboard.register_key(key='aruco_state', access=Access.WRITE)
         self.blackboard.register_key(key='aruco_state', access=Access.READ)
         
-        
-        
+     
     def setup(self, **kwargs: Any) -> None:
         self.node:Node = kwargs['node']   
-        self.distance_tolerance = 0.1
-        self.yaw_tolerance = 0.1
-        
-        self.marker_id = self.blackboard.aruco_maker_result['id']
-        self.marker_x = self.blackboard.aruco_maker_result['x']
-        self.marker_z = self.blackboard.aruco_maker_result['z'] / 2
-        self.marker_yaw = self.blackboard.aruco_maker_result['yaw']
-        self.marker_centerline_error = self.blackboard.aruco_maker_result['centerline_error']
-
-        self.marker_detected = self.blackboard.marker_detected
-        self.marker_theta = math.atan2(self.marker_z, self.marker_x)
+        self.distance_tolerance = 0.6
+        self.yaw_tolerance = 1.0
         
         self.twist_pub = \
             self.node.create_publisher(
                 Twist, 
                 '/base_controller/cmd_vel_unstamped',
                 10)
+           
+        
+    def set_marker_data(self) -> None:
+        self.marker_id = self.blackboard.aruco_maker_result['id']
+        self.marker_x = self.blackboard.aruco_maker_result['x']
+        self.marker_z = self.blackboard.aruco_maker_result['z'] / 2
+        self.marker_yaw = self.blackboard.aruco_maker_result['yaw']
+        self.marker_centerline_error = self.blackboard.aruco_maker_result['centerline_error']
+        self.marker_theta = math.atan2(self.marker_z, self.marker_x)
+        
         
     def update(self) -> Status:
         
         if self.blackboard.aruco_state != "align":
-            return Status.FAILURE
+            return Status.SUCCESS
         
-        if self.marker_detected:
+        if self.blackboard.marker_detected:
+            self.set_marker_data()
             
             # 거리
             if math.hypot(self.marker_x, self.marker_z) < self.distance_tolerance:
                 self.blackboard.aruco_state = "yawing"
+                self.node.get_logger().fatal("Yawing 상태로 넘어갑니다.")
                 return Status.FAILURE
                 
             # 방향
             elif abs(self.marker_yaw) < self.yaw_tolerance:
                 self.blackboard.aruco_state = "approach"
+                self.node.get_logger().fatal("approach 상태로 넘어갑니다.")
                 return Status.FAILURE
                 
             # 마커와 정렬되지 않은 경우 회전해서 각도 조정.
@@ -83,8 +86,10 @@ class ArucoAligning(Behaviour):
                 path = self.blackboard.path
                 path.poses.append(goal_pose)
                 
-                self.blackboard.set("path", path)
-                self.blackboard.set("robot_state" "parking")
+                self.blackboard.path = path
+                self.blackboard.aruco_state = "search"
+                self.blackboard.robot_state = "parking"
+                self.node.get_logger().fatal(f"마커와 정렬되지 않아 다시 이동합니다.{distance}, {math.hypot(self.marker_x, self.marker_z)}, {abs(self.marker_yaw)}")
                     
                     
         else:

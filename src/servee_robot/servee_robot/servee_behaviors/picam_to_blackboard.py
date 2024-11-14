@@ -30,7 +30,7 @@ class PicamToBlackboard(Behaviour):
         cv2.waitKey(1)
             
         
-        cv2.imshow("test", frame)
+        # cv2.imshow("test", frame)
         if not ret:
             self.node.get_logger().error("Failed to grab frame")
             return Status.FAILURE
