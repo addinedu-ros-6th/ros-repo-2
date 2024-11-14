@@ -20,7 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'path_planner_node=servee_server.path_planner:main'
+            'path_planner_node=servee_server.path_planner:main',
+            'robot_task_node=servee_server.task_manager:main',
         ],
     },
 )

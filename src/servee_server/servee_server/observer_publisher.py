@@ -36,20 +36,21 @@ class Server:
     def manage_queue(self, instance):
         try:
             if isinstance(instance, ServingInstance):
-                if instance.status == "Q":
+                if instance.status == "waiting_serverbot":
                     self.serving_task_queue.put(instance)
                     print(f"Serving instance {instance.order_id} added to serving_task_queue.")
-                elif instance.status == "DQ":
-                    dequeued_instance = self.serving_task_queue.get()
-                    print(f"Serving instance {dequeued_instance.order_id} removed from serving_task_queue.")
+                # elif instance.status == "DQ":
+                #     dequeued_instance = self.serving_task_queue.get()
+                #     print(f"Serving instance {dequeued_instance.order_id} removed from serving_task_queue.")
 
             elif isinstance(instance, RetrievalInstance):
-                if instance.status == "Q":
+                if instance.status == "call_complete":
                     self.retrieving_task_queue.put(instance)
                     print(f"Retrieval instance {instance.table_id} added to retrieving_task_queue.")
-                elif instance.status == "DQ":
-                    dequeued_instance = self.retrieving_task_queue.get()
-                    print(f"Retrieval instance {dequeued_instance.table_id} removed from retrieving_task_queue.")
+                # elif instance.status == "DQ":
+                #     dequeued_instance = self.retrieving_task_queue.get()
+                #     print(f"Retrieval instance {dequeued_instance.table_id} removed from retrieving_task_queue.")
+        
         except Exception as e:
             print(f"Error while managing queue: {e}")
 
@@ -98,16 +99,21 @@ class Server:
         client_socket.close()
 
     def start(self):
-        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server_socket.bind((self.host, self.port))
-        server_socket.listen(5)
+        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_socket.bind((self.host, self.port))
+        self.server_socket.listen(5)
         print(f"Server running on {self.host}:{self.port}...")
 
         while True:
-            client_socket, addr = server_socket.accept()
-            print(f"Connection from {addr}")
+            client_socket, addr = self.server_socket.accept()
+            # print(f"Connection from {addr}")
             client_thread = threading.Thread(target=self.handle_client_connection, args=(client_socket,))
             client_thread.start()
+
+    def stop(self):
+        self.running = False
+        if self.server_socket:
+            self.server_socket.close()
 
 # ------------------- commands -------------------
 class Command(ABC):
@@ -129,11 +135,13 @@ class CreateInstanceCommand(Command):
             server.SE_instances[self.order_id] = instance
             server.notify_observers(f"CREATE,{self.call_type},{self.order_id},{server.SE_instances[self.order_id].status}")
             print(f"SE Instance {self.order_id} created.")
+            server.manage_queue(instance)
         elif self.call_type == 'RV':
             instance = RetrievalInstance(self.store_id, self.table_id, self.call_time)
             server.RV_instances[self.table_id] = instance
             server.notify_observers(f"CREATE,{self.call_type},{self.table_id},{server.RV_instances[self.table_id].status}")
             print(f"RV Instance {self.table_id} created.")
+            server.manage_queue(instance)
 
 class UpdateStatusCommand(Command):
     def __init__(self, new_status, call_type, order_id=None, table_id=None):
@@ -181,7 +189,7 @@ class ServingInstance: # 서빙 인스턴스
         self.store_id = store_id
         self.table_id = table_id
         self.call_time = call_time
-        self.status = "1" #초기 상태
+        self.status = "call_complete" #초기 상태
         self.table_location = "0-0-0/0-0-0-0" #table_id 로 위치 접근, 추후 DB 연동
         self.store_location = "0-0-0/0-0-0-0" #store_id 로 위치 접근, 추후 DB 연동
         self.task_start_time = None
@@ -192,7 +200,7 @@ class RetrievalInstance: # 회수 인스턴스
         self.store_id = store_id
         self.table_id = table_id
         self.call_time = call_time
-        self.status = "1" #초기 상태
+        self.status = "call_complete" #초기 상태
         self.table_location = "0-0-0/0-0-0-0" #table_id 로 위치 접근, 추후 DB 연동
         self.retrieval_location = "0-0-0/0-0-0-0" #stoe_id 로 위치 접근, 추후 DB 연동
         self.task_start_time = None
