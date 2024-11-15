@@ -325,14 +325,14 @@ class MySQLConnection:
 
     def get_robots(self):
         '''
-        로봇 리스트
+        robot_id와 type 반환
         '''
         db_pool = MySQLConnection.getInstance()
         connection = db_pool.get_connection()
         cursor = connection.cursor()
 
         sql=f"""
-            select robot_id from Robots;
+            select robot_id, type from Robots;
         """
         try:
             cursor.execute(sql)
