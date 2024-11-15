@@ -84,17 +84,17 @@
       </column>
       <item row="0" column="0">
        <property name="text">
-        <string>Servee_Robot_1</string>
+        <string/>
        </property>
       </item>
       <item row="1" column="0">
        <property name="text">
-        <string>Servee_Robot_2</string>
+        <string/>
        </property>
       </item>
       <item row="2" column="0">
        <property name="text">
-        <string>Servee_Robot_3</string>
+        <string/>
        </property>
       </item>
      </widget>
@@ -196,39 +196,63 @@
      <attribute name="title">
       <string>매출 현황 조회</string>
      </attribute>
-     <widget class="QTabWidget" name="tabWidget">
+     <widget class="QStackedWidget" name="stacked_store_info">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>10</y>
+        <width>881</width>
+        <height>521</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="page"/>
+      <widget class="QWidget" name="page_2"/>
+      <widget class="QWidget" name="page_3"/>
+     </widget>
+     <widget class="QPushButton" name="btn_store_1">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>951</width>
-        <height>391</height>
+        <width>101</width>
+        <height>41</height>
        </rect>
       </property>
-      <property name="tabPosition">
-       <enum>QTabWidget::West</enum>
+      <property name="text">
+       <string>마파궁전</string>
       </property>
-      <property name="tabShape">
-       <enum>QTabWidget::Rounded</enum>
+     </widget>
+     <widget class="QPushButton" name="btn_store_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>101</width>
+        <height>41</height>
+       </rect>
       </property>
-      <property name="currentIndex">
-       <number>1</number>
+      <property name="text">
+       <string>차이니즈 키친</string>
       </property>
-      <widget class="QWidget" name="tab_4">
-       <attribute name="title">
-        <string>마파궁전</string>
-       </attribute>
-      </widget>
-      <widget class="QWidget" name="tab_5">
-       <attribute name="title">
-        <string>차이니즈 키친</string>
-       </attribute>
-      </widget>
-      <widget class="QWidget" name="tab_6">
-       <attribute name="title">
-        <string>올리브 비스트로</string>
-       </attribute>
-      </widget>
+     </widget>
+     <widget class="QPushButton" name="btn_store_3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>110</y>
+        <width>101</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>올리브 비스트로</string>
+      </property>
      </widget>
     </widget>
    </widget>
