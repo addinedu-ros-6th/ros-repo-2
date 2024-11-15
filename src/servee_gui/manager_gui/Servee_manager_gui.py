@@ -6,7 +6,7 @@ from PyQt5 import uic
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
-from geometry_msgs.msg import Pose, TransformStamped
+from geometry_msgs.msg import Pose
 from nav_msgs.msg import Path
 
 from datetime import datetime
@@ -24,18 +24,12 @@ TODO:
 ### 장애물이랑 로봇 회피하는 행동 시각화 할거 준비하기
 ### 특히 로봇은 서로의 경로까지 보여주기
 
-1. 맵이랑 로봇 위치 띄우기 - 일단 대기
-2. 로봇별 현황 띄우기 - okay?
-3. 매장별 주문 현황 띄우기 - okay
-4. 매출현황 조회에서 세로로 된 탭 고치기
-5. 로봇별 자세 현황 띄우기 - okay
-6. 매장별 자세 현황 띄우기 - okay
-7. 매장별 매출 현황 띄우기 - 보류
-8. 서빙로봇이랑 수거로봇 구분 - okay
-9. 지도에 로봇이랑 경로 그리기 - 하나만 okay
-10. 사장 호출 버튼 수신 구현하기
-11. 로봇 자세 현황 검색 기능 구현
-12. 로봇 위치랑 경로 3개까지 동시에 다 해보기
+1. 매출현황 조회에서 세로로 된 탭 고치기
+2. 로봇 자세 현황 검색 기능 구현
+3. 매장별 매출 현황 띄우기 - 보류
+4. 사장 호출 버튼 수신 구현하기
+5. 로봇 위치랑 경로 3개까지 동시에 다 해보기
+6. 로봇 상태 컬럼 너비 고정시키기
 +
 - manager에서 주문 인스턴스 없애기
 
@@ -44,11 +38,12 @@ TODO:
 - 매장별 주문현황 주문 상태
 
 토픽으로 받을 데이터:
-- 로봇 위치 okay
-- 로봇 경로 okay
-- 로봇 상태 okay
-- 로봇 배터리 okay
 - 주행거리 관련 데이터  <- 이건 임의로 계산 때리기
+
+State map:
+["idle", "running1", "standby1", "running2", "standby2"]
+서빙: ["충전중", "픽업중", "음식 대기중", "배달중", "수령 대기중"]
+수거: ["충전중", "수거중", "수거 대기중", "퇴식중", "퇴식 대기중"]
 '''
 
 
@@ -90,7 +85,7 @@ class SubscriberNode(Node):
         self.robots_state = [None, None, None]
         self.robots_battery = [None, None, None]
 
-        self.pose_sub_1 = self.create_subscription(TransformStamped, '/custom_pose', self.robot_pose_callback(0), 10)
+        self.pose_sub_1 = self.create_subscription(Pose, '/pose', self.robot_pose_callback(0), 10)
         self.pose_sub_2 = self.create_subscription(Pose, '/robot2/pose', self.robot_pose_callback(1), 10)
         self.pose_sub_3 = self.create_subscription(Pose, '/robot3/pose', self.robot_pose_callback(2), 10)
 
@@ -98,7 +93,7 @@ class SubscriberNode(Node):
         self.path_sub_2 = self.create_subscription(Path, '/robot2/plan', self.robot_path_callback(1), 10)
         self.path_sub_3 = self.create_subscription(Path, '/robot3/plan', self.robot_path_callback(2), 10)
 
-        self.state_sub_1 = self.create_subscription(String, '/robot1/state', self.robot_state_callback(0), 10)
+        self.state_sub_1 = self.create_subscription(String, '/state', self.robot_state_callback(0), 10)
         self.state_sub_2 = self.create_subscription(String, '/robot2/state', self.robot_state_callback(1), 10)
         self.state_sub_3 = self.create_subscription(String, '/robot3/state', self.robot_state_callback(2), 10)
 
@@ -108,8 +103,8 @@ class SubscriberNode(Node):
     
 
     def robot_pose_callback(self, robot_index):
-        def callback(msg: TransformStamped):
-            self.robots_pose[robot_index] = msg.transform
+        def callback(msg: Pose):
+            self.robots_pose[robot_index] = msg
         return callback
     
     def robot_path_callback(self, robot_index):
@@ -146,30 +141,30 @@ class ManagerGUI(QMainWindow, ui_info):
         # DB 연결
         self.dbm = MySQLConnection.getInstance()
 
-        # 주문 현황 조회 탭 클릭 시 DB 데이터 조회
-        self.tab_manager.currentChanged.connect(self.tab_clicked_callback)
-
-        # 표 더블클릭 시 자세한 현황 조회
-        self.table_robots_status.cellDoubleClicked.connect(self.table_robot_dclicked)
-        self.table_stores_status.cellDoubleClicked.connect(self.table_store_dclicked)
-
         # 지도 사진 삽입
         self.pixmap = QPixmap('./src/servee_gui/manager_gui/maps/map_final_3_scaled.pgm')
-        # pixmap = pixmap.scaled(self.label_map.size(), Qt.KeepAspectRatio, Qt.FastTransformation)
         self.label_map_1.setPixmap(self.pixmap)
         self.label_map_2.setPixmap(self.pixmap)
 
+        # 로봇 상태 매핑
+        self.robot_serving_state_map = {"idle": "충전중", "running1": "픽업중", "standby1": "음식 대기중", "running2": "배당중", "standby2": "수령 대기중"}
+        self.robot_retrieving_state_map = {"idle": "충전중", "running1": "수거중", "standby1": "수거 대기중", "running2": "퇴식중", "standby2": "퇴식 대기중"}
+
         # 로봇 현황 시작
-        self.robots_pose = (None, None, None)
-        self.robots_path = (None, None, None)
+        self.robot_type = []  # [{robot_id: type}, ...]
+        self.robots_pose = [None, None, None]
+        self.robots_path = [None, None, None]
+        self.robots_state = [None, None, None]
+        self.robots_battery = [None, None, None]
 
         robots = self.dbm.get_robots()
         header = self.table_robots_status.horizontalHeader()
         header.setSectionResizeMode(QHeaderView.ResizeToContents)
         self.table_robots_status.setRowCount(len(robots))
 
-        for i, robot_id in enumerate(robots):
-            id_1 = QTableWidgetItem(f"Servee_Robot_{robot_id[0]}")
+        for i, robot_info in enumerate(robots):
+            id_1 = QTableWidgetItem(f"Servee_Robot_{robot_info[0]}")
+            self.robot_type.append({id_1: robot_info[1]})
             _state = QTableWidgetItem(" ")
             _battery = QTableWidgetItem("100")
 
@@ -184,7 +179,20 @@ class ManagerGUI(QMainWindow, ui_info):
         # 일정 주기마다 지도 업데이트
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_map)
-        self.timer.start(100)  # 100ms마다 업데이트
+        self.timer.start(100)
+
+        # 주문 현황 조회 탭 클릭 시 DB 데이터 조회
+        self.tab_manager.currentChanged.connect(self.tab_clicked_callback)
+
+        # 표 더블클릭 시 자세한 현황 조회
+        self.table_robots_status.cellDoubleClicked.connect(self.table_robot_dclicked)
+        self.table_stores_status.cellDoubleClicked.connect(self.table_store_dclicked)
+
+        # 매출 현황 조회에서 버튼 클릭하면 식당 페이지로 이동
+        self.btn_store_1.clicked.connect(lambda: self.show_content(0))
+        self.btn_store_2.clicked.connect(lambda: self.show_content(1))
+        self.btn_store_3.clicked.connect(lambda: self.show_content(2))
+
 
     def __del__(self):
         self.node.destroy_node()
@@ -192,7 +200,7 @@ class ManagerGUI(QMainWindow, ui_info):
         self.ob_client.stop()
         self.worker.stop()  # 이것들 어떻게 멈춤?
 
-    
+
     def get_status(self, result):
         print("data result:", result)
         if "UPDATE" in result:
@@ -214,29 +222,30 @@ class ManagerGUI(QMainWindow, ui_info):
     def update_map(self):
         rclpy.spin_once(self.node, timeout_sec=0.01)  # 제일 최근값 가져오는지 확인 필요. 
         
+        # try:
         # 맵 상의 로봇 위치와 경로 업데이트/그리기
         self.robots_pose = self.node.robots_pose
         self.robots_path = self.node.robots_path
-        self.robots_state = (self.node.robots_state[0], self.node.robots_state[1], self.node.robots_state[2])
-        self.robots_battery = (self.node.robots_battery[0], self.node.robots_battery[1], self.node.robots_battery[2])
+        self.robots_state = self.node.robots_state
+        self.robots_battery = self.node.robots_battery
 
         # 그리기 예제
-        # print("paint on!")
         pixmap_copy = self.pixmap.copy()
         
         painter = QPainter(pixmap_copy)
         pen = QPen(Qt.red, 5)
         painter.setPen(pen)
 
-        print("x:", self.robots_pose[0].translation.x, "\ty:", self.robots_pose[0].translation.y)
-        painter.drawEllipse(int(540 - 540/2.3*self.robots_pose[0].translation.y), int(408 - 408/1.7*self.robots_pose[0].translation.x), 30, 30)  # 408 대신에 396 확인해보기
+        if self.robots_pose[0] is not None:
+            print("x:", self.robots_pose[0].position.x, "\ty:", self.robots_pose[0].position.y)
+            painter.drawEllipse(int(540 - 540/2.3*self.robots_pose[0].position.y), int(408 - 408/1.7*self.robots_pose[0].position.x), 30, 30)  # 408 대신에 396 확인해보기
 
-        # 경로 그리기
-        try:
-            for path in self.robots_path[0]:
-                painter.drawEllipse(int(540 - 540/2.3*path.pose.position.y), int(408 - 408/1.7*path.pose.position.x), 3, 3)
-        except:
-            pass
+            # 경로 그리기
+            try:
+                for path in self.robots_path[0]:
+                    painter.drawEllipse(int(540 - 540/2.3*path.pose.position.y), int(408 - 408/1.7*path.pose.position.x), 3, 3)
+            except:
+                pass
 
         painter.end()
 
@@ -245,13 +254,20 @@ class ManagerGUI(QMainWindow, ui_info):
 
         # 로봇 현황 업데이트
         for i in range(3):
-            item_1 = QTableWidgetItem(self.robots_state[i])
+            if self.robot_type[i][i+1] == "서빙용":
+                item_1 = QTableWidgetItem(self.robot_serving_state_map[self.robots_state[i]])
+            else:
+                item_1 = QTableWidgetItem(self.robot_retrieving_state_map[self.robots_state[i]])
+            # item_1 = QTableWidgetItem(self.robots_state[i])
             item_2 = QTableWidgetItem(self.robots_battery[i])
             item_1.setTextAlignment(Qt.AlignCenter)
             item_2.setTextAlignment(Qt.AlignCenter)
             self.table_robots_status.setItem(i, 1, item_1)
             self.table_robots_status.setItem(i, 2, item_2)
-    
+
+        # except Exception as e:
+        #     pass
+
     def tab_clicked_callback(self, index):
         if index == 1:
             stores = self.dbm.get_stores()
@@ -357,6 +373,9 @@ class ManagerGUI(QMainWindow, ui_info):
             dialog.table_order_details.setItem(i, 3, order_status)
 
         dialog.exec_()
+    
+    def show_content(self, index):
+        self.stacked_store_info.setCurrentIndex(index)
 
 
 class RobotStatus(QDialog):
