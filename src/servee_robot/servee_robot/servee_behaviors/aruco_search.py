@@ -58,7 +58,7 @@ class ArucoSearch(Behaviour):
         if self.blackboard.aruco_state != "search":
             return Status.FAILURE
         
-        self.node.get_logger().warn(f"아루코 마커를 찾아서! {self.blackboard.marker_detected}")
+        # self.node.get_logger().warn(f"아루코 마커를 찾아서! {self.blackboard.marker_detected}")
         
         # 마커가 검출된 동안 반복하여 로봇을 회전시켜 정렬을 시도합니다.
         if  self.blackboard.marker_detected == True:
@@ -84,15 +84,16 @@ class ArucoSearch(Behaviour):
             
         # 마커가 안 보인다면 회전하며 마커를 찾는다.  
         else:
-            self.node.get_logger().warn("마커 탐색 중")
+            # self.node.get_logger().warn("마커 탐색 중")
             twist = Twist()
             twist.angular.z = self.ang_vel
             self.twist_pub.publish(twist)
             self.rotation_count += 1
             # self.node.get_logger().warn(f"마커를 찾는 중 {self.rotation_count}")
-            # 시도를 했지만 결국 마커를 못 찾는 경우
+
             
-            if self.rotation_count >= 50:  
+            if self.rotation_count >= 100:  
+                # 시도를 했지만 결국 마커를 못 찾는 경우
                 twist.angular.z = 0.0
                 self.twist_pub.publish(twist)
                 self.rotation_count = 0
@@ -104,19 +105,13 @@ class ArucoSearch(Behaviour):
                 direction_y = next_pose.position.y - current_pose.position.y
                 distance = math.sqrt(direction_x ** 2 + direction_y ** 2)
                 
-                step_x = (direction_x / distance)
-                step_y = (direction_y / distance) 
-                
+                step_x = (direction_x / distance) * 0.1
+                step_y = (direction_y / distance) * 0.1
                 forward_twist = Twist()
-                forward_twist.linear.x = step_x
+                forward_twist.linear.x = step_x 
                 forward_twist.linear.y = step_y
                 self.twist_pub.publish(forward_twist)
 
-                rclpy.spin_once(self.node, timeout_sec=0.1)
-                
-                forward_twist.linear.x = 0.0
-                forward_twist.linear.y = 0.0
-                self.twist_pub.publish(forward_twist)
                 
             return Status.SUCCESS
         
