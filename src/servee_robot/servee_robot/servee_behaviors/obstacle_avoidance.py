@@ -23,9 +23,9 @@ class ObstacleAvoidanceMover(Behaviour):
         self.node.declare_parameters(
             namespace='',
             parameters=[
-                ('avoidance_lieaner', 0.05),
+                ('avoidance_lieaner', 0.07),
                 ('avoidance_angular', 0.5),
-                ('wall_threshold', 0.14),
+                ('wall_threshold', 0.125),
             ]
         )
         
@@ -40,7 +40,6 @@ class ObstacleAvoidanceMover(Behaviour):
             10
         )
      
-             
     def update(self) -> Status:
         
         if self.blackboard.robot_state in ['parking', 'idle', 'aruco']:
@@ -49,7 +48,6 @@ class ObstacleAvoidanceMover(Behaviour):
         self.scan = self.blackboard.scan
         ranges = self.scan.ranges.tolist()
         num_readings = len(ranges)
-        
         
          # 세그먼트 수와 각 세그먼트별 최소 거리 리스트
         num_segments = 4

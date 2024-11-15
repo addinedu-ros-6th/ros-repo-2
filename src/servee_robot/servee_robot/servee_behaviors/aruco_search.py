@@ -21,10 +21,11 @@ class ArucoSearch(Behaviour):
         self.blackboard.register_key(key="aruco_maker_result", access=Access.READ)
         self.blackboard.register_key(key='max_angular_speed', access=Access.READ)
         
-        self.blackboard.register_key(key="robot_state", access=Access.WRITE)
-        
+        # self.blackboard.register_key(key="robot_state", access=Access.WRITE)
+        self.blackboard.register_key(key="next_pose", access=Access.READ)
         self.blackboard.register_key(key='aruco_state', access=Access.WRITE)
         self.blackboard.register_key(key='aruco_state', access=Access.READ)
+        self.blackboard.register_key(key='curr_pose', access=Access.READ)
         
         self.blackboard.aruco_state = "search"
         
@@ -96,11 +97,29 @@ class ArucoSearch(Behaviour):
                 self.twist_pub.publish(twist)
                 self.rotation_count = 0
                 
-                self.blackboard.robot_state = "task"
-                self.node.get_logger().fatal("결국 마커를 찾지 못 했습니다.")
+                current_pose = self.blackboard.curr_pose
+                next_pose = self.blackboard.next_pose
                 
+                direction_x = next_pose.position.x - current_pose.position.x
+                direction_y = next_pose.position.y - current_pose.position.y
+                distance = math.sqrt(direction_x ** 2 + direction_y ** 2)
+                
+                step_x = (direction_x / distance)
+                step_y = (direction_y / distance) 
+                
+                forward_twist = Twist()
+                forward_twist.linear.x = step_x
+                forward_twist.linear.y = step_y
+                self.twist_pub.publish(forward_twist)
+
+                rclpy.spin_once(self.node, timeout_sec=0.1)
+                
+                forward_twist.linear.x = 0.0
+                forward_twist.linear.y = 0.0
+                self.twist_pub.publish(forward_twist)
                 
             return Status.SUCCESS
+        
         
         
             

@@ -104,14 +104,17 @@ class ArucoYawing(Behaviour):
          # 라이다로 검출한 벽의 각도가 허용 오차를 초과하는 경우, 각도를 조정합니다.
         if abs(self.closest_line_angle) > self.closest_line_angle_tolerance:
             twist.angular.z = self.ang_vel * np.sign(self.closest_line_angle)
+            
             self.node.get_logger().fatal(f"yawing 이동: {twist.angular.z}")
             self.twist_pub.publish(twist)
+            
+            rclpy.spin_once(self.node, timeout_sec=0.1)
+            twist.linear.z = 0.0
+            self.twist_pub.publish(twist)
+            
             return Status.FAILURE
             
         else:
-            # 각도가 허용 오차 이내라면 회전을 멈추고 상태를 'STANDBY'로 전환합니다.
-            twist.angular.z = 0.0
-            self.twist_pub.publish(twist)
             self.node.get_logger().fatal("주차 완료")
             self.blackboard.aruco_state = 'search'
             self.blackboard.robot_state = 'idle'
