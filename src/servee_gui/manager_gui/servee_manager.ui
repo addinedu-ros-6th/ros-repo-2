@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1000</width>
-    <height>479</height>
+    <width>1028</width>
+    <height>590</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,8 +19,8 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>981</width>
-      <height>451</height>
+      <width>1011</width>
+      <height>571</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -30,29 +30,29 @@
      <attribute name="title">
       <string>로봇 현황 조회</string>
      </attribute>
-     <widget class="QLabel" name="label_map">
+     <widget class="QLabel" name="label_map_1">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>631</width>
-        <height>401</height>
+        <width>660</width>
+        <height>516</height>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Box</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <property name="text">
        <string>TextLabel</string>
       </property>
      </widget>
-     <widget class="QTableWidget" name="table_robots_status_2">
+     <widget class="QTableWidget" name="table_robots_status">
       <property name="geometry">
        <rect>
-        <x>650</x>
+        <x>680</x>
         <y>40</y>
         <width>321</width>
-        <height>121</height>
+        <height>241</height>
        </rect>
       </property>
       <property name="editTriggers">
@@ -101,7 +101,7 @@
      <widget class="QLabel" name="label_robots_status_title">
       <property name="geometry">
        <rect>
-        <x>650</x>
+        <x>680</x>
         <y>10</y>
         <width>321</width>
         <height>31</height>
@@ -118,30 +118,30 @@
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_table_order_2">
+    <widget class="QWidget" name="tab_table_order">
      <attribute name="title">
       <string>주문 현황 조회</string>
      </attribute>
-     <widget class="QLabel" name="label_map_3">
+     <widget class="QLabel" name="label_map_2">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>631</width>
-        <height>401</height>
+        <width>660</width>
+        <height>516</height>
        </rect>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Box</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <property name="text">
        <string>TextLabel</string>
       </property>
      </widget>
-     <widget class="QTableWidget" name="table_stores_status_2">
+     <widget class="QTableWidget" name="table_stores_status">
       <property name="geometry">
        <rect>
-        <x>650</x>
+        <x>680</x>
         <y>40</y>
         <width>321</width>
         <height>361</height>
@@ -172,10 +172,10 @@
        </property>
       </column>
      </widget>
-     <widget class="QLabel" name="label_orders_status_title_2">
+     <widget class="QLabel" name="label_orders_status_title">
       <property name="geometry">
        <rect>
-        <x>650</x>
+        <x>680</x>
         <y>10</y>
         <width>321</width>
         <height>31</height>
@@ -192,11 +192,11 @@
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_sales_overview_2">
+    <widget class="QWidget" name="tab_sales_overview">
      <attribute name="title">
       <string>매출 현황 조회</string>
      </attribute>
-     <widget class="QTabWidget" name="tabWidget_3">
+     <widget class="QTabWidget" name="tabWidget">
       <property name="geometry">
        <rect>
         <x>10</x>
