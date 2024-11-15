@@ -1,12 +1,12 @@
 from PyQt5.QtWidgets import QMainWindow, QDialog, QApplication, QTableWidgetItem, QHeaderView
-from PyQt5.QtGui import QPixmap, QPainter, QPen, QFont
+from PyQt5.QtGui import QPixmap, QPainter, QPen
 from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal
 from PyQt5 import uic
 
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
-from geometry_msgs.msg import Pose, TransformStamped
+from geometry_msgs.msg import Pose
 from nav_msgs.msg import Path
 
 from datetime import datetime
@@ -29,6 +29,7 @@ TODO:
 3. 매장별 매출 현황 띄우기 - 보류
 4. 사장 호출 버튼 수신 구현하기
 5. 로봇 위치랑 경로 3개까지 동시에 다 해보기
+6. 로봇 상태 컬럼 너비 고정시키기
 +
 - manager에서 주문 인스턴스 없애기
 
@@ -38,6 +39,11 @@ TODO:
 
 토픽으로 받을 데이터:
 - 주행거리 관련 데이터  <- 이건 임의로 계산 때리기
+
+State map:
+["idle", "running1", "standby1", "running2", "standby2"]
+서빙: ["충전중", "픽업중", "음식 대기중", "배달중", "수령 대기중"]
+수거: ["충전중", "수거중", "수거 대기중", "퇴식중", "퇴식 대기중"]
 '''
 
 
@@ -79,7 +85,7 @@ class SubscriberNode(Node):
         self.robots_state = [None, None, None]
         self.robots_battery = [None, None, None]
 
-        self.pose_sub_1 = self.create_subscription(TransformStamped, '/custom_pose', self.robot_pose_callback(0), 10)
+        self.pose_sub_1 = self.create_subscription(Pose, '/pose', self.robot_pose_callback(0), 10)
         self.pose_sub_2 = self.create_subscription(Pose, '/robot2/pose', self.robot_pose_callback(1), 10)
         self.pose_sub_3 = self.create_subscription(Pose, '/robot3/pose', self.robot_pose_callback(2), 10)
 
@@ -87,7 +93,7 @@ class SubscriberNode(Node):
         self.path_sub_2 = self.create_subscription(Path, '/robot2/plan', self.robot_path_callback(1), 10)
         self.path_sub_3 = self.create_subscription(Path, '/robot3/plan', self.robot_path_callback(2), 10)
 
-        self.state_sub_1 = self.create_subscription(String, '/robot1/state', self.robot_state_callback(0), 10)
+        self.state_sub_1 = self.create_subscription(String, '/state', self.robot_state_callback(0), 10)
         self.state_sub_2 = self.create_subscription(String, '/robot2/state', self.robot_state_callback(1), 10)
         self.state_sub_3 = self.create_subscription(String, '/robot3/state', self.robot_state_callback(2), 10)
 
@@ -97,8 +103,8 @@ class SubscriberNode(Node):
     
 
     def robot_pose_callback(self, robot_index):
-        def callback(msg: TransformStamped):
-            self.robots_pose[robot_index] = msg.transform
+        def callback(msg: Pose):
+            self.robots_pose[robot_index] = msg
         return callback
     
     def robot_path_callback(self, robot_index):
@@ -140,17 +146,25 @@ class ManagerGUI(QMainWindow, ui_info):
         self.label_map_1.setPixmap(self.pixmap)
         self.label_map_2.setPixmap(self.pixmap)
 
+        # 로봇 상태 매핑
+        self.robot_serving_state_map = {"idle": "충전중", "running1": "픽업중", "standby1": "음식 대기중", "running2": "배당중", "standby2": "수령 대기중"}
+        self.robot_retrieving_state_map = {"idle": "충전중", "running1": "수거중", "standby1": "수거 대기중", "running2": "퇴식중", "standby2": "퇴식 대기중"}
+
         # 로봇 현황 시작
-        self.robots_pose = (None, None, None)
-        self.robots_path = (None, None, None)
+        self.robot_type = []  # [{robot_id: type}, ...]
+        self.robots_pose = [None, None, None]
+        self.robots_path = [None, None, None]
+        self.robots_state = [None, None, None]
+        self.robots_battery = [None, None, None]
 
         robots = self.dbm.get_robots()
         header = self.table_robots_status.horizontalHeader()
         header.setSectionResizeMode(QHeaderView.ResizeToContents)
         self.table_robots_status.setRowCount(len(robots))
 
-        for i, robot_id in enumerate(robots):
-            id_1 = QTableWidgetItem(f"Servee_Robot_{robot_id[0]}")
+        for i, robot_info in enumerate(robots):
+            id_1 = QTableWidgetItem(f"Servee_Robot_{robot_info[0]}")
+            self.robot_type.append({id_1: robot_info[1]})
             _state = QTableWidgetItem(" ")
             _battery = QTableWidgetItem("100")
 
@@ -212,8 +226,8 @@ class ManagerGUI(QMainWindow, ui_info):
         # 맵 상의 로봇 위치와 경로 업데이트/그리기
         self.robots_pose = self.node.robots_pose
         self.robots_path = self.node.robots_path
-        self.robots_state = (self.node.robots_state[0], self.node.robots_state[1], self.node.robots_state[2])
-        self.robots_battery = (self.node.robots_battery[0], self.node.robots_battery[1], self.node.robots_battery[2])
+        self.robots_state = self.node.robots_state
+        self.robots_battery = self.node.robots_battery
 
         # 그리기 예제
         pixmap_copy = self.pixmap.copy()
@@ -223,8 +237,8 @@ class ManagerGUI(QMainWindow, ui_info):
         painter.setPen(pen)
 
         if self.robots_pose[0] is not None:
-            print("x:", self.robots_pose[0].translation.x, "\ty:", self.robots_pose[0].translation.y)
-            painter.drawEllipse(int(540 - 540/2.3*self.robots_pose[0].translation.y), int(408 - 408/1.7*self.robots_pose[0].translation.x), 30, 30)  # 408 대신에 396 확인해보기
+            print("x:", self.robots_pose[0].position.x, "\ty:", self.robots_pose[0].position.y)
+            painter.drawEllipse(int(540 - 540/2.3*self.robots_pose[0].position.y), int(408 - 408/1.7*self.robots_pose[0].position.x), 30, 30)  # 408 대신에 396 확인해보기
 
             # 경로 그리기
             try:
@@ -240,7 +254,11 @@ class ManagerGUI(QMainWindow, ui_info):
 
         # 로봇 현황 업데이트
         for i in range(3):
-            item_1 = QTableWidgetItem(self.robots_state[i])
+            if self.robot_type[i][i+1] == "서빙용":
+                item_1 = QTableWidgetItem(self.robot_serving_state_map[self.robots_state[i]])
+            else:
+                item_1 = QTableWidgetItem(self.robot_retrieving_state_map[self.robots_state[i]])
+            # item_1 = QTableWidgetItem(self.robots_state[i])
             item_2 = QTableWidgetItem(self.robots_battery[i])
             item_1.setTextAlignment(Qt.AlignCenter)
             item_2.setTextAlignment(Qt.AlignCenter)
