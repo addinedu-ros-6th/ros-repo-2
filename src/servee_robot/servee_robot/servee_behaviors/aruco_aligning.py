@@ -31,8 +31,8 @@ class ArucoAligning(Behaviour):
      
     def setup(self, **kwargs: Any) -> None:
         self.node:Node = kwargs['node']   
-        self.distance_tolerance = 0.2
-        self.yaw_tolerance = 0.3
+        self.distance_tolerance = 0.05
+        self.yaw_tolerance = 0.1
         self.initial_position = None
         self.initial_yaw = None
         self.ang_vel = 0.3
@@ -67,11 +67,11 @@ class ArucoAligning(Behaviour):
                 self.node.get_logger().fatal(f"Yawing 상태로 넘어갑니다. {math.hypot(self.marker_x, self.marker_z)}")
                 return Status.FAILURE
                 
-            # 방향
-            elif abs(self.marker_yaw) < self.yaw_tolerance:
-                self.blackboard.aruco_state = "approach"
-                self.node.get_logger().fatal(f"approach 상태로 넘어갑니다.{self.marker_yaw}")
-                return Status.FAILURE
+            # # 방향
+            # elif abs(self.marker_yaw) < self.yaw_tolerance:
+            #     self.blackboard.aruco_state = "approach"
+            #     self.node.get_logger().fatal(f"approach 상태로 넘어갑니다.{self.marker_yaw}")
+            #     return Status.FAILURE
                 
             # 마커와 정렬되지 않은 경우 회전해서 각도 조정.
             else:
@@ -99,13 +99,18 @@ class ArucoAligning(Behaviour):
         if self.initial_yaw is None:
             self.initial_yaw = self.blackboard.yaw
         yaw_error = target_angle - (self.blackboard.yaw- self.initial_yaw)
+        
         if abs(yaw_error) > 0.1:
             twist.angular.z = self.ang_vel if yaw_error > 0 else -self.ang_vel
             self.twist_pub.publish(twist)
-        else:
+            
+            rclpy.spin_once(self.node, timeout_sec=0.1)
             twist.angular.z = 0.0
             self.twist_pub.publish(twist)
-            self.initial_yaw = None  # Reset for next rotation
+        else:
+            self.initial_yaw = None 
+           
+    
             
     def move_by_distance(self, target_distance):
         """
@@ -116,24 +121,25 @@ class ArucoAligning(Behaviour):
         curr_x = self.blackboard.odom_pose.position.x
         curr_y = self.blackboard.odom_pose.position.y
         
-        # 초기 위치를 설정합니다.
+        # 초기 위치를 설정
         if self.initial_position is None:
             self.initial_position = (curr_x, curr_y)
             
-        # 현재 위치와 초기 위치 간의 변위를 계산합니다.
+        # 현재 위치와 초기 위치 간의 변위를 계산
         dx = curr_x - self.initial_position[0]
         dy = curr_y - self.initial_position[1]
         
         dist_moved = math.hypot(dx, dy)
         
-        # 목표 거리(target_distance)까지 이동이 완료되지 않은 경우 전진합니다.
+        # 목표 거리(target_distance)까지 이동이 완료되지 않은 경우 전진
         if dist_moved < target_distance:
             twist.linear.x = self.lin_vel
             self.twist_pub.publish(twist)
-                
-        # 목표 거리에 도달한 경우 이동을 멈추고 초기 위치를 재설정합니다.
-        else:
+            rclpy.spin_once(self.node, timeout_sec=0.1)
             twist.linear.x = 0.0
             self.twist_pub.publish(twist)
+                
+        # 목표 거리에 도달한 경우
+        else:
             self.initial_position = None  # 다음 이동을 위해 초기 위치 초기화
         
