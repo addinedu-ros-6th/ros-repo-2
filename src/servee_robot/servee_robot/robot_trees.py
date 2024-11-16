@@ -29,11 +29,11 @@ def parking_selector_tree():
     
     aruco_transform = arucomaker_transformer.ArucoMakerTransformer("aruco_transform_node")
     
-    search = aruco_search.ArucoSearch("aruco_search")
-    aligning = aruco_aligning.ArucoAligning("aruco_aligning")
-    yawing = aruco_yawing.ArucoYawing("aruco_yawing")
+    search = aruco_search.ArucoSearch("aruco_search_node")
+    aligning = aruco_aligning.ArucoAligning("aruco_aligning_node")
+    yawing = aruco_yawing.ArucoYawing("aruco_yawing_node")
    
-    approaching = aruco_approaching.ArucoApproaching("aruco_approaching")
+    approaching = aruco_approaching.ArucoApproaching("aruco_approaching_node")
     parking.add_children([aruco_transform, search, aligning, approaching, yawing])
     return parking
     

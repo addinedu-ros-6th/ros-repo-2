@@ -26,7 +26,7 @@ class ArucoSearch(Behaviour):
         self.blackboard.register_key(key='aruco_state', access=Access.WRITE)
         self.blackboard.register_key(key='aruco_state', access=Access.READ)
         self.blackboard.register_key(key='curr_pose', access=Access.READ)
-        
+                
         self.blackboard.aruco_state = "search"
         
         
@@ -35,7 +35,16 @@ class ArucoSearch(Behaviour):
         self.node:Node = kwargs['node']
         self.ang_vel = (self.blackboard.max_angular_speed - 0.35)
         self.rotation_count = 0
-        self.centerline_error_tolerance = 50
+        
+        self.node.declare_parameter(
+            'centerline_error_tolerance_search', 130  
+        )
+
+        self.centerline_error_tolerance = self.node.get_parameter(
+            'centerline_error_tolerance_search'
+        ).value
+
+        self.node.get_logger().warn(f"centerline_error_tolerance1: {self.centerline_error_tolerance}")
 
         self.twist_pub = \
             self.node.create_publisher(
@@ -67,6 +76,7 @@ class ArucoSearch(Behaviour):
             
             # 마커와 로봇이 정면으로 마주보도록 회전한다.
             if abs(self.marker_centerline_error) > self.centerline_error_tolerance:
+                self.node.get_logger().warn(f"현재 각도 오차: {self.marker_centerline_error}")
                 twist = Twist()
                 twist.angular.z = -self.ang_vel if self.marker_centerline_error > 0 else self.ang_vel
                 self.twist_pub.publish(twist)
@@ -89,7 +99,7 @@ class ArucoSearch(Behaviour):
             twist.angular.z = self.ang_vel
             self.twist_pub.publish(twist)
             self.rotation_count += 1
-            # self.node.get_logger().warn(f"마커를 찾는 중 {self.rotation_count}")
+            
 
             
             if self.rotation_count >= 100:  
@@ -97,7 +107,7 @@ class ArucoSearch(Behaviour):
                 twist.angular.z = 0.0
                 self.twist_pub.publish(twist)
                 self.rotation_count = 0
-                
+                self.node.get_logger().warn(f"마커를 찾지 못했다구!...")
                 current_pose = self.blackboard.curr_pose
                 next_pose = self.blackboard.next_pose
                 

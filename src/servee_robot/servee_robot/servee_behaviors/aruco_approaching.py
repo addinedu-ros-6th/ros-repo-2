@@ -28,9 +28,18 @@ class ArucoApproaching(Behaviour):
                 Twist, 
                 '/base_controller/cmd_vel_unstamped',
                 10)
-            
+        
+        self.node.declare_parameter(
+            'centerline_error_tolerance_approaching', 130  
+        )
+        
         self.distance_tolerance = 0.2
-        self.centerline_error_tolerance = 35
+        self.centerline_error_tolerance = self.node.get_parameter(
+            'centerline_error_tolerance_approaching'
+        ).value
+        
+        self.node.get_logger().warn(f"centerline_error_tolerance2: {self.centerline_error_tolerance}")
+
         self.ang_vel = 0.3
         self.lin_vel = 0.08
      
