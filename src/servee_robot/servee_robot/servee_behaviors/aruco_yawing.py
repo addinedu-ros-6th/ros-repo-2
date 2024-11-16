@@ -37,15 +37,27 @@ class ArucoYawing(Behaviour):
         self.ang_vel = 0.1
         self.lin_vel = 0.08
         
+        self.dected_count = 0
+        
     def update(self):
         if self.blackboard.aruco_state == "approach":
             return Status.FAILURE
         if self.blackboard.aruco_state != "yawing":
             return Status.SUCCESS
         
-        self.node.get_logger().fatal("yawing")
-        self.detect_lines()
-        self.yawing()
+        if self.blackboard.marker_detected:  
+            self.dected_count = 0
+            self.node.get_logger().fatal("yawing")
+            self.detect_lines()
+            self.yawing()
+            
+            
+        else:
+            self.dected_count += 1
+            if self.dected_count >= 50:
+                self.blackboard.aruco_state = "search"
+                self.node.get_logger().info("Marker not found. Returning to Searching.")
+                return Status.SUCCESS
     
     def detect_lines(self):
         msg = self.blackboard.scan
