@@ -365,7 +365,7 @@ class MySQLConnection:
             cursor.close()
             connection.close() 
     
-    def get_robot_log(self, robot_id):
+    def get_robot_log(self, robot_id, start_date, end_date):
         '''
         robot_id로 로봇 로그 데이터 가져오기
         '''
@@ -374,7 +374,8 @@ class MySQLConnection:
         cursor = connection.cursor()
 
         sql=f"""
-            SELECT * from Log WHERE robot_id = {robot_id}
+            SELECT table_id, call_time from Log 
+            WHERE (robot_id = {robot_id}) and (call_time BETWEEN '{start_date} 00:00:00' AND '{end_date} 23:59:59' )
         """
         try:
             cursor.execute(sql)
@@ -395,7 +396,7 @@ class MySQLConnection:
         cursor = connection.cursor()
 
         sql=f"""
-            select name from Stores;
+            select name from Stores where name != '퇴식구1';
         """
         try:
             cursor.execute(sql)

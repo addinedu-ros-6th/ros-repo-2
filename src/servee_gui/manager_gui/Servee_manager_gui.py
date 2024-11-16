@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QMainWindow, QDialog, QApplication, QTableWidgetItem, QHeaderView
 from PyQt5.QtGui import QPixmap, QPainter, QPen
-from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal
+from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal, QDate
 from PyQt5 import uic
 
 import rclpy
@@ -24,13 +24,12 @@ TODO:
 ### 장애물이랑 로봇 회피하는 행동 시각화 할거 준비하기
 ### 특히 로봇은 서로의 경로까지 보여주기
 
-1. 매출현황 조회에서 세로로 된 탭 고치기
-2. 로봇 자세 현황 검색 기능 구현
-3. 매장별 매출 현황 띄우기 - 보류
-4. 사장 호출 버튼 수신 구현하기
-5. 로봇 위치랑 경로 3개까지 동시에 다 해보기
-6. 로봇 상태 컬럼 너비 고정시키기
+1. 로봇 자세 현황 검색 기능 구현 okay
+2. 사장 호출 버튼 수신 구현하기
+3. 맵에서 로봇마다 색상 다르게 하기
+4. 매장별 매출 현황 띄우기 - 보류
 +
+- 로봇 위치랑 경로 3개까지 동시에 다 해보기
 - manager에서 주문 인스턴스 없애기
 
 소켓으로 받을 데이터:
@@ -40,10 +39,8 @@ TODO:
 토픽으로 받을 데이터:
 - 주행거리 관련 데이터  <- 이건 임의로 계산 때리기
 
-State map:
-["idle", "running1", "standby1", "running2", "standby2"]
-서빙: ["충전중", "픽업중", "음식 대기중", "배달중", "수령 대기중"]
-수거: ["충전중", "수거중", "수거 대기중", "퇴식중", "퇴식 대기중"]
+Log table dummy data:
+insert into Log value (1, 1, 1, 1, 'SE', '2024-11-11 12:00:00', '2024-11-11 12:00:00', '2024-11-11 13:00:00');
 '''
 
 
@@ -83,7 +80,7 @@ class SubscriberNode(Node):
         self.robots_pose = [None, None, None]
         self.robots_path = [None, None, None]
         self.robots_state = [None, None, None]
-        self.robots_battery = [None, None, None]
+        self.robots_battery = [100, 100, 100]
 
         self.pose_sub_1 = self.create_subscription(Pose, '/pose', self.robot_pose_callback(0), 10)
         self.pose_sub_2 = self.create_subscription(Pose, '/robot2/pose', self.robot_pose_callback(1), 10)
@@ -147,7 +144,7 @@ class ManagerGUI(QMainWindow, ui_info):
         self.label_map_2.setPixmap(self.pixmap)
 
         # 로봇 상태 매핑
-        self.robot_serving_state_map = {"idle": "충전중", "running1": "픽업중", "standby1": "음식 대기중", "running2": "배당중", "standby2": "수령 대기중"}
+        self.robot_serving_state_map = {"idle": "충전중", "running1": "픽업중", "standby1": "음식 대기중", "running2": "배달중", "standby2": "수령 대기중"}
         self.robot_retrieving_state_map = {"idle": "충전중", "running1": "수거중", "standby1": "수거 대기중", "running2": "퇴식중", "standby2": "퇴식 대기중"}
 
         # 로봇 현황 시작
@@ -159,12 +156,15 @@ class ManagerGUI(QMainWindow, ui_info):
 
         robots = self.dbm.get_robots()
         header = self.table_robots_status.horizontalHeader()
-        header.setSectionResizeMode(QHeaderView.ResizeToContents)
+        self.table_robots_status.setColumnWidth(0, 120)
+        self.table_robots_status.setColumnWidth(1, 80)
+        self.table_robots_status.setColumnWidth(2, 40)
+        header.setStretchLastSection(True)
         self.table_robots_status.setRowCount(len(robots))
 
         for i, robot_info in enumerate(robots):
             id_1 = QTableWidgetItem(f"Servee_Robot_{robot_info[0]}")
-            self.robot_type.append({id_1: robot_info[1]})
+            self.robot_type.append({id_1.text(): robot_info[1]})
             _state = QTableWidgetItem(" ")
             _battery = QTableWidgetItem("100")
 
@@ -237,7 +237,7 @@ class ManagerGUI(QMainWindow, ui_info):
         painter.setPen(pen)
 
         if self.robots_pose[0] is not None:
-            print("x:", self.robots_pose[0].position.x, "\ty:", self.robots_pose[0].position.y)
+            # print("x:", self.robots_pose[0].position.x, "\ty:", self.robots_pose[0].position.y)
             painter.drawEllipse(int(540 - 540/2.3*self.robots_pose[0].position.y), int(408 - 408/1.7*self.robots_pose[0].position.x), 30, 30)  # 408 대신에 396 확인해보기
 
             # 경로 그리기
@@ -254,7 +254,7 @@ class ManagerGUI(QMainWindow, ui_info):
 
         # 로봇 현황 업데이트
         for i in range(3):
-            if self.robot_type[i][i+1] == "서빙용":
+            if self.robot_type[i]['Servee_Robot_'+str(i+1)] == "서빙용":
                 item_1 = QTableWidgetItem(self.robot_serving_state_map[self.robots_state[i]])
             else:
                 item_1 = QTableWidgetItem(self.robot_retrieving_state_map[self.robots_state[i]])
@@ -276,7 +276,10 @@ class ManagerGUI(QMainWindow, ui_info):
 
             self.table_stores_status.setRowCount(len(stores))
             header = self.table_stores_status.horizontalHeader()
-            header.setSectionResizeMode(QHeaderView.ResizeToContents)
+            self.table_stores_status.setColumnWidth(0, 110)
+            self.table_stores_status.setColumnWidth(1, 95)
+            self.table_stores_status.setColumnWidth(2, 95)
+            header.setStretchLastSection(True)
 
             for i, store_name in enumerate(stores):
                 name = QTableWidgetItem(store_name[0])
@@ -297,12 +300,51 @@ class ManagerGUI(QMainWindow, ui_info):
             
             for i, earnings in enumerate(store_earning_recap):
                 store_id, earning = earnings[0], earnings[1]
-                store_earning = QTableWidgetItem(str(earning))
+                store_earning = QTableWidgetItem(f"{int(earning):,} 원")
                 store_earning.setTextAlignment(Qt.AlignCenter)
                 self.table_stores_status.setItem(store_id-1, 2, store_earning)
 
     def table_robot_dclicked(self, row, column):
+        def date_start_callback():
+            self.start_date = robot_status.date_start.date()
+            print("start_date:", self.start_date)
+        
+        def date_end_callback():
+            self.end_date = robot_status.date_end.date()
+            print("end_date:", self.end_date)
+        
+        def search_callback():
+            start_date_string = self.start_date.toString("yyyy-MM-dd")
+            end_date_string = self.end_date.toString("yyyy-MM-dd")
+
+            log_data = self.dbm.get_robot_log(robot_id, start_date_string, end_date_string)
+            print("log_data:", log_data)
+
+            robot_status.label_count_value.setText(str(len(log_data)))
+            robot_status.table_history.setRowCount(len(log_data))
+
+            for i, data in enumerate(log_data):
+                table_num = QTableWidgetItem(str(data[0]))
+                order_time = QTableWidgetItem(str(data[1]))
+
+                table_num.setTextAlignment(Qt.AlignCenter)
+                order_time.setTextAlignment(Qt.AlignCenter)
+
+                robot_status.table_history.setItem(i, 0, table_num)
+                robot_status.table_history.setItem(i, 1, order_time)
+
         robot_status = RobotStatus()
+
+        self.start_date = QDate.currentDate()
+        self.end_date = QDate.currentDate()
+
+        robot_status.date_start.setDate(self.start_date)
+        robot_status.date_end.setDate(self.end_date)
+
+        header = robot_status.table_history.horizontalHeader()
+        robot_status.table_history.setColumnWidth(0, 50)
+        robot_status.table_history.setColumnWidth(1, 100)
+        header.setStretchLastSection(True)
 
         robot_id = self.table_robots_status.item(row, 0).text()[-1]
         if self.dbm.get_robot_type(robot_id)[0][0] == "서빙용":
@@ -311,23 +353,29 @@ class ManagerGUI(QMainWindow, ui_info):
         else:
             robot_status.label_robot_status.setText("서빙 상태")
             robot_status.label_count_title.setText("수거 횟수")
+
+        search_callback()
         
-        log_data = self.dbm.get_robot_log(robot_id)
+        # log_data = self.dbm.get_robot_log(robot_id, self.start_date, self.end_date)
         
-        robot_status.label_count_value.setText(str(len(log_data)))
-        robot_status.table_history.setRowCount(len(log_data))
-        header = robot_status.table_history.horizontalHeader()
-        header.setSectionResizeMode(QHeaderView.ResizeToContents)
+        # robot_status.label_count_value.setText(str(len(log_data)))
+        # robot_status.table_history.setRowCount(len(log_data))
+        # header = robot_status.table_history.horizontalHeader()
+        # header.setSectionResizeMode(QHeaderView.ResizeToContents)
 
-        for i, data in enumerate(log_data):
-            table_num = QTableWidgetItem(str(data[2]))
-            order_time = QTableWidgetItem(str(data[5]))
+        # for i, data in enumerate(log_data):
+        #     table_num = QTableWidgetItem(str(data[0]))
+        #     order_time = QTableWidgetItem(str(data[1]))
 
-            table_num.setTextAlignment(Qt.AlignCenter)
-            order_time.setTextAlignment(Qt.AlignCenter)
+        #     table_num.setTextAlignment(Qt.AlignCenter)
+        #     order_time.setTextAlignment(Qt.AlignCenter)
 
-            robot_status.table_history.setItem(i, 0, table_num)
-            robot_status.table_history.setItem(i, 1, order_time)
+        #     robot_status.table_history.setItem(i, 0, table_num)
+        #     robot_status.table_history.setItem(i, 1, order_time)
+        
+        robot_status.date_start.dateChanged.connect(date_start_callback)
+        robot_status.date_end.dateChanged.connect(date_end_callback)
+        robot_status.btn_search.clicked.connect(search_callback)
 
         robot_status.exec_()
 
