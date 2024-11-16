@@ -20,7 +20,7 @@ class TestPublisher(Node):
 
         # State management
         self.states = ["idle", "running1", "standby1", "running2", "standby2"]
-        self.state_counts = {"idle": 3, "running1": 5, "standby1": 5, "running2": 5, "standby2": 5}
+        self.state_counts = {"idle": 3, "running1": 10, "standby1": 10, "running2": 10, "standby2": 10}
         self.state_index = 0  # Index to track the current state
         self.current_count = 0  # Track how many times the current state has been published
 

@@ -57,7 +57,7 @@ class ClientObserver:
             if call_type == "SE":
                 command = f"CREATE,{call_type},{order_id},{store_id},{table_id},{call_time}"
             elif call_type == "RV":
-                store_id = 0  # Specify store_id separately if needed
+                store_id = 101  # Specify store_id separately if needed
                 command = f"CREATE,{call_type},{store_id},{table_id},{call_time}"
             else:
                 print("Unknown call_type provided.")

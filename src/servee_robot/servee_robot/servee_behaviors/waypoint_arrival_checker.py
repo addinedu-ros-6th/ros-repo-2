@@ -35,7 +35,7 @@ class WaypointArrivalChecker(Behaviour):
         
     def setup(self, **kwargs: Any) -> None:
         self.node: Node = kwargs['node']
-        self.tolerance_distance = 0.2 # 허용 거리
+        self.tolerance_distance = 0.15 # 허용 거리
         self.path = []
 
     def update_next_waypoint_info(self):

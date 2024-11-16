@@ -5,7 +5,7 @@ from rclpy.callback_groups import ReentrantCallbackGroup, MutuallyExclusiveCallb
 
 from std_msgs.msg import String
 from geometry_msgs.msg import PoseArray, Pose
-from servee_interfaces.msg import TaskGoalPoses, TaskGoalPose
+from servee_interfaces.msg import TaskGoalData
 
 import threading
 import queue
@@ -16,7 +16,7 @@ from datetime import datetime
 import re
 
 from .observer_publisher import Server, ServingInstance, RetrievalInstance, Command, \
-    CreateInstanceCommand, UpdateStatusCommand, DeleteInstanceCommand
+    CreateInstanceCommand, UpdateStatusCommand, DeleteInstanceCommand, DBManager
 
 class Robot:
     def __init__(self, name, robot_type):
@@ -36,10 +36,11 @@ class Robot:
         return (dx**2 + dy**2)**0.5
 
 class RobotTask(Node):
-    def __init__(self, server):
+    def __init__(self, server, db_manager):
         super().__init__('robot_task')
-
+    
         self.server = server
+        self.db_manager = db_manager
 
         self.group1 = MutuallyExclusiveCallbackGroup()
         self.group2 = MutuallyExclusiveCallbackGroup()
@@ -61,8 +62,8 @@ class RobotTask(Node):
         self.retrieving_task_queue = self.server.retrieving_task_queue
 
         # ! code for communication test
-        self.robots = {'robot': Robot('robot', 'Server')}
-        # self.robots = {'robot': Robot('robot', 'Retriever')}
+        # self.robots = {'robot': Robot('robot', 'Server')}
+        self.robots = {'robot': Robot('robot', 'Retriever')}
 
         self.task_publishers = self.init_publishers()
         self.create_subscription(Pose, 'pose', self.robot_pose_callback('robot'), 10, callback_group=self.group1)
@@ -74,12 +75,12 @@ class RobotTask(Node):
     def init_publishers(self):
         publishers = { 
             ## ? actual code
-            # 'robot1': self.create_publisher(TaskGoalPoses, '/robot1/servee/task_goal_poses', 10),
-            # 'robot2': self.create_publisher(TaskGoalPoses, '/robot2/servee/task_goal_poses', 10),
-            # 'robot3': self.create_publisher(TaskGoalPoses, '/robot3/servee/task_goal_poses', 10)
+            # 'robot1': self.create_publisher(TaskGoalData, '/robot1/servee/task_goal_data', 10),
+            # 'robot2': self.create_publisher(TaskGoalData, '/robot2/servee/task_goal_data', 10),
+            # 'robot3': self.create_publisher(TaskGoalData, '/robot3/servee/task_goal_data', 10)
 
             # ! code for communication test
-            'robot': self.create_publisher(TaskGoalPoses, '/servee/task_goal_poses', 10)
+            'robot': self.create_publisher(TaskGoalData, '/servee/task_goal_data', 10)
         }
         return publishers
 
@@ -171,32 +172,44 @@ class RobotTask(Node):
             order = self.serving_task_queue.get()  # Get the position of the first task
             print("Assigning order ", order.order_id)
    
-            # ! code for communication test
-            store_data_string = "x:1.2, y:3.4, z:5.6, qx:0.1, qy:0.2, qz:0.3, qw:0.4"
-            table_data_string = "x:9.2, y:9.4, z:9.6, qx:9.1, qy:9.2, qz:9.3, qw:9.4"
+            # # ! code for communication test
+            # store_data_string = "x:1.2, y:3.4, z:5.6, qx:0.1, qy:0.2, qz:0.3, qw:0.4"
+            # table_data_string = "x:9.2, y:9.4, z:9.6, qx:9.1, qy:9.2, qz:9.3, qw:9.4"
 
             # ? actual code
-            # store_data_string = order.store_loaction
-            # table_data_string = order.table_loaction
+            store_data_string = order.store_location
+            table_data_string = order.table_location
+            store_arucomarker_id = order.store_arucomarker_id
+            table_arucomarker_id = order.table_arucomarker_id
+
             store_goalpose = self.location_parser(store_data_string)
             table_goalpose = self.location_parser(table_data_string)
+
+            print("store data string : ", store_data_string)
+            print("store goalpose : ", store_goalpose)
+            print("store arucomarker id : ", store_arucomarker_id)
+            print("table arucomarker id : ", table_arucomarker_id)
+
 
             if store_goalpose and table_goalpose:
                 closest_serverbot = min(available_serverbots, key=lambda r: r.calculate_distance(store_goalpose[:2]))
                 print("Task assigned to : ", closest_serverbot.name)
-                self.assign_task_to_robot(closest_serverbot, order.order_id, store_goalpose, table_goalpose)
+                self.assign_task_to_robot(closest_serverbot, order.order_id, store_goalpose, 
+                                          table_goalpose, store_arucomarker_id, table_arucomarker_id)
 
         if self.retrieving_task_queue and available_retrieverbots:
             retrieval = self.retrieving_task_queue.get()  # Get the position of the first task
             print("Assigning retrieval ", retrieval.table_id)
 
-            # ! code for communication test
-            store_data_string = "x:1.2, y:3.4, z:5.6, qx:0.1, qy:0.2, qz:0.3, qw:0.4"
-            table_data_string = "x:9.2, y:9.4, z:9.6, qx:9.1, qy:9.2, qz:9.3, qw:9.4"
+            # # ! code for communication test
+            # store_data_string = "x:1.2, y:3.4, z:5.6, qx:0.1, qy:0.2, qz:0.3, qw:0.4"
+            # table_data_string = "x:9.2, y:9.4, z:9.6, qx:9.1, qy:9.2, qz:9.3, qw:9.4"
 
             # ? actual code
-            # store_data_string = retrieval.store_loaction
-            # table_data_string = retrieval.table_loaction
+            store_data_string = retrieval.store_location
+            table_data_string = retrieval.table_location
+            store_arucomarker_id = retrieval.store_arucomarker_id
+            table_arucomarker_id = retrieval.table_arucomarker_id
 
             store_goalpose = self.location_parser(store_data_string)
             table_goalpose = self.location_parser(table_data_string)
@@ -204,13 +217,15 @@ class RobotTask(Node):
             if store_goalpose and table_goalpose:
                 closest_retrieverbot = min(available_retrieverbots, key=lambda r: r.calculate_distance(table_goalpose[:2]))
                 print("Task assigned to : ", closest_retrieverbot.name)
-                self.assign_task_to_robot(closest_retrieverbot, retrieval.table_id, table_goalpose, store_goalpose)
+                self.assign_task_to_robot(closest_retrieverbot, retrieval.table_id, table_goalpose, 
+                                          store_goalpose, table_arucomarker_id, store_arucomarker_id)
 
-    def assign_task_to_robot(self, robot, task_id, first_goalpose, second_goalpose):
+    def assign_task_to_robot(self, robot, task_id, first_goalpose, second_goalpose, 
+                             first_arucomarker_id, second_arucomarker_id):
         
         robot.assigned_task_id=task_id
 
-        task_goal_poses = TaskGoalPoses()
+        task_goal_poses = TaskGoalData()
         pose_array = PoseArray()
         
         pose1 = Pose() # 첫 번째 좌표 설정
@@ -235,8 +250,15 @@ class RobotTask(Node):
         pose_array.poses.append(pose1)
         pose_array.poses.append(pose2)
 
-        # TaskGoalPoses에 PoseArray 할당
+        ## ? actual code 
+        aruco_ids = [first_arucomarker_id, second_arucomarker_id]
+
+        # ! test code for communication test
+        # aruco_ids = [10, 11]
+
+        # TaskGoalData에 PoseArray 할당
         task_goal_poses.goal_poses = pose_array
+        task_goal_poses.aruco_id = aruco_ids
 
         # 퍼블리시
         while True:
@@ -273,13 +295,21 @@ def main(args=None):
     host = "localhost"
     port = 9998
 
-    server = Server(host, port)
+    db_manager = DBManager(
+        host="192.168.0.130",
+        port=3306,
+        user="kjc",
+        password="1234",
+        database="SERVEE_DB"
+    )
+
+    server = Server(host, port, db_manager)
     server_thread = threading.Thread(target=server.start)
     server_thread.daemon = True  # 메인 스레드 종료 시 함께 종료
     server_thread.start()
 
     rclpy.init(args=args)
-    robot_task = RobotTask(server)
+    robot_task = RobotTask(server, db_manager)
     executor = MultiThreadedExecutor(num_threads=3)
     executor.add_node(robot_task)
 
@@ -291,6 +321,7 @@ def main(args=None):
         executor.shutdown()
         robot_task.stop()
         server.stop()
+        db_manager.close()
         print("All tasks stopped")
 
 if __name__ == '__main__':

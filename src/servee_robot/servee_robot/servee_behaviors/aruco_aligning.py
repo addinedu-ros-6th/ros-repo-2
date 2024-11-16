@@ -22,7 +22,7 @@ class ArucoAligning(Behaviour):
         self.blackboard.register_key(key="path", access=Access.READ)
         self.blackboard.register_key(key="path", access=Access.WRITE)
         self.blackboard.register_key(key="curr_pose", access=Access.READ)
-        self.blackboard.register_key(key="odom_pose", access=Access.READ)
+        # self.blackboard.register_key(key="odom_pose", access=Access.READ)
         
         
         self.blackboard.register_key(key='aruco_state', access=Access.WRITE)
@@ -31,8 +31,8 @@ class ArucoAligning(Behaviour):
      
     def setup(self, **kwargs: Any) -> None:
         self.node:Node = kwargs['node']   
-        self.distance_tolerance = 0.05
-        self.yaw_tolerance = 0.1
+        self.distance_tolerance = 0.25
+        self.yaw_tolerance = 30
         self.initial_position = None
         self.initial_yaw = None
         self.ang_vel = 0.3
@@ -67,7 +67,7 @@ class ArucoAligning(Behaviour):
                 self.node.get_logger().fatal(f"Yawing 상태로 넘어갑니다. {math.hypot(self.marker_x, self.marker_z)}")
                 return Status.FAILURE
                 
-            # # 방향
+            # # # 방향
             # elif abs(self.marker_yaw) < self.yaw_tolerance:
             #     self.blackboard.aruco_state = "approach"
             #     self.node.get_logger().fatal(f"approach 상태로 넘어갑니다.{self.marker_yaw}")
@@ -76,12 +76,13 @@ class ArucoAligning(Behaviour):
             # 마커와 정렬되지 않은 경우 회전해서 각도 조정.
             else:
                 
-                self.rotate_by_angle(-self.marker_theta / 2)
+                # self.rotate_by_angle(-self.marker_theta / 2)
                 distance = (self.marker_x * self.marker_z) / (
                     (math.sin(self.marker_theta / 2)) * (self.marker_x + self.marker_z + math.hypot(self.marker_x, self.marker_z)))
+                
                 self.move_by_distance(distance*1.5)
-                self.rotate_by_angle(np.sign(self.marker_theta) * math.pi / 4)
-                self.node.get_logger().fatal(f"마커와 정렬되지 않아 다시 이동합니다. distance {math.hypot(self.marker_x, self.marker_z)}, yaw {abs(self.marker_yaw)}")
+                # self.rotate_by_angle(np.sign(self.marker_theta) * math.pi / 4)
+                # self.node.get_logger().fatal(f"마커와 정렬되지 않아 다시 이동합니다. 거리: {distance} 좌표:{self.marker_x}, {self.marker_z}, yaw {abs(self.marker_yaw)}")
                 return Status.SUCCESS
                     
         else:
@@ -103,11 +104,11 @@ class ArucoAligning(Behaviour):
         if abs(yaw_error) > 0.1:
             twist.angular.z = self.ang_vel if yaw_error > 0 else -self.ang_vel
             self.twist_pub.publish(twist)
+
             
-            rclpy.spin_once(self.node, timeout_sec=0.1)
+        else:
             twist.angular.z = 0.0
             self.twist_pub.publish(twist)
-        else:
             self.initial_yaw = None 
            
     
@@ -118,12 +119,14 @@ class ArucoAligning(Behaviour):
         """
         twist = Twist()
         
-        curr_x = self.blackboard.odom_pose.position.x
-        curr_y = self.blackboard.odom_pose.position.y
+        curr_x = self.blackboard.curr_pose.position.x
+        curr_y = self.blackboard.curr_pose.position.y
         
         # 초기 위치를 설정
         if self.initial_position is None:
             self.initial_position = (curr_x, curr_y)
+           
+        
             
         # 현재 위치와 초기 위치 간의 변위를 계산
         dx = curr_x - self.initial_position[0]
@@ -135,11 +138,12 @@ class ArucoAligning(Behaviour):
         if dist_moved < target_distance:
             twist.linear.x = self.lin_vel
             self.twist_pub.publish(twist)
-            rclpy.spin_once(self.node, timeout_sec=0.1)
-            twist.linear.x = 0.0
-            self.twist_pub.publish(twist)
-                
+            self.node.get_logger().fatal(f"속도: {self.lin_vel}")  
+
+
         # 목표 거리에 도달한 경우
         else:
+            twist.linear.x = 0.0
+            self.twist_pub.publish(twist)
             self.initial_position = None  # 다음 이동을 위해 초기 위치 초기화
         
