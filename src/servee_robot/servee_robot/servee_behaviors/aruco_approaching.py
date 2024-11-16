@@ -33,7 +33,7 @@ class ArucoApproaching(Behaviour):
             'centerline_error_tolerance_approaching', 130  
         )
         
-        self.distance_tolerance = 0.2
+        self.distance_tolerance = 0.08
         self.centerline_error_tolerance = self.node.get_parameter(
             'centerline_error_tolerance_approaching'
         ).value
@@ -41,7 +41,7 @@ class ArucoApproaching(Behaviour):
         self.node.get_logger().warn(f"centerline_error_tolerance2: {self.centerline_error_tolerance}")
 
         self.ang_vel = 0.3
-        self.lin_vel = 0.08
+        self.lin_vel = 0.05
      
     def set_marker_data(self) -> None:
         self.marker_id = self.blackboard.aruco_maker_result['id']
