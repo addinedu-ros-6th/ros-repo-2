@@ -24,7 +24,7 @@ class ObstacleAvoidanceMover(Behaviour):
         parameters_to_use = {
             "avoidance_lieaner": 0.1,
             "avoidance_angular": 0.5,
-            "wall_threshold": 0.125
+            "wall_threshold": 0.13
         }
 
         # 파라미터 선언 및 재활용
