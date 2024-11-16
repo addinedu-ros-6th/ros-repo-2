@@ -2,24 +2,21 @@ import rclpy
 from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.callback_groups import ReentrantCallbackGroup, MutuallyExclusiveCallbackGroup
-
 from std_msgs.msg import String
 from geometry_msgs.msg import PoseArray, Pose
 from servee_interfaces.msg import TaskGoalData
-
 import threading
 import queue
 import time
 import math
 from datetime import datetime
-
 import re
-
 from .observer_publisher import Server, ServingInstance, RetrievalInstance, Command, \
     CreateInstanceCommand, UpdateStatusCommand, DeleteInstanceCommand, DBManager
 
 class Robot:
-    def __init__(self, name, robot_type):
+    def __init__(self, robot_id, name, robot_type):
+        self.robot_id = robot_id
         self.name = name
         self.robot_type = robot_type
         self.state = 'idle'
@@ -51,9 +48,9 @@ class RobotTask(Node):
 
         # ? actual code
         # self.robots = {
-        #     'robot1': Robot('robot1', 'Server'),
-        #     'robot2': Robot('robot2', 'Server'),
-        #     'robot3': Robot('robot3', 'Retriever')}
+        #     'robot1': Robot(1, 'robot1', 'Server'),
+        #     'robot2': Robot(2, 'robot2', 'Server'),
+        #     'robot3': Robot(3, 'robot3', 'Retriever')}
    
         # self.publishers = self.init_publishers()
         # self.init_subscriptions()
@@ -62,8 +59,8 @@ class RobotTask(Node):
         self.retrieving_task_queue = self.server.retrieving_task_queue
 
         # ! code for communication test
-        # self.robots = {'robot': Robot('robot', 'Server')}
-        self.robots = {'robot': Robot('robot', 'Retriever')}
+        self.robots = {'robot': Robot(1, 'robot', 'Server')}
+        # self.robots = {'robot': Robot('robot', 'Retriever')}
 
         self.task_publishers = self.init_publishers()
         self.create_subscription(Pose, 'pose', self.robot_pose_callback('robot'), 10, callback_group=self.group1)
@@ -103,50 +100,77 @@ class RobotTask(Node):
             robot = self.robots[robot_name]
             robot.prev_state = robot.state
             robot.state = msg.data
-            if robot.prev_state in ['idle','returning_home','low_battery'] and robot.state == 'running1':
-                if robot.robot_type == 'Server':
-                    command = UpdateStatusCommand(call_type='SE', order_id=robot.assigned_task_id, 
-                                                  new_status='waiting_handover')
-                elif robot.robot_type == 'Retriever':
-                    command = UpdateStatusCommand(call_type='RV', table_id=robot.assigned_task_id, 
-                                                  new_status='start_retrieving')
-                command.execute(self.server)
-                time.sleep(1)
-            elif robot.prev_state=='running1' and robot.state == 'standby1':
-                if robot.robot_type == 'Server':
-                    command = UpdateStatusCommand(call_type='SE', order_id=robot.assigned_task_id, 
-                                                  new_status='waiting_handover')
-                elif robot.robot_type == 'Retriever':
-                    command = UpdateStatusCommand(call_type='RV', table_id=robot.assigned_task_id, 
-                                                  new_status='waiting_handover')
-                command.execute(self.server)
-                time.sleep(1)
-            elif robot.prev_state=='standby1' and robot.state == 'running2':
-                if robot.robot_type == 'Server':
-                    command = UpdateStatusCommand(call_type='SE', order_id=robot.assigned_task_id, 
-                                                  new_status='serving')
-                elif robot.robot_type == 'Retriever':
-                    command = UpdateStatusCommand(call_type='RV', table_id=robot.assigned_task_id, 
-                                                  new_status='retrieving')
-                command.execute(self.server)
-                time.sleep(1)
-            elif robot.prev_state=='running2' and robot.state == 'standby2':
-                if robot.robot_type == 'Server':
-                    command = UpdateStatusCommand(call_type='SE', order_id=robot.assigned_task_id, 
-                                                  new_status='done_serving')
-                elif robot.robot_type == 'Retriever':
-                    command = UpdateStatusCommand(call_type='RV', table_id=robot.assigned_task_id, 
-                                                  new_status='done_retrieving')
-                command.execute(self.server)
-                time.sleep(1)
-            elif robot.prev_state == 'standby2' and robot.state in ['idle', 'low_battery'] and robot.assigned_task_id:
-                if robot.robot_type == 'Server':
-                    command = DeleteInstanceCommand(call_type='SE', order_id=robot.assigned_task_id)
-                elif robot.robot_type == 'Retriever':
-                    command = DeleteInstanceCommand(call_type='RV', table_id=robot.assigned_task_id)
-                command.execute(self.server)
-                time.sleep(1)
-                print(robot.name, " finished task ", robot.assigned_task_id)
+            if robot.assigned_task_id:
+                if robot.prev_state in ['idle','returning_home','low_battery'] and robot.state == 'running1':
+                    if robot.robot_type == 'Server':
+                        command = UpdateStatusCommand(call_type='SE', order_id=robot.assigned_task_id, 
+                                                    new_status='waiting_handover')
+                    elif robot.robot_type == 'Retriever':
+                        command = UpdateStatusCommand(call_type='RV', table_id=robot.assigned_task_id, 
+                                                    new_status='start_retrieving')
+                    command.execute(self.server)
+                    time.sleep(1)
+                elif robot.prev_state=='running1' and robot.state == 'standby1':
+                    if robot.robot_type == 'Server':
+                        command = UpdateStatusCommand(call_type='SE', order_id=robot.assigned_task_id, 
+                                                    new_status='waiting_handover')
+                    elif robot.robot_type == 'Retriever':
+                        command = UpdateStatusCommand(call_type='RV', table_id=robot.assigned_task_id, 
+                                                    new_status='waiting_handover')
+                    command.execute(self.server)
+                    time.sleep(1)
+                elif robot.prev_state=='standby1' and robot.state == 'running2':
+                    if robot.robot_type == 'Server':
+                        command = UpdateStatusCommand(call_type='SE', order_id=robot.assigned_task_id, 
+                                                    new_status='serving')
+                    elif robot.robot_type == 'Retriever':
+                        command = UpdateStatusCommand(call_type='RV', table_id=robot.assigned_task_id, 
+                                                    new_status='retrieving')
+                    command.execute(self.server)
+                    time.sleep(1)
+                elif robot.prev_state=='running2' and robot.state == 'standby2':
+                    if robot.robot_type == 'Server':
+                        command = UpdateStatusCommand(call_type='SE', order_id=robot.assigned_task_id, 
+                                                    new_status='done_serving')
+                    elif robot.robot_type == 'Retriever':
+                        command = UpdateStatusCommand(call_type='RV', table_id=robot.assigned_task_id, 
+                                                    new_status='done_retrieving')
+                    command.execute(self.server)
+                    time.sleep(1)
+                elif robot.prev_state == 'standby2' and robot.state in ['idle', 'low_battery'] :
+                    if robot.robot_type == 'Server':
+                        order_id=robot.assigned_task_id
+                        self.db_manager.insert_log(robot_id=robot.robot_id, 
+                                                   table_id=self.server.SE_instances[order_id].table_id, 
+                                                   store_id=self.server.SE_instances[order_id].store_id,
+                                                   call_type='서빙',
+                                                   call_time=self.server.SE_instances[order_id].call_time,
+                                                   task_start_time=self.server.SE_instances[order_id].task_start_time,
+                                                   task_end_time=datetime.now()
+                                                   )
+                        print("log inserted to DB")
+                        
+                        command = DeleteInstanceCommand(call_type='SE', order_id=order_id)
+                    elif robot.robot_type == 'Retriever':
+                        table_id=robot.assigned_task_id
+                        self.db_manager.insert_log(robot_id=robot.robot_id, 
+                                                   table_id=self.server.RV_instances[order_id].table_id, 
+                                                   store_id=self.server.RV_instnaces[order_id].store_id,
+                                                   call_type='회수',
+                                                   call_time=self.server.RV_instnaces[order_id].call_time,
+                                                   task_start_time=self.server.RV_instnaces[order_id].task_start_time,
+                                                   task_end_time=datetime.now()
+                                                   )
+                        print("log inserted to DB")
+                        
+                        command = DeleteInstanceCommand(call_type='RV', table_id=table_id)
+                    command.execute(self.server)
+                    robot.executed_tasks += 1
+                    print(robot.name, "finished task ", robot.assigned_task_id)
+                    print(robot.name, "has executed ", robot.executed_tasks, "tasks so far!")
+                    
+                    robot.assigned_task_id = None
+                    time.sleep(1)
 
         return callback
 
@@ -190,11 +214,11 @@ class RobotTask(Node):
             print("store arucomarker id : ", store_arucomarker_id)
             print("table arucomarker id : ", table_arucomarker_id)
 
-
             if store_goalpose and table_goalpose:
-                closest_serverbot = min(available_serverbots, key=lambda r: r.calculate_distance(store_goalpose[:2]))
-                print("Task assigned to : ", closest_serverbot.name)
-                self.assign_task_to_robot(closest_serverbot, order.order_id, store_goalpose, 
+                optimal_serverbot = min(available_serverbots, key=lambda r: (r.executed_tasks, 
+                                                                             r.calculate_distance(store_goalpose[:2])))
+                print("Task assigned to : ", optimal_serverbot.name)
+                self.assign_task_to_robot(optimal_serverbot, order.order_id, store_goalpose, 
                                           table_goalpose, store_arucomarker_id, table_arucomarker_id)
 
         if self.retrieving_task_queue and available_retrieverbots:
@@ -215,9 +239,9 @@ class RobotTask(Node):
             table_goalpose = self.location_parser(table_data_string)
 
             if store_goalpose and table_goalpose:
-                closest_retrieverbot = min(available_retrieverbots, key=lambda r: r.calculate_distance(table_goalpose[:2]))
-                print("Task assigned to : ", closest_retrieverbot.name)
-                self.assign_task_to_robot(closest_retrieverbot, retrieval.table_id, table_goalpose, 
+                optimal_retrieverbot = min(available_retrieverbots, key=lambda r: r.calculate_distance(table_goalpose[:2]))
+                print("Task assigned to : ", optimal_retrieverbot.name)
+                self.assign_task_to_robot(optimal_retrieverbot, retrieval.table_id, table_goalpose, 
                                           store_goalpose, table_arucomarker_id, store_arucomarker_id)
 
     def assign_task_to_robot(self, robot, task_id, first_goalpose, second_goalpose, 
@@ -265,7 +289,7 @@ class RobotTask(Node):
             print(f"Assigning task {task_id} to {robot.name}")
             self.task_publishers[robot.name].publish(task_goal_poses)
             time.sleep(0.2)
-            if robot.state == 'running1':
+            if robot.assigned_task_id:
                 break
 
         print(f"Assigned successfully!")

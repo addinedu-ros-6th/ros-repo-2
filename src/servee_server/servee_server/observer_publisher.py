@@ -233,6 +233,15 @@ class DBManager:
         )
         self.cursor = self.connection.cursor(dictionary=True)
 
+    def insert_log(self, robot_id, table_id, store_id, call_type, call_time, task_start_time, task_end_time):
+        query = """
+            INSERT INTO Log (robot_id, table_id, store_id, call_type, call_time, task_start_time, task_end_time)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """
+        values = (robot_id, table_id, store_id, call_type, call_time, task_start_time, task_end_time)
+        self.cursor.execute(query, values)
+        self.connection.commit()
+        
     def fetch_table_data(self, table_id):
         query = "SELECT location, arucomarker_id FROM DiningTables WHERE table_id = %s"
         self.cursor.execute(query, (table_id,))
