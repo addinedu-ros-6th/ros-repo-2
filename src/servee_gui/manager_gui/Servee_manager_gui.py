@@ -26,8 +26,9 @@ TODO:
 
 1. 로봇 자세 현황 검색 기능 구현 okay
 2. 사장 호출 버튼 수신 구현하기
-3. 맵에서 로봇마다 색상 다르게 하기
+3. 맵에서 로봇마다 색상 다르게 하기 okay
 4. 매장별 매출 현황 띄우기 - 보류
+5. robot status 윈도우 너비랑 높이 조정하기
 +
 - 로봇 위치랑 경로 3개까지 동시에 다 해보기
 - manager에서 주문 인스턴스 없애기
@@ -136,7 +137,7 @@ class ManagerGUI(QMainWindow, ui_info):
         self.status_list = []  # list[tuple[instance_id, status]]  (instance_id = order_id, instance_id = table_id)
 
         # DB 연결
-        self.dbm = MySQLConnection.getInstance()
+        self.dbm = MySQLConnection.getInstance()  #########################################
 
         # 지도 사진 삽입
         self.pixmap = QPixmap('./src/servee_gui/manager_gui/maps/map_final_3_scaled.pgm')
@@ -146,6 +147,8 @@ class ManagerGUI(QMainWindow, ui_info):
         # 로봇 상태 매핑
         self.robot_serving_state_map = {"idle": "충전중", "running1": "픽업중", "standby1": "음식 대기중", "running2": "배달중", "standby2": "수령 대기중"}
         self.robot_retrieving_state_map = {"idle": "충전중", "running1": "수거중", "standby1": "수거 대기중", "running2": "퇴식중", "standby2": "퇴식 대기중"}
+        self.color_map = [Qt.red, Qt.green, Qt.blue]
+        self.color_map_text = ['red', 'green', 'blue']
 
         # 로봇 현황 시작
         self.robot_type = []  # [{robot_id: type}, ...]
@@ -233,19 +236,24 @@ class ManagerGUI(QMainWindow, ui_info):
         pixmap_copy = self.pixmap.copy()
         
         painter = QPainter(pixmap_copy)
-        pen = QPen(Qt.red, 5)
-        painter.setPen(pen)
+        # pen = QPen(Qt.red, 5)
+        # painter.setPen(pen)
 
-        if self.robots_pose[0] is not None:
-            # print("x:", self.robots_pose[0].position.x, "\ty:", self.robots_pose[0].position.y)
-            painter.drawEllipse(int(540 - 540/2.3*self.robots_pose[0].position.y), int(408 - 408/1.7*self.robots_pose[0].position.x), 30, 30)  # 408 대신에 396 확인해보기
+        for i in range(len(self.robots_pose)):
+            if self.robots_pose[i] is not None:
+                pen = QPen(self.color_map[i], 5)
+                painter.setPen(pen)
 
-            # 경로 그리기
-            try:
-                for path in self.robots_path[0]:
-                    painter.drawEllipse(int(540 - 540/2.3*path.pose.position.y), int(408 - 408/1.7*path.pose.position.x), 3, 3)
-            except:
-                pass
+                self.label_color_1.setText(f"Robot {i+1}: {self.color_map_text[i]}")
+                self.label_color_1.setStyleSheet(f"Color : {self.color_map_text[i]}")
+                painter.drawEllipse(int(540 - 540/2.3*self.robots_pose[0].position.y), int(396 - 396/1.7*self.robots_pose[0].position.x), 30, 30)  # 408 대신에 396 확인해보기
+
+                # 경로 그리기
+                try:
+                    for path in self.robots_path[0]:
+                        painter.drawEllipse(int(540 - 540/2.3*path.pose.position.y), int(408 - 408/1.7*path.pose.position.x), 3, 3)
+                except:
+                    pass
 
         painter.end()
 
@@ -342,7 +350,7 @@ class ManagerGUI(QMainWindow, ui_info):
         robot_status.date_end.setDate(self.end_date)
 
         header = robot_status.table_history.horizontalHeader()
-        robot_status.table_history.setColumnWidth(0, 50)
+        robot_status.table_history.setColumnWidth(0, 100)
         robot_status.table_history.setColumnWidth(1, 100)
         header.setStretchLastSection(True)
 
@@ -355,23 +363,6 @@ class ManagerGUI(QMainWindow, ui_info):
             robot_status.label_count_title.setText("수거 횟수")
 
         search_callback()
-        
-        # log_data = self.dbm.get_robot_log(robot_id, self.start_date, self.end_date)
-        
-        # robot_status.label_count_value.setText(str(len(log_data)))
-        # robot_status.table_history.setRowCount(len(log_data))
-        # header = robot_status.table_history.horizontalHeader()
-        # header.setSectionResizeMode(QHeaderView.ResizeToContents)
-
-        # for i, data in enumerate(log_data):
-        #     table_num = QTableWidgetItem(str(data[0]))
-        #     order_time = QTableWidgetItem(str(data[1]))
-
-        #     table_num.setTextAlignment(Qt.AlignCenter)
-        #     order_time.setTextAlignment(Qt.AlignCenter)
-
-        #     robot_status.table_history.setItem(i, 0, table_num)
-        #     robot_status.table_history.setItem(i, 1, order_time)
         
         robot_status.date_start.dateChanged.connect(date_start_callback)
         robot_status.date_end.dateChanged.connect(date_end_callback)

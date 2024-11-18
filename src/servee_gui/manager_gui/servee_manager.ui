@@ -117,6 +117,54 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
+     <widget class="QLabel" name="label_color_1">
+      <property name="geometry">
+       <rect>
+        <x>680</x>
+        <y>430</y>
+        <width>141</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_color_2">
+      <property name="geometry">
+       <rect>
+        <x>680</x>
+        <y>460</y>
+        <width>141</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_color_3">
+      <property name="geometry">
+       <rect>
+        <x>680</x>
+        <y>490</y>
+        <width>141</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_table_order">
      <attribute name="title">
@@ -199,9 +247,9 @@
      <widget class="QStackedWidget" name="stacked_store_info">
       <property name="geometry">
        <rect>
-        <x>120</x>
+        <x>130</x>
         <y>10</y>
-        <width>881</width>
+        <width>871</width>
         <height>521</height>
        </rect>
       </property>
@@ -220,7 +268,7 @@
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>101</width>
+        <width>111</width>
         <height>41</height>
        </rect>
       </property>
@@ -233,7 +281,7 @@
        <rect>
         <x>10</x>
         <y>60</y>
-        <width>101</width>
+        <width>111</width>
         <height>41</height>
        </rect>
       </property>
@@ -246,7 +294,7 @@
        <rect>
         <x>10</x>
         <y>110</y>
-        <width>101</width>
+        <width>111</width>
         <height>41</height>
        </rect>
       </property>
