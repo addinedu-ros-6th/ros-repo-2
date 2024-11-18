@@ -271,7 +271,7 @@ class RobotTask(Node):
 def main(args=None):
 
     host = "localhost"
-    port = 9998
+    port = 9999
 
     server = Server(host, port)
     server_thread = threading.Thread(target=server.start)

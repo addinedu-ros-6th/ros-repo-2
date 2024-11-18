@@ -90,14 +90,18 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("SERVEE GUI")
         self.cancel_index =0
         self.result_price=0
-        self.host = "192.168.0.130"
-        self.port = 9993
+        self.host = "localhost"
+        self.port = 9999
         self.running = True
         #self.dbm = MySQLConnection()
         #self.dbm.db_connect(self.tcp_ip, 3306, "SERVEE_DB", "kjc", "1234")
         self.ob_client = ClientObserver(self.host, self.port,order_queue)
         self.dbm = MySQLConnection.getInstance()
 
+        items=self.dbm.get_store_name()
+        
+        item_list = [item[0] for item in items]
+        self.store_comboBox.addItems(item_list)
 
 
         self.client_first_receive = threading.Thread(target=self.ob_client.receive_updates)
@@ -124,6 +128,9 @@ class MainWindow(QMainWindow):
         self.orderlist_tableWidget.verticalHeader().setVisible(False)
         self.orderlist_tableWidget.horizontalHeader().setStretchLastSection(True)  # 마지막 열이 남은 공간을 차지하도록 설정
         
+        self.store_name  = self.store_comboBox.currentText()
+        self.store_comboBox.currentIndexChanged.connect(self.on_combobox_changed)
+
         column_width = 150  # 원하는 너비 설정
         for i in range(self.orderlist_tableWidget.columnCount()):
             self.orderlist_tableWidget.setColumnWidth(i, column_width)
@@ -133,7 +140,34 @@ class MainWindow(QMainWindow):
 
         self.orderlist_tableWidget.setStyleSheet("QTableWidget { gridline-color: transparent; }"
                                          "QTableWidget::item { border: none;}")
+
+    def on_combobox_changed(self):
         
+        self.update_store_order_list()
+
+    def update_store_order_list(self):
+        self.store_name = self.store_comboBox.currentText()
+        
+        order_results = self.dbm.get_order_store_details(self.store_name)
+
+        # 기존 주문 목록을 지웁니다.
+        self.orderlist_tableWidget.setRowCount(0)
+        self.order_count = 1  # 주문 카운트 초기화
+
+        # 주문 결과를 테이블에 추가합니다.
+        for row_index, row in enumerate(order_results):
+            self.orderlist_tableWidget.insertRow(row_index)
+            self.orderlist_tableWidget.setItem(row_index, 0, QTableWidgetItem(str(self.order_count)))
+            self.order_count += 1
+
+            for column_index, item in enumerate(row):
+                self.orderlist_tableWidget.setItem(row_index, column_index + 1, QTableWidgetItem(str(item)))
+
+            self.orderlist_tableWidget.setItem(row_index, 4, QTableWidgetItem("조리중"))
+            self.orderlist_tableWidget.setItem(row_index, 6, QTableWidgetItem(str(row[6])))  # order_id 가정
+
+        self.orderlist_tableWidget.setColumnHidden(6, True)
+        self.center_text_in_cells()
 
     def make_orderlist(self,result):
         #command_type = results.split(',')[0]
@@ -142,14 +176,13 @@ class MainWindow(QMainWindow):
         if("CREATE" in result):
 
             order_id = result.split(',')[2]
+            store_id = result.split(',')[3]
             #call_state = results.split(',')[3]
             row_index=0
             
             print("리스트 만드는 오더아이디 : ", order_id)
-            for i in range(3):
-                order_results=self.dbm.get_order_details(order_id)
-    
-    
+            order_results=self.dbm.get_order_store_details(order_id)
+
             #self.robot_call_count= self.robot_call_count+1
             print(order_results)
             row_count = self.orderlist_tableWidget.rowCount()
@@ -163,9 +196,9 @@ class MainWindow(QMainWindow):
                 
                     # 각 셀에 데이터 설정
                     self.orderlist_tableWidget.setItem(row_count+row_index, column_index+1, QTableWidgetItem(str(item)))
-                    if(column_index==2):
-                        item = str(item).split(' ')[1]
-                        self.orderlist_tableWidget.setItem(row_count+row_index, column_index+1, QTableWidgetItem(str(item)))
+                    #if(column_index==2):
+                    #    item = str(item).split(' ')[1]
+                    #    self.orderlist_tableWidget.setItem(row_count+row_index, column_index+1, QTableWidgetItem(str(item)))
                 self.orderlist_tableWidget.setItem(row_count+row_index, 4, QTableWidgetItem("조리중"))
                 self.orderlist_tableWidget.setItem(row_count+row_index, 6, QTableWidgetItem(str(order_id)))  
     
@@ -195,7 +228,7 @@ class MainWindow(QMainWindow):
             robot_call_button = self.findChild(QPushButton, "button_serve_" + str(order_id))            
             robot_call_button.setEnabled(False)
 
-        self.ob_client.send_update_command("SE",order_id,"서빙중") 
+        self.ob_client.send_update_command("SE",order_id,"waiting_serverbot") 
 
 
     def center_text_in_cells(self):
