@@ -59,12 +59,12 @@ class RobotTask(Node):
         self.retrieving_task_queue = self.server.retrieving_task_queue
 
         # ! code for communication test
-        self.robots = {'servee': Robot(1, 'robot', 'Server')}
+        self.robots = {'robot1': Robot(1, 'robot1', 'Server')}
         # self.robots = {'robot': Robot('robot', 'Retriever')}
 
         self.task_publishers = self.init_publishers()
-        self.create_subscription(Pose, '/servee/get_pose', self.robot_pose_callback('servee'), 10, callback_group=self.group1)
-        self.create_subscription(String, '/servee/get_state', self.robot_state_callback('servee'), 10, callback_group=self.group4)
+        self.create_subscription(Pose, '/robot1/pose', self.robot_pose_callback('robot1'), 10, callback_group=self.group1)
+        self.create_subscription(String, '/robot1/state', self.robot_state_callback('robot1'), 10, callback_group=self.group4)
         
         
         time.sleep(3)
@@ -83,7 +83,7 @@ class RobotTask(Node):
         return publishers
 
     def init_subscriptions(self): 
-        self.create_subscription(Pose, '/servee/get_pose', self.robot_pose_callback('servee'), 10, callback_group=self.group1)
+        # self.create_subscription(Pose, '/servee/get_pose', self.robot_pose_callback('servee'), 10, callback_group=self.group1)
         self.create_subscription(Pose, '/robot1/get_pose', self.robot_pose_callback('robot1'), 10, callback_group=self.group1)
         self.create_subscription(Pose, '/robot2/get_pose', self.robot_pose_callback('robot2'), 10, callback_group=self.group2)
         # self.create_subscription(TransformStamped, '/robot2/pose', self.robot_pose_callback('robot2'), 10, callback_group=self.group3)
