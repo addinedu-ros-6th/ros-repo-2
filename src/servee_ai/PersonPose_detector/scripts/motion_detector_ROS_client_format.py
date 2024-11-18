@@ -16,7 +16,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__)) # 현재 스크립트�
 relative_path = os.path.join(current_dir, '../../..')  # 상위 폴더로 이동
 sys.path.append(relative_path)
 
-from scripts.pose_estimate_ver01 import YoloPose
+from scripts.pose_estimate_final_ver import YoloPose
 
 
 class ClientFormat(Node):

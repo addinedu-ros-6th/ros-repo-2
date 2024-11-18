@@ -4,10 +4,10 @@ import socket
 import ast
 import threading
 current_dir = os.path.dirname(os.path.abspath(__file__)) # 현재 스크립트의 디렉토리를 가져오고, 프로젝트 루트로 이동하는 상대 경로를 추가
-print("Current Directory:", current_dir)
+
 relative_path = os.path.join(current_dir, '..', '..') # 상위 폴더로 이동
 absolute_path = os.path.abspath(relative_path) 
-print("Relative Path:", absolute_path)
+
 sys.path.append(relative_path)
 
 from PyQt5.QtWidgets import *
@@ -32,6 +32,7 @@ import matplotlib.dates as mdates
 from etc.db.dbtest_connpull import MySQLConnection
 from servee_gui.observer_subscriber import ClientObserver
 
+
 from PyQt5.QtCore import Qt 
 import math
 #from qt_material import apply_stylesheet
@@ -55,19 +56,13 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("SERVEE GUI")
         self.cancel_index =0
         self.result_price=0
-        self.port = 9993
-        self.host = "192.168.0.130"
+        self.port = 9999
+        self.host = "localhost"
 
         self.running =True
         self.ob_client = ClientObserver(self.host, self.port, self.order_queue)
-        
-        #self.dbm = MySQLConnection()
-        #self.dbm.db_connect(self.tcp_ip , 3306, "SERVEE_DB", "yhc", "1234")
 
         self.dbm = MySQLConnection.getInstance()
-
-        #self.client_thread = threading.Thread(target=self.update_state)
-        #self.client_thread.start()
 
         self.client_first_receive = threading.Thread(target=self.ob_client.receive_updates)
         self.client_first_receive.start()
@@ -93,7 +88,6 @@ class MainWindow(QMainWindow):
         self.selected_item  = self.selected_item .split(' ')
         self.table_num = self.selected_item [1]
         self.table_comboBox.currentIndexChanged.connect(self.on_combobox_changed)
-          
         
 
         self.button_payment.clicked.connect(self.payment_alarm)
@@ -136,8 +130,6 @@ class MainWindow(QMainWindow):
         layout = QtWidgets.QGridLayout(self.scroll_area)
         layout.setVerticalSpacing(1) 
 
-        #data = f"get_order_menu/{store_id}"    
-        #menu_results= self.data_select_receive(data)
         menu_results=self.dbm.get_order_menu(store_id)
         if(len(menu_results)!=0):
             for index, value in enumerate(menu_results):
@@ -153,7 +145,6 @@ class MainWindow(QMainWindow):
                 
                 button_size = self.button.size()
                 # 아이콘 생성
-                #scaled_pixmap = pixmap.scaled(button_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
                 scaled_pixmap = pixmap.scaled(button_size, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
                 self.button.setIcon(QIcon(scaled_pixmap))
                 self.button.setIconSize(button_size) 
@@ -174,33 +165,6 @@ class MainWindow(QMainWindow):
                   
             
             self.scroll_area.setLayout(layout)
-
-        #for i in range(6):
-        #    zza_pixmap = QPixmap(path)
-        #    self.button = QtWidgets.QPushButton("button_menu_"+(str(i+1)),self)
-#
-        #    self.button.setFixedSize(120, 100)
-        #    button_size = self.button.size()
-        #      # 아이콘 생성
-        #    scaled_pixmap = zza_pixmap.scaled(button_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-        #    self.button.setIcon(QIcon(scaled_pixmap))
-        #    self.button.setIconSize(button_size) 
-#
-        #    text_label =QtWidgets.QLabel(f"Button {i + 1}", self)  # 버튼 아래에s표시할 텍스트
-        #    text_label.setAlignment(Qt.AlignCenter) 
-        #    text_label.setAttribute(Qt.WA_TransparentForMouseEvents) 
-        #    
-        #    if(i /3 ==0):
-        #        layout.addWidget(self.button,int(i /3),int(i%3))
-        #    else:
-        #        layout.addWidget(self.button,int(i /3)+int(i/3),int(i%3))
-        #    
-        #    if(int(i /3)+1 ==1):
-        #        layout.addWidget(text_label, int(i /3)+1, i)
-        #    else:
-        #        layout.addWidget(text_label,int(i /3)+2,int(i%3))
-        #    
-        #self.scroll_area.setLayout(layout)
             
     def china_scroallArea_1_show(self):  
        self.scrollArea_1.setVisible(True)
@@ -223,6 +187,8 @@ class MainWindow(QMainWindow):
          
         if(len(menu_detail)!=0):
             for value in menu_detail:
+                print("스토어 이름 : ", value[0])
+                print("넌 뭐니 : ", value[1])
                 item_found = False
                 for row in range(self.shopping_tableWidget.rowCount()): 
                     
@@ -239,18 +205,36 @@ class MainWindow(QMainWindow):
                         break
 
                 if not item_found:
-                    self.cancel_index = self.cancel_index+1
-                    button = QtWidgets.QPushButton("주문취소",self)
-                    button.setObjectName("button_cancel_" + str(self.cancel_index))
-                    row = self.shopping_tableWidget.rowCount()
-                    self.shopping_tableWidget.insertRow(row)
-                    self.shopping_tableWidget.setItem(row, 0, QTableWidgetItem(str(value[0])))
-                    self.shopping_tableWidget.setItem(row, 1, QTableWidgetItem(str(value[1])))
-                    self.shopping_tableWidget.setItem(row, 2, QTableWidgetItem(str(1)))
-                    self.shopping_tableWidget.setItem(row, 3, QTableWidgetItem(str(value[2])))
-                    self.shopping_tableWidget.setCellWidget(row, 4, button)
+                    if(self.shopping_tableWidget.rowCount()==0):
 
-                    button.clicked.connect(self.order_cancel)
+                        self.cancel_index = self.cancel_index+1
+                        button = QtWidgets.QPushButton("주문취소",self)
+                        button.setObjectName("button_cancel_" + str(self.cancel_index))
+                        row = self.shopping_tableWidget.rowCount()
+                        self.shopping_tableWidget.insertRow(row)
+                        self.shopping_tableWidget.setItem(row, 0, QTableWidgetItem(str(value[0])))
+                        self.shopping_tableWidget.setItem(row, 1, QTableWidgetItem(str(value[1])))
+                        self.shopping_tableWidget.setItem(row, 2, QTableWidgetItem(str(1)))
+                        self.shopping_tableWidget.setItem(row, 3, QTableWidgetItem(str(value[2])))
+                        self.shopping_tableWidget.setCellWidget(row, 4, button)
+
+                        button.clicked.connect(self.order_cancel)
+
+                    elif(self.shopping_tableWidget.item(0, 0).text()==value[0]):
+                        self.cancel_index = self.cancel_index+1
+                        button = QtWidgets.QPushButton("주문취소",self)
+                        button.setObjectName("button_cancel_" + str(self.cancel_index))
+                        row = self.shopping_tableWidget.rowCount()
+                        self.shopping_tableWidget.insertRow(row)
+                        self.shopping_tableWidget.setItem(row, 0, QTableWidgetItem(str(value[0])))
+                        self.shopping_tableWidget.setItem(row, 1, QTableWidgetItem(str(value[1])))
+                        self.shopping_tableWidget.setItem(row, 2, QTableWidgetItem(str(1)))
+                        self.shopping_tableWidget.setItem(row, 3, QTableWidgetItem(str(value[2])))
+                        self.shopping_tableWidget.setCellWidget(row, 4, button)
+                        button.clicked.connect(self.order_cancel)
+                    else:
+                        self.store_diff_alarm()
+
 
                 
         for row in range(self.shopping_tableWidget.rowCount()):
@@ -319,7 +303,19 @@ class MainWindow(QMainWindow):
         if result == QMessageBox.Yes:
             self.dbm.insert_servicecall(self.table_num)
         else:
-            print("사용자가 NO를 선택했습니다.")            
+            print("사용자가 NO를 선택했습니다.")
+
+    def store_diff_alarm(self):
+        # 알람 메시지 박스 생성
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information) 
+        msg.setText("동일한 영업점에서 선택해주세요")  # 메시지 텍스트 설정
+        msg.setWindowTitle("영업점")  # 창 제목 설정
+        msg.setStandardButtons(QMessageBox.Yes)
+        # 메시지 박스 표시
+        msg.exec_()
+    
+                      
 
     def confirm_payment(self):
         
@@ -341,11 +337,11 @@ class MainWindow(QMainWindow):
 
             store_id =result[0][0]
             menu_id = result[0][1]
-            print("스토어아이디 : ", store_id)
-            print("오더아이디 : ", order_id)
-            print("테이블 넘버 : ", self.table_num)
-            print("수량 : ", quantity)
-            print("메뉴아이디 : ", menu_id)
+            #print("스토어아이디 : ", store_id)
+            #print("오더아이디 : ", order_id)
+            #print("테이블 넘버 : ", self.table_num)
+            #print("수량 : ", quantity)
+            #print("메뉴아이디 : ", menu_id)
             self.dbm.insert_orderdetails(order_id,menu_id, quantity)
 
 
@@ -365,15 +361,26 @@ class MainWindow(QMainWindow):
                     
                     self.order_tableWidget.setItem(current_row_count + row, column, new_item)
 
-            self.order_tableWidget.setItem(current_row_count + row, column_count-1, QTableWidgetItem("조리중"))
+            self.order_tableWidget.setItem(current_row_count + row, column_count-1, QTableWidgetItem("주문 대기중"))
             self.order_tableWidget.setItem(current_row_count + row, column_count, QTableWidgetItem(str(order_id)))
 
             self.order_tableWidget.setColumnHidden(column_count, True)
+
+            QTimer.singleShot(2000, lambda row=row: self.updateOrderStatus(row+current_row_count))
+
+        
 
         self.shopping_tableWidget.setRowCount(0)
         label_text = self.label_predict_price.text()  # 현재 label의 텍스트 가져오기
         price_only_number = ''.join(filter(str.isdigit, label_text)) 
         self.result_price += int(price_only_number)
+
+        last_row_count = self.order_tableWidget.rowCount()
+        state = self.order_tableWidget.item(last_row_count-1, 4).text()
+        if state == "서빙완료":
+            self.button_retrieve.setEnabled(True)
+        else:
+            self.button_retrieve.setEnabled(False) 
 
         self.label_total_price.setText((f"{str(self.result_price )}원"))
         self.label_predict_price.setText(f"0원")
@@ -381,8 +388,12 @@ class MainWindow(QMainWindow):
         #vendor manager와 통신 하기
         self.client_thread = threading.Thread(target=self.ob_client.send_create_command, args=("SE", order_id, store_id,self.table_num))
         self.client_thread.start()
-        #self.ob_client.send_create_command("SE", order_id, store_id,self.table_num)
+
         
+        
+    def updateOrderStatus(self, row):
+            # 주문 상태를 "조리 중"으로 변경
+            self.order_tableWidget.item(row, 4).setText("조리 중")
 
     def receive_state(self):
 
@@ -413,15 +424,25 @@ class MainWindow(QMainWindow):
         
         for row in range(row_count):
             item = self.order_tableWidget.item(row, column_count-1).text()
-            print("item : ",item)
-            print("order_id : ",order_id)
+
             if(item == order_id):
+                if call_state =="waiting_serverbot":
+                    call_state = "로봇 호출중"
+                    
+                elif call_state =="waiting_handover":
+                    call_state = "음식 인계 대기중"
+                elif call_state =="serving":
+                    call_state = "서빙중"
+                elif call_state =="done_serving":
+                    call_state = "서빙완료"             
                 self.order_tableWidget.setItem(row, 4, QTableWidgetItem(call_state))
         
-        for value in range(row_count):
-            state = self.order_tableWidget.item(value, 4).text()
-            if state == "서빙":
-                self.button_retrieve.setEnabled(True)
+       
+        state = self.order_tableWidget.item(row_count-1, 4).text()
+        if state == "서빙완료":
+            self.button_retrieve.setEnabled(True)
+        else:
+            self.button_retrieve.setEnabled(False)   
 
     def closeEvent(self, event):
         # 윈도우 종료 시 데이터베이스 연결 종료

@@ -18,9 +18,9 @@ class Vendor():
     def __init__(self):
         #self.dbm = MySQLConnection.getInstance()
         #self.dbm.db_connect("localhost", 3306, "amrbase", "root", "tjdudghks1")
-        self.tcp_ip = "192.168.0.130"
+        self.tcp_ip = "localhost"
         self.vendor_tcp_port =9992
-        self.customer_tcp_port =9993
+        self.customer_tcp_port =9999
 
         self.orderid_queue = queue.Queue()
         Server(self.tcp_ip,self.customer_tcp_port).start()
