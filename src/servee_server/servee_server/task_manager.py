@@ -59,13 +59,12 @@ class RobotTask(Node):
         self.retrieving_task_queue = self.server.retrieving_task_queue
 
         # ! code for communication test
-        self.robots = {'servee': Robot(1, 'robot', 'Server')}
+        self.robots = {'servee': Robot(1, 'servee', 'Server')}
         # self.robots = {'robot': Robot('robot', 'Retriever')}
 
         self.task_publishers = self.init_publishers()
-        self.create_subscription(Pose, '/servee/get_pose', self.robot_pose_callback('servee'), 10, callback_group=self.group1)
-        self.create_subscription(String, '/servee/get_state', self.robot_state_callback('servee'), 10, callback_group=self.group4)
-        
+        self.create_subscription(Pose, '/servee/pose', self.robot_pose_callback('servee'), 10, callback_group=self.group1)
+        self.create_subscription(String, '/servee/state', self.robot_state_callback('servee'), 10, callback_group=self.group4)
         
         time.sleep(3)
         self.create_timer(0.5, self.assign_tasks)
@@ -78,7 +77,7 @@ class RobotTask(Node):
             # 'robot3': self.create_publisher(TaskGoalData, '/robot3/servee/task_goal_data', 10)
 
             # ! code for communication test
-            'robot': self.create_publisher(TaskGoalData, '/servee/task_goal_data', 10)
+            'servee': self.create_publisher(TaskGoalData, '/servee/task_goal_data', 10)
         }
         return publishers
 
