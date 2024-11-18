@@ -189,8 +189,8 @@ class RobotTask(Node):
         
     def assign_tasks(self):
         # Check for 'Server' robots and assign serving tasks if available
-        available_serverbots = [r for r in self.robots.values() if r.robot_type == 'Server' and r.state in ['idle', 'returning_home']]
-        available_retrieverbots = [r for r in self.robots.values() if r.robot_type == 'Retriever' and r.state in ['idle', 'returning_home']]
+        available_serverbots = [r for r in self.robots.values() if r.robot_type == 'Server' and not r.assigned_task_id]
+        available_retrieverbots = [r for r in self.robots.values() if r.robot_type == 'Retriever' and not r.assigned_task_id]
         
         if self.serving_task_queue and available_serverbots:
             order = self.serving_task_queue.get()  # Get the position of the first task
