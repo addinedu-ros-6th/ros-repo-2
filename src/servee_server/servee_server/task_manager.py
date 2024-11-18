@@ -63,8 +63,9 @@ class RobotTask(Node):
         # self.robots = {'robot': Robot('robot', 'Retriever')}
 
         self.task_publishers = self.init_publishers()
-        self.create_subscription(Pose, 'pose', self.robot_pose_callback('robot'), 10, callback_group=self.group1)
-        self.create_subscription(String, 'state', self.robot_state_callback('robot'), 10, callback_group=self.group4)
+        self.create_subscription(Pose, '/servee/get_pose' self.robot_pose_callback('servee'), 10, callback_group=self.group1)
+        self.create_subscription(String, '/servee/get_state', self.robot_state_callback('servee'), 10, callback_group=self.group4)
+        
         
         time.sleep(3)
         self.create_timer(0.5, self.assign_tasks)
@@ -82,11 +83,13 @@ class RobotTask(Node):
         return publishers
 
     def init_subscriptions(self): 
-        self.create_subscription(Pose, '/robot1/pose', self.robot_pose_callback('robot1'), 10, callback_group=self.group1)
-        self.create_subscription(Pose, '/robot2/pose', self.robot_pose_callback('robot2'), 10, callback_group=self.group2)
+        self.create_subscription(Pose, '/servee/get_pose', self.robot_pose_callback('servee'), 10, callback_group=self.group1)
+        self.create_subscription(Pose, '/robot1/get_pose', self.robot_pose_callback('robot1'), 10, callback_group=self.group1)
+        self.create_subscription(Pose, '/robot2/get_pose', self.robot_pose_callback('robot2'), 10, callback_group=self.group2)
         # self.create_subscription(TransformStamped, '/robot2/pose', self.robot_pose_callback('robot2'), 10, callback_group=self.group3)
-        self.create_subscription(String, '/robot1/state', self.robot_state_callback('robot1'), 10, callback_group=self.group4)
-        self.create_subscription(String, '/robot2/state', self.robot_state_callback('robot2'), 10, callback_group=self.group5)
+        self.create_subscription(String, '/servee/get_state', self.robot_state_callback('servee'), 10, callback_group=self.group4)
+        self.create_subscription(String, '/robot1/get_state', self.robot_state_callback('robot1'), 10, callback_group=self.group4)
+        self.create_subscription(String, '/robot2/get_state', self.robot_state_callback('robot2'), 10, callback_group=self.group5)
         # self.create_subscription(String, '/robot2/state', self.robot_state_callback('robot2'), 10, callback_group=self.group6)
 
     def robot_pose_callback(self, robot_name):
