@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
-    <height>480</height>
+    <width>440</width>
+    <height>680</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,14 +18,16 @@
     <rect>
      <x>20</x>
      <y>120</y>
-     <width>601</width>
-     <height>271</height>
+     <width>401</width>
+     <height>471</height>
     </rect>
    </property>
-   <property name="rowCount">
-    <number>1</number>
+   <property name="editTriggers">
+    <set>QAbstractItemView::NoEditTriggers</set>
    </property>
-   <row/>
+   <property name="rowCount">
+    <number>0</number>
+   </property>
    <column>
     <property name="text">
      <string>테이블 번호</string>
@@ -41,8 +43,8 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>400</y>
-     <width>301</width>
+     <y>600</y>
+     <width>201</width>
      <height>31</height>
     </rect>
    </property>
@@ -59,9 +61,9 @@
   <widget class="QLabel" name="label_count_title">
    <property name="geometry">
     <rect>
-     <x>320</x>
-     <y>400</y>
-     <width>301</width>
+     <x>220</x>
+     <y>600</y>
+     <width>201</width>
      <height>31</height>
     </rect>
    </property>
@@ -79,8 +81,8 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>430</y>
-     <width>301</width>
+     <y>630</y>
+     <width>201</width>
      <height>31</height>
     </rect>
    </property>
@@ -97,9 +99,9 @@
   <widget class="QLabel" name="label_count_value">
    <property name="geometry">
     <rect>
-     <x>320</x>
-     <y>430</y>
-     <width>301</width>
+     <x>220</x>
+     <y>630</y>
+     <width>201</width>
      <height>31</height>
     </rect>
    </property>
@@ -118,7 +120,7 @@
     <rect>
      <x>20</x>
      <y>90</y>
-     <width>601</width>
+     <width>401</width>
      <height>31</height>
     </rect>
    </property>
@@ -135,7 +137,7 @@
   <widget class="QPushButton" name="btn_search">
    <property name="geometry">
     <rect>
-     <x>500</x>
+     <x>300</x>
      <y>30</y>
      <width>121</width>
      <height>41</height>
@@ -148,7 +150,7 @@
   <widget class="QDateEdit" name="date_end">
    <property name="geometry">
     <rect>
-     <x>370</x>
+     <x>150</x>
      <y>30</y>
      <width>110</width>
      <height>41</height>
@@ -161,7 +163,7 @@
   <widget class="QDateEdit" name="date_start">
    <property name="geometry">
     <rect>
-     <x>220</x>
+     <x>20</x>
      <y>30</y>
      <width>110</width>
      <height>41</height>
@@ -174,7 +176,7 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>330</x>
+     <x>120</x>
      <y>40</y>
      <width>41</width>
      <height>20</height>

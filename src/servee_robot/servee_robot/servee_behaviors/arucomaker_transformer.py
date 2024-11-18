@@ -139,6 +139,7 @@ class ArucoMakerTransformer(Behaviour):
 
             aruco_id_index = self.blackboard.aruco_id_index
             if closest_marker["id"] != self.blackboard.aruco_ids[aruco_id_index]:
+                self.blackboard.marker_detected  = False
                 return Status.FAILURE
                 
             self.blackboard.aruco_maker_result = closest_marker
