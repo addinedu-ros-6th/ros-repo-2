@@ -24,11 +24,11 @@ TODO:
 ### 장애물이랑 로봇 회피하는 행동 시각화 할거 준비하기
 ### 특히 로봇은 서로의 경로까지 보여주기
 
-1. 로봇 자세 현황 검색 기능 구현 okay
-2. 사장 호출 버튼 수신 구현하기
-3. 맵에서 로봇마다 색상 다르게 하기 okay
-4. 매장별 매출 현황 띄우기 - 보류
-5. robot status 윈도우 너비랑 높이 조정하기
+1. 사장 호출 버튼 수신 구현하기
+2. 매장별 매출 현황 띄우기 - 기달
+3. domain bridge 경로 어떻게 해야되는지 확인하기
+4. 로봇->task 도메인 브릿지 만들기
+5. 주석 처리 하기
 +
 - 로봇 위치랑 경로 3개까지 동시에 다 해보기
 - manager에서 주문 인스턴스 없애기
@@ -137,7 +137,7 @@ class ManagerGUI(QMainWindow, ui_info):
         self.status_list = []  # list[tuple[instance_id, status]]  (instance_id = order_id, instance_id = table_id)
 
         # DB 연결
-        self.dbm = MySQLConnection.getInstance()  #########################################
+        self.dbm = MySQLConnection.getInstance()
 
         # 지도 사진 삽입
         self.pixmap = QPixmap('./src/servee_gui/manager_gui/maps/map_final_3_scaled.pgm')
@@ -149,6 +149,8 @@ class ManagerGUI(QMainWindow, ui_info):
         self.robot_retrieving_state_map = {"idle": "충전중", "running1": "수거중", "standby1": "수거 대기중", "running2": "퇴식중", "standby2": "퇴식 대기중"}
         self.color_map = [Qt.red, Qt.green, Qt.blue]
         self.color_map_text = ['red', 'green', 'blue']
+        self.label_legend_1 = [self.label_color_1_1, self.label_color_1_2, self.label_color_1_3]
+        self.label_legend_2 = [self.label_color_2_1, self.label_color_2_2, self.label_color_2_3]
 
         # 로봇 현황 시작
         self.robot_type = []  # [{robot_id: type}, ...]
@@ -168,8 +170,8 @@ class ManagerGUI(QMainWindow, ui_info):
         for i, robot_info in enumerate(robots):
             id_1 = QTableWidgetItem(f"Servee_Robot_{robot_info[0]}")
             self.robot_type.append({id_1.text(): robot_info[1]})
-            _state = QTableWidgetItem(" ")
-            _battery = QTableWidgetItem("100")
+            _state = QTableWidgetItem("Offline")
+            _battery = QTableWidgetItem("0")
 
             id_1.setTextAlignment(Qt.AlignCenter)
             _state.setTextAlignment(Qt.AlignCenter)
@@ -201,7 +203,7 @@ class ManagerGUI(QMainWindow, ui_info):
         self.node.destroy_node()
         rclpy.shutdown()
         self.ob_client.stop()
-        self.worker.stop()  # 이것들 어떻게 멈춤?
+        self.worker.stop()
 
 
     def get_status(self, result):
@@ -244,8 +246,10 @@ class ManagerGUI(QMainWindow, ui_info):
                 pen = QPen(self.color_map[i], 5)
                 painter.setPen(pen)
 
-                self.label_color_1.setText(f"Robot {i+1}: {self.color_map_text[i]}")
-                self.label_color_1.setStyleSheet(f"Color : {self.color_map_text[i]}")
+                self.label_legend_1[i].setText(f"Robot {i+1}: {self.color_map_text[i]}")
+                self.label_legend_1[i].setStyleSheet(f"Color: {self.color_map_text[i]}")
+                self.label_legend_2[i].setText(f"Robot {i+1}: {self.color_map_text[i]}")
+                self.label_legend_2[i].setStyleSheet(f"Color: {self.color_map_text[i]}")
                 painter.drawEllipse(int(540 - 540/2.3*self.robots_pose[0].position.y), int(396 - 396/1.7*self.robots_pose[0].position.x), 30, 30)  # 408 대신에 396 확인해보기
 
                 # 경로 그리기
@@ -410,6 +414,8 @@ class ManagerGUI(QMainWindow, ui_info):
             dialog.table_order_details.setItem(i, 1, count)
             dialog.table_order_details.setItem(i, 2, order_time)
             dialog.table_order_details.setItem(i, 3, order_status)
+        
+        dialog.table_order_details.sortItems(2, Qt.AscendingOrder)
 
         dialog.exec_()
     
