@@ -32,6 +32,7 @@ import matplotlib.dates as mdates
 from etc.db.dbtest_connpull import MySQLConnection
 from servee_gui.observer_subscriber import ClientObserver
 
+
 from PyQt5.QtCore import Qt 
 import math
 #from qt_material import apply_stylesheet
@@ -87,7 +88,6 @@ class MainWindow(QMainWindow):
         self.selected_item  = self.selected_item .split(' ')
         self.table_num = self.selected_item [1]
         self.table_comboBox.currentIndexChanged.connect(self.on_combobox_changed)
-          
         
 
         self.button_payment.clicked.connect(self.payment_alarm)

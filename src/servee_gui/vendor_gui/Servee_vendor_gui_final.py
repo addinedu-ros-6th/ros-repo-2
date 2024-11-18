@@ -31,6 +31,8 @@ import matplotlib.dates as mdates
 #from etc.db.DBmanager import MySQLConnection
 from etc.db.dbtest_connpull import MySQLConnection
 from servee_gui.observer_subscriber import ClientObserver
+from servee_gui.vendor_gui.Servee_sales_gui import SalesWindow
+
 import queue
 
 from PyQt5.QtCore import Qt 
@@ -125,15 +127,15 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("SERVEE GUI")
 
- # 현재 날짜 설정
-
-
+        self.salesWindow = SalesWindow()
 
         self.store_widget = QWidget(self)
         self.setCentralWidget(self.store_widget)
-        self.store_layout = QVBoxLayout(self.store_widget)  
+        self.store_layout = QVBoxLayout(self.store_widget)
+        
+         
         self.store_layout.setContentsMargins(10,30, 10, 60)
-
+        
         date_label = QLabel()
         current_date = QDate.currentDate()
         formatted_date = current_date.toString("yyyy년 MM월 dd일")
@@ -161,6 +163,10 @@ class MainWindow(QMainWindow):
         self.stores = {}
         self.store_table_dic = {} 
         self.call_states = {}
+
+        #self.sales_button = QtWidgets.QPushButton("매출현황",self)
+        #self.sales_button.setObjectName("button_sales")
+        #self.sales_button.clicked.connect(self.salesWindow.test)
         
         items = self.dbm.get_store_info()
         for item in items:
@@ -208,7 +214,7 @@ class MainWindow(QMainWindow):
         table_widget = self.findChild(QTableWidget, f"table_widget_{store_id}")
         return table_widget
 
-    def update_order_list(self,upadte_order_id=None ,call_state=None):
+    def update_order_list(self):
         
 
         # 현재 선택된 스토어에 대한 주문 목록을 가져옵니다.
@@ -328,14 +334,15 @@ class MainWindow(QMainWindow):
                 self.center_text_in_cells()    
         elif "UPDATE" in result:
 
-            self.update_order_list(result)
+            #self.update_order_list(result)
             order_id = result.split(',')[2]
             call_state = result.split(',')[3]
 
             self.call_states[order_id] = call_state
 
             # 콤보 박스 변경 시 상태를 업데이트
-            self.update_order_list(order_id, call_state)
+            self.update_order_list()
+
             #orderlist_tableWidget = self.find_store_table_widget(store_id_main)
             #row_count = orderlist_tableWidget.rowCount()
             #column_count = orderlist_tableWidget.columnCount()

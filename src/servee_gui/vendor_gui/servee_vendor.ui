@@ -14,6 +14,51 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <widget class="QTableWidget" name="orderlist_tableWidget">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>80</y>
+      <width>921</width>
+      <height>361</height>
+     </rect>
+    </property>
+    <column>
+     <property name="text">
+      <string>주문번호</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>음식명</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>수량</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>주문시간</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>상태</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>조리버튼</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>order_id</string>
+     </property>
+    </column>
+   </widget>
    <widget class="QLabel" name="day_label">
     <property name="geometry">
      <rect>
