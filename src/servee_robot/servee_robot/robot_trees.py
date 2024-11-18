@@ -16,7 +16,7 @@ from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
 import sensor_msgs.msg
 from servee_interfaces.msg import TaskGoalPose, ResPath
-from servee_robot.servee_behaviors import led_flasher, request_path, response_path, get_curr_pose, receive_goal, move_forward, robot_rotate, waypoint_arrival_checker, obstacle_avoidance, get_scan, picam_to_blackboard, image_sender, arucomaker_transformer,aruco_search, aruco_aligning, aruco_yawing, aruco_approaching
+from servee_robot.servee_behaviors import led_flasher, request_path, response_path, get_curr_pose, receive_goal, move_forward, robot_rotate, waypoint_arrival_checker, obstacle_avoidance, get_scan, picam_to_blackboard, image_sender, arucomaker_transformer,aruco_search, aruco_aligning, aruco_yawing, aruco_approaching, robot_data_sender
 
 from rclpy.qos import QoSProfile
 from rclpy.qos import QoSReliabilityPolicy, QoSHistoryPolicy
@@ -194,8 +194,12 @@ def receive_topic2bb():
 
 def sender_data():
     sender = Sequence("sender", memory=True)
+    
     picam2bb = picam_to_blackboard.PicamToBlackboard("picam_to_blackboard_node")
     picam_send = image_sender.ImageSender("image_sender_node")
+    
+    robot_data_send = robot_data_sender.RobotDataSender("robot_data_sender")
+    
     sender.add_children([picam2bb, picam_send])
     return sender
 

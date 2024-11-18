@@ -63,7 +63,7 @@ class RobotTask(Node):
         # self.robots = {'robot': Robot('robot', 'Retriever')}
 
         self.task_publishers = self.init_publishers()
-        self.create_subscription(Pose, '/servee/get_pose' self.robot_pose_callback('servee'), 10, callback_group=self.group1)
+        self.create_subscription(Pose, '/servee/get_pose', self.robot_pose_callback('servee'), 10, callback_group=self.group1)
         self.create_subscription(String, '/servee/get_state', self.robot_state_callback('servee'), 10, callback_group=self.group4)
         
         

@@ -16,7 +16,6 @@ class ArucoYawing(Behaviour):
         self.blackboard.register_key(key='aruco_state', access=Access.WRITE)
         self.blackboard.register_key(key='aruco_state', access=Access.READ)
         self.blackboard.register_key(key="marker_detected", access=Access.READ)
-        
         self.blackboard.register_key(key='scan', access=Access.READ)
         
         
