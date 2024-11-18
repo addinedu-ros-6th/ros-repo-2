@@ -32,6 +32,15 @@ def generate_launch_description():
             'obstacle_avoidance.yaml'
         )
     )
+    
+    robot_info_dir = LaunchConfiguration(
+        "robot_info", 
+        default=os.path.join(
+            get_package_share_directory('servee_robot'),
+            'param',
+            'robot_info.yaml'
+        )
+    )
        
     
     return LaunchDescription([
@@ -47,6 +56,10 @@ def generate_launch_description():
             'obstacle_param',
             default_value=obstacle_param_dir),
         
+        DeclareLaunchArgument(
+            'robot_info',
+            default_value=robot_info_dir),
+        
         Node(
             package='servee_robot',
             executable='battery_state_pub',
@@ -58,7 +71,7 @@ def generate_launch_description():
         Node(
             package='servee_robot',
             executable='robot_trees',
-            parameters=[aruco_param_dir, obstacle_param_dir],
+            parameters=[aruco_param_dir, obstacle_param_dir, robot_info_dir],
             output='screen',
         )
     ])

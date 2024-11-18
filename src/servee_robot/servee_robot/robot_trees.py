@@ -16,7 +16,7 @@ from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
 import sensor_msgs.msg
 from servee_interfaces.msg import TaskGoalPose, ResPath
-from servee_robot.servee_behaviors import led_flasher, request_path, response_path, get_curr_pose, receive_goal, move_forward, robot_rotate, waypoint_arrival_checker, obstacle_avoidance, get_scan, picam_to_blackboard, image_sender, arucomaker_transformer,aruco_search, aruco_aligning, aruco_yawing, aruco_approaching, robot_data_sender
+from servee_robot.servee_behaviors import led_flasher, request_path, response_path, get_curr_pose, receive_goal, move_forward, robot_rotate, waypoint_arrival_checker, obstacle_avoidance, get_scan, picam_to_blackboard, image_sender, arucomaker_transformer,aruco_search, aruco_aligning, aruco_yawing, aruco_approaching, robot_data_sender, robot_standy
 
 from rclpy.qos import QoSProfile
 from rclpy.qos import QoSReliabilityPolicy, QoSHistoryPolicy
@@ -151,8 +151,9 @@ def begin_tasks():
     parking = parking_selector_tree()
     move = move_to_goal() # 로봇을 이동시킨다.
     battery_alarm = battery_low_alarm()
-
-    tasks.add_children([battery_alarm, path, move, parking])
+    standy = robot_standy.RobotStandy("robot_standy")
+    
+    tasks.add_children([battery_alarm, path, move, parking, standy])
     return tasks
 
 
@@ -200,7 +201,7 @@ def sender_data():
     
     robot_data_send = robot_data_sender.RobotDataSender("robot_data_sender")
     
-    sender.add_children([picam2bb, picam_send])
+    sender.add_children([picam2bb, picam_send, robot_data_send])
     return sender
 
 
@@ -221,6 +222,7 @@ def create_root_tree():
     topic2bb = receive_topic2bb()
     sender = sender_data()
     tasks = begin_tasks()
+    
     root.add_children([topic2bb, sender, tasks])
     return root
     

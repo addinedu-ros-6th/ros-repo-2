@@ -20,12 +20,7 @@ class ArucoApproaching(Behaviour):
         self.blackboard.register_key(key="robot_state", access=Access.WRITE)
         self.blackboard.register_key(key="marker_detected", access=Access.READ)
         self.blackboard.register_key(key="aruco_maker_result", access=Access.READ)
-        
-        self.blackboard.register_key(key="aruco_ids", access=Access.READ)
-        self.blackboard.register_key(key="aruco_id_index", access=Access.WRITE)
-        self.blackboard.register_key(key="aruco_id_index", access=Access.READ)
-        
-        
+          
         
     def setup(self, **kwargs: Any) -> None:
         self.node:Node = kwargs['node'] 
@@ -107,15 +102,9 @@ class ArucoApproaching(Behaviour):
             self.node.get_logger().fatal("주차 완료")
             
             self.blackboard.aruco_state = 'search'
+            self.blackboard.robot_state = 'standy'
             
-            if self.blackboard.aruco_id_index >= len(self.blackboard.aruco_ids):
-                # 모든 동선을 돌았다. (여기에 홈 추가할 예정.)
-                self.blackboard.robot_state = 'idle'
-                
-            else:
-                self.blackboard.aruco_id_index += 1
-                self.blackboard.waypoint = 0
-                self.blackboard.robot_state = 'task'
+            
                 
             return Status.FAILURE
         

@@ -17,6 +17,7 @@ class MoveForward(Behaviour):
 
         self.blackboard.register_key(key="debug", access=Access.WRITE)
         self.blackboard.debug = 0
+        
     def setup(self, **kwargs: Any) -> None:
         self.node: Node = kwargs['node']
         self.cmd_vel_publisher =self.node.create_publisher(
@@ -54,7 +55,7 @@ class MoveForward(Behaviour):
         1. 경로를 받아왔는지?
         2. robot_state가 move 인지?
         """               
-        if self.blackboard.robot_state not in ["task", "home", "parking"]:
+        if self.blackboard.robot_state not in ["task", "home"]:
             return False
         
         return True

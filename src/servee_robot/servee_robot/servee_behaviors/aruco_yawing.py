@@ -126,6 +126,7 @@ class ArucoYawing(Behaviour):
             self.twist_pub.publish(twist)
             return Status.FAILURE
             
+            
         else:
             self.node.get_logger().fatal("어프로치로 넘어갑니다.")
             twist.angular.z = 0.0
