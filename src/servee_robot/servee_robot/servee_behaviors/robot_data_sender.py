@@ -42,16 +42,17 @@ class RobotDataSender(Behaviour):
             PoseWithCovarianceStamped, 
             '/initialpose', 
             10)
+               
         
         self.publisher_pose = self.node.create_publisher(
             Pose,
-            '/servee/get_pose',
+            '/robot1/pose',
             10
         )
         
         self.publisher_robot_state = self.node.create_publisher(
             String,
-            '/servee/get_state',
+            '/robot1/state',
             10
         )
         
