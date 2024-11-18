@@ -3,13 +3,15 @@ import threading
 from queue import Queue
 from collections import deque
 from abc import ABC, abstractmethod
+import mysql.connector
 
 # ------------------- server -------------------
 class Server:
-    def __init__(self, host, port):
+    def __init__(self, host, port, db_manager):
         self.host = host
         self.port = port
         self.observers = []
+        self.db_manager = db_manager
         self.SE_instances = {}
         self.RV_instances = {}
         self.serving_task_queue = Queue()
@@ -131,13 +133,13 @@ class CreateInstanceCommand(Command):
 
     def execute(self, server):
         if self.call_type == 'SE':
-            instance = ServingInstance(self.order_id, self.store_id, self.table_id, self.call_time)
+            instance = ServingInstance(self.order_id, self.store_id, self.table_id, self.call_time, server.db_manager)
             server.SE_instances[self.order_id] = instance
             server.notify_observers(f"CREATE,{self.call_type},{self.order_id},{server.SE_instances[self.order_id].status}")
             print(f"SE Instance {self.order_id} created.")
             server.manage_queue(instance)
         elif self.call_type == 'RV':
-            instance = RetrievalInstance(self.store_id, self.table_id, self.call_time)
+            instance = RetrievalInstance(self.store_id, self.table_id, self.call_time, server.db_manager)
             server.RV_instances[self.table_id] = instance
             server.notify_observers(f"CREATE,{self.call_type},{self.table_id},{server.RV_instances[self.table_id].status}")
             print(f"RV Instance {self.table_id} created.")
@@ -184,24 +186,72 @@ class DeleteInstanceCommand(Command):
 
 # ------------------- instances -------------------
 class ServingInstance: # 서빙 인스턴스
-    def __init__(self, order_id, store_id, table_id, call_time):
+    def __init__(self, order_id, store_id, table_id, call_time, db_manager):
         self.order_id = order_id
         self.store_id = store_id
         self.table_id = table_id
         self.call_time = call_time
         self.status = "call_complete" #초기 상태
-        self.table_location = "0-0-0/0-0-0-0" #table_id 로 위치 접근, 추후 DB 연동
-        self.store_location = "0-0-0/0-0-0-0" #store_id 로 위치 접근, 추후 DB 연동
+
+        table_data = db_manager.fetch_table_data(table_id)
+        store_data = db_manager.fetch_store_data(store_id)
+
+        self.table_location = table_data.get("location", "0-0-0/0-0-0-0")
+        self.table_arucomarker_id = table_data.get("arucomarker_id", 0)
+        self.store_location = store_data.get("location", "0-0-0/0-0-0-0")
+        self.store_arucomarker_id = store_data.get("arucomarker_id", 0)
         self.task_start_time = None
         self.task_end_time = None
 
 class RetrievalInstance: # 회수 인스턴스
-    def __init__(self, store_id, table_id, call_time):
+    def __init__(self, store_id, table_id, call_time, db_manager):
         self.store_id = store_id
         self.table_id = table_id
         self.call_time = call_time
-        self.status = "call_complete" #초기 상태
-        self.table_location = "0-0-0/0-0-0-0" #table_id 로 위치 접근, 추후 DB 연동
-        self.retrieval_location = "0-0-0/0-0-0-0" #stoe_id 로 위치 접근, 추후 DB 연동
+        self.status = "call_complete"
+
+        # Fetch data using DBManager
+        table_data = db_manager.fetch_table_data(table_id)
+        store_data = db_manager.fetch_store_data(store_id)
+
+        self.table_location = table_data.get("location", "0-0-0/0-0-0-0")
+        self.table_arucomarker_id = table_data.get("arucomarker_id", 0)
+        self.store_location = store_data.get("location", "0-0-0/0-0-0-0")
+        self.store_arucomarker_id = store_data.get("arucomarker_id", 0)
         self.task_start_time = None
         self.task_end_time = None
+
+# ------------------- db_manager -------------------
+class DBManager:
+    def __init__(self, host, port, user, password, database):
+        self.connection = mysql.connector.connect(
+            host=host,
+            port=port,
+            user=user,
+            password=password,
+            database=database
+        )
+        self.cursor = self.connection.cursor(dictionary=True)
+
+    def insert_log(self, robot_id, table_id, store_id, call_type, call_time, task_start_time, task_end_time):
+        query = """
+            INSERT INTO Log (robot_id, table_id, store_id, call_type, call_time, task_start_time, task_end_time)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """
+        values = (robot_id, table_id, store_id, call_type, call_time, task_start_time, task_end_time)
+        self.cursor.execute(query, values)
+        self.connection.commit()
+        
+    def fetch_table_data(self, table_id):
+        query = "SELECT location, arucomarker_id FROM DiningTables WHERE table_id = %s"
+        self.cursor.execute(query, (table_id,))
+        return self.cursor.fetchone()
+
+    def fetch_store_data(self, store_id):
+        query = "SELECT location, arucomarker_id FROM Stores WHERE store_id = %s"
+        self.cursor.execute(query, (store_id,))
+        return self.cursor.fetchone()
+
+    def close(self):
+        self.cursor.close()
+        self.connection.close()

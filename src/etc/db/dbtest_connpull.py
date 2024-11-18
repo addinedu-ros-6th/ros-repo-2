@@ -394,14 +394,14 @@ class MySQLConnection:
 
     def get_robots(self):
         '''
-        로봇 리스트
+        robot_id와 type 반환
         '''
         db_pool = MySQLConnection.getInstance()
         connection = db_pool.get_connection()
         cursor = connection.cursor()
 
         sql=f"""
-            select robot_id from Robots;
+            select robot_id, type from Robots;
         """
         try:
             cursor.execute(sql)
@@ -410,7 +410,50 @@ class MySQLConnection:
         except Exception as e:
             print(f"쿼리 실행 중 오류: {e}")
         finally:
-            cursor.close()  # 커서 닫기
+            cursor.close()
+            connection.close() 
+    
+    def get_robot_type(self, robot_id):
+        '''
+        robot_id로 type 가져오기
+        '''
+        db_pool = MySQLConnection.getInstance()
+        connection = db_pool.get_connection()
+        cursor = connection.cursor()
+
+        sql=f"""
+            select type from Robots where robot_id = {robot_id};
+        """
+        try:
+            cursor.execute(sql)
+            results = cursor.fetchall()
+            return results
+        except Exception as e:
+            print(f"쿼리 실행 중 오류: {e}")
+        finally:
+            cursor.close()
+            connection.close() 
+    
+    def get_robot_log(self, robot_id, start_date, end_date):
+        '''
+        robot_id로 로봇 로그 데이터 가져오기
+        '''
+        db_pool = MySQLConnection.getInstance()
+        connection = db_pool.get_connection()
+        cursor = connection.cursor()
+
+        sql=f"""
+            SELECT table_id, call_time from Log 
+            WHERE (robot_id = {robot_id}) and (call_time BETWEEN '{start_date} 00:00:00' AND '{end_date} 23:59:59' )
+        """
+        try:
+            cursor.execute(sql)
+            results = cursor.fetchall()
+            return results
+        except Exception as e:
+            print(f"쿼리 실행 중 오류: {e}")
+        finally:
+            cursor.close()
             connection.close() 
 
     def get_stores(self):
@@ -422,7 +465,7 @@ class MySQLConnection:
         cursor = connection.cursor()
 
         sql=f"""
-            select name from Stores;
+            select name from Stores where name != '퇴식구1';
         """
         try:
             cursor.execute(sql)
@@ -431,7 +474,7 @@ class MySQLConnection:
         except Exception as e:
             print(f"쿼리 실행 중 오류: {e}")
         finally:
-            cursor.close()  # 커서 닫기
+            cursor.close()
             connection.close() 
     
     def total_orders_today(self):
@@ -457,7 +500,7 @@ class MySQLConnection:
         except Exception as e:
             print(f"쿼리 실행 중 오류: {e}")
         finally:
-            cursor.close()  # 커서 닫기
+            cursor.close()
             connection.close() 
 
     def total_earning_today(self):
@@ -483,7 +526,7 @@ class MySQLConnection:
         except Exception as e:
             print(f"쿼리 실행 중 오류: {e}")
         finally:
-            cursor.close()  # 커서 닫기
+            cursor.close()
             connection.close() 
     
     def get_store_id(self, store_name):
@@ -495,7 +538,7 @@ class MySQLConnection:
         cursor = connection.cursor()
 
         sql=f"""
-            SELECT store_id where name = {store_name}
+            SELECT store_id from Stores where name = "{store_name}";
         """
         try:
             cursor.execute(sql)
@@ -504,12 +547,12 @@ class MySQLConnection:
         except Exception as e:
             print(f"쿼리 실행 중 오류: {e}")
         finally:
-            cursor.close()  # 커서 닫기
+            cursor.close()
             connection.close() 
     
     def order_status(self, store_id):
         '''
-        매점당 금일 주문 형황
+        매점당 금일 주문 현황
         '''
         db_pool = MySQLConnection.getInstance()
         connection = db_pool.get_connection()
@@ -519,7 +562,8 @@ class MySQLConnection:
             SELECT 
                 M.name AS menu_name,
                 OD.quantity,
-                OC.call_time
+                OC.call_time, 
+                OC.order_id
             FROM 
                 OrderCalls OC
             JOIN 
@@ -536,7 +580,7 @@ class MySQLConnection:
         except Exception as e:
             print(f"쿼리 실행 중 오류: {e}")
         finally:
-            cursor.close()  # 커서 닫기
+            cursor.close()
             connection.close() 
 
 

@@ -9,12 +9,14 @@ from py_trees.common import ParallelPolicy
 from py_trees.composites import Parallel, Sequence, Selector
 from py_trees import decorators
 from py_trees import logging as log_tree
+from py_trees.decorators import Inverter
+
 from rclpy.qos import qos_profile_sensor_data
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
 import sensor_msgs.msg
 from servee_interfaces.msg import TaskGoalPose, ResPath
-from servee_robot.servee_behaviors import led_flasher, request_path, response_path, get_curr_pose, receive_goal, move_forward, robot_rotate, waypoint_arrival_checker, obstacle_avoidance, get_scan, picam_to_blackboard, image_sender, arucomaker_transformer,aruco_search, aruco_aligning, aruco_yawing
+from servee_robot.servee_behaviors import led_flasher, request_path, response_path, get_curr_pose, receive_goal, move_forward, robot_rotate, waypoint_arrival_checker, obstacle_avoidance, get_scan, picam_to_blackboard, image_sender, arucomaker_transformer,aruco_search, aruco_aligning, aruco_yawing, aruco_approaching
 
 from rclpy.qos import QoSProfile
 from rclpy.qos import QoSReliabilityPolicy, QoSHistoryPolicy
@@ -29,12 +31,12 @@ def parking_selector_tree():
     
     aruco_transform = arucomaker_transformer.ArucoMakerTransformer("aruco_transform_node")
     
-    search = aruco_search.ArucoSearch("aruco_search")
-    aligning = aruco_aligning.ArucoAligning("aruco_aligning")
-    yawing = aruco_yawing.ArucoYawing("aruco_yawing")
-    parking.add_children([aruco_transform, search, aligning, yawing])
-    
-    
+    search = aruco_search.ArucoSearch("aruco_search_node")
+    aligning = aruco_aligning.ArucoAligning("aruco_aligning_node")
+    yawing = aruco_yawing.ArucoYawing("aruco_yawing_node")
+   
+    approaching = aruco_approaching.ArucoApproaching("aruco_approaching_node")
+    parking.add_children([aruco_transform, search, aligning, yawing, approaching])
     return parking
     
 
@@ -76,12 +78,21 @@ def create_path():
     path = Parallel("Create Path", policy=ParallelPolicy.SuccessOnAll())
     
     goal = receive_goal_node()
+    
+
+    
     req_path = request_path.RequestPath("reqeuest_path_node")
     res_path = response_path.ResponsePath("response_path_node")    
 
+    avoid = obstacle_avoidance.ObstacleAvoidanceMover("obstacle_avoidance_receive_goal_node")
+    inverted_avoid = Inverter(name="Wall Check" , child=avoid)
+    
+    ready_to_move = Sequence("Read to Move?", memory=True) 
+    ready_to_move.add_children([goal, inverted_avoid])
+    
     # timer_node = py_trees.timers.Timer(name="time", duration=10.0)
 
-    path.add_children([goal, req_path, res_path])
+    path.add_children([ready_to_move, req_path, res_path])
     return path
 
 def move_to_goal():
