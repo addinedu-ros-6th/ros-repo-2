@@ -23,6 +23,15 @@ def generate_launch_description():
             'aruco_param.yaml'
         )
     )
+    
+    obstacle_param_dir = LaunchConfiguration(
+        'obstacle_param',
+        default=os.path.join(
+            get_package_share_directory('servee_robot'),
+            'param',
+            'obstacle_avoidance.yaml'
+        )
+    )
        
     
     return LaunchDescription([
@@ -33,6 +42,10 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'aruco_param',
             default_value=aruco_param_dir),
+        
+        DeclareLaunchArgument(
+            'obstacle_param',
+            default_value=obstacle_param_dir),
         
         Node(
             package='servee_robot',
@@ -45,7 +58,7 @@ def generate_launch_description():
         Node(
             package='servee_robot',
             executable='robot_trees',
-            parameters=[aruco_param_dir],
+            parameters=[aruco_param_dir, obstacle_param_dir],
             output='screen',
         )
     ])
