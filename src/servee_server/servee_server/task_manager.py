@@ -59,7 +59,7 @@ class RobotTask(Node):
         self.retrieving_task_queue = self.server.retrieving_task_queue
 
         # ! code for communication test
-        self.robots = {'robot': Robot(1, 'robot', 'Server')}
+        self.robots = {'servee': Robot(1, 'robot', 'Server')}
         # self.robots = {'robot': Robot('robot', 'Retriever')}
 
         self.task_publishers = self.init_publishers()
@@ -94,12 +94,16 @@ class RobotTask(Node):
 
     def robot_pose_callback(self, robot_name):
         def callback(msg):
+            print(msg)
             self.robots[robot_name].pose = msg
         return callback
 
     def robot_state_callback(self, robot_name):
         # * robot state type : "idle", "running1", "standby1", "running2", "standy2", "returning_home", "low_battery" 
+        
+        # print(f"robot_name: {robot_name}")
         def callback(msg):
+            # print(f"msg : {msg}")
             robot = self.robots[robot_name]
             robot.prev_state = robot.state
             robot.state = msg.data
@@ -194,6 +198,7 @@ class RobotTask(Node):
         # Check for 'Server' robots and assign serving tasks if available
         available_serverbots = [r for r in self.robots.values() if r.robot_type == 'Server' and not r.assigned_task_id]
         available_retrieverbots = [r for r in self.robots.values() if r.robot_type == 'Retriever' and not r.assigned_task_id]
+        print(f"assign_tasks: {available_serverbots}")
         
         if self.serving_task_queue and available_serverbots:
             order = self.serving_task_queue.get()  # Get the position of the first task

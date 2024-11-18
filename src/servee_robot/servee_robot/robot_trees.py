@@ -200,7 +200,7 @@ def sender_data():
     
     robot_data_send = robot_data_sender.RobotDataSender("robot_data_sender")
     
-    sender.add_children([picam2bb, picam_send])
+    sender.add_children([picam2bb, picam_send, robot_data_send])
     return sender
 
 

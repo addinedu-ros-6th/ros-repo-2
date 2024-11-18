@@ -33,7 +33,7 @@ class ClientObserverWithQueue(ClientObserver):
 
 if __name__ == "__main__":
     host = "localhost"
-    port = 9998
+    port = 9999
 
     # Initialize the shared queue
     shared_queue = queue.Queue(maxsize=100)  # Set a max size to prevent overfilling
