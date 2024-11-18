@@ -47,49 +47,38 @@ class RobotTask(Node):
         self.group6 = MutuallyExclusiveCallbackGroup()
 
         # ? actual code
-        # self.robots = {
-        #     'robot1': Robot(1, 'robot1', 'Server'),
-        #     'robot2': Robot(2, 'robot2', 'Server'),
-        #     'robot3': Robot(3, 'robot3', 'Retriever')}
+        self.robots = {
+            'robot1': Robot(1, 'robot1', 'Server'),
+            # 'robot2': Robot(2, 'robot2', 'Server'),
+            # 'robot3': Robot(3, 'robot3', 'Retriever')
+            }
    
-        # self.publishers = self.init_publishers()
-        # self.init_subscriptions()
+        self.publishers = self.init_publishers()
+        self.init_subscriptions()
 
         self.serving_task_queue = self.server.serving_task_queue
         self.retrieving_task_queue = self.server.retrieving_task_queue
 
-        # ! code for communication test
-        self.robots = {'servee': Robot(1, 'servee', 'Server')}
-        # self.robots = {'robot': Robot('robot', 'Retriever')}
-
         self.task_publishers = self.init_publishers()
-        self.create_subscription(Pose, '/servee/pose', self.robot_pose_callback('servee'), 10, callback_group=self.group1)
-        self.create_subscription(String, '/servee/state', self.robot_state_callback('servee'), 10, callback_group=self.group4)
-        
+ 
         time.sleep(3)
         self.create_timer(0.5, self.assign_tasks)
 
     def init_publishers(self):
         publishers = { 
-            ## ? actual code
-            # 'robot1': self.create_publisher(TaskGoalData, '/robot1/servee/task_goal_data', 10),
-            # 'robot2': self.create_publisher(TaskGoalData, '/robot2/servee/task_goal_data', 10),
-            # 'robot3': self.create_publisher(TaskGoalData, '/robot3/servee/task_goal_data', 10)
-
-            # ! code for communication test
-            'servee': self.create_publisher(TaskGoalData, '/servee/task_goal_data', 10)
+            'robot1': self.create_publisher(TaskGoalData, '/robot1/task_goal_data', 10),
+            # 'robot2': self.create_publisher(TaskGoalData, '/robot2/task_goal_data', 10),
+            # 'robot3': self.create_publisher(TaskGoalData, '/robot3/task_goal_data', 10)
         }
         return publishers
 
     def init_subscriptions(self): 
-        self.create_subscription(Pose, '/servee/get_pose', self.robot_pose_callback('servee'), 10, callback_group=self.group1)
-        self.create_subscription(Pose, '/robot1/get_pose', self.robot_pose_callback('robot1'), 10, callback_group=self.group1)
-        self.create_subscription(Pose, '/robot2/get_pose', self.robot_pose_callback('robot2'), 10, callback_group=self.group2)
-        # self.create_subscription(TransformStamped, '/robot2/pose', self.robot_pose_callback('robot2'), 10, callback_group=self.group3)
-        self.create_subscription(String, '/servee/get_state', self.robot_state_callback('servee'), 10, callback_group=self.group4)
-        self.create_subscription(String, '/robot1/get_state', self.robot_state_callback('robot1'), 10, callback_group=self.group4)
-        self.create_subscription(String, '/robot2/get_state', self.robot_state_callback('robot2'), 10, callback_group=self.group5)
-        # self.create_subscription(String, '/robot2/state', self.robot_state_callback('robot2'), 10, callback_group=self.group6)
+        self.create_subscription(Pose, '/robot1/pose', self.robot_pose_callback('robot1'), 10, callback_group=self.group1)
+        # self.create_subscription(Pose, '/robot2/pose', self.robot_pose_callback('robot2'), 10, callback_group=self.group2)
+        # self.create_subscription(Pose, '/robot3/pose', self.robot_pose_callback('robot3'), 10, callback_group=self.group3)
+        self.create_subscription(String, '/robot1/state', self.robot_state_callback('robot1'), 10, callback_group=self.group4)
+        # self.create_subscription(String, '/robot2/state', self.robot_state_callback('robot2'), 10, callback_group=self.group5)
+        # self.create_subscription(String, '/robot3/state', self.robot_state_callback('robot3'), 10, callback_group=self.group6)
 
     def robot_pose_callback(self, robot_name):
         def callback(msg):
