@@ -85,6 +85,42 @@ class MySQLConnection:
         obstacle_results = self.cursor.fetchall()
         return obstacle_results
     
+
+    def get_store_info(self):
+        db_pool = MySQLConnection.getInstance()
+        connection = db_pool.get_connection()
+        cursor = connection.cursor()
+
+
+        sql= f"""SELECT store_id,name FROM Stores"""
+        try:
+            cursor.execute(sql)
+            results = cursor.fetchall()
+            return results
+        except Exception as e:
+            print(f"쿼리 실행 중 오류: {e}")
+        finally:
+            cursor.close()  # 커서 닫기
+            connection.close() 
+
+    def get_store_id_vendor(self, store_name):
+        db_pool = MySQLConnection.getInstance()
+        connection = db_pool.get_connection()
+        cursor = connection.cursor()
+
+        sql= f"""SELECT store_id FROM Stores where name=%s"""
+        try:
+            
+            cursor.execute(sql, (store_name,))
+            results = cursor.fetchall()
+            return results
+        except Exception as e:
+            print(f"쿼리 실행 중 오류: {e}")
+        finally:
+            cursor.close()  # 커서 닫기
+            connection.close() 
+
+
     #메뉴에서 메뉴 누르면 데이터 가져오기
     def get_order_menu(self, store_id):
         db_pool = MySQLConnection.getInstance()
@@ -102,7 +138,42 @@ class MySQLConnection:
         finally:
             cursor.close()  # 커서 닫기
             connection.close() 
+
+    
+
+    def get_order_store_details(self, order_id):
+        db_pool = MySQLConnection.getInstance()
+        connection = db_pool.get_connection()
+        cursor = connection.cursor()
+        sql= f"""
+        SELECT
+            s.store_id,
+            Menus.name,
+            od.quantity,
+            oc.call_time
+        FROM 
+            OrderCalls oc
+        JOIN 
+            OrderDetails od ON oc.order_id = od.order_id
+        JOIN 
+            Menus ON od.menu_id = Menus.menu_id
+        JOIN 
+            Stores s ON Menus.store_id = s.store_id
+        WHERE 
+            oc.order_id = %s
+
+        ORDER BY 
+            oc.order_id ASC"""
         
+        try:
+            cursor.execute(sql, (order_id,))
+            results = cursor.fetchall()
+            return results
+        except Exception as e:
+            print(f"쿼리 실행 중 오류: {e}")
+        finally:
+            cursor.close()  # 커서 닫기
+            connection.close()    
     
     def get_order_details(self, order_id):
         db_pool = MySQLConnection.getInstance()
@@ -122,8 +193,6 @@ class MySQLConnection:
         WHERE 
             oc.order_id = %s"""
         
-        #print("select_data: ", sql)
-        # 새로운 커서 생성
         try:
             cursor.execute(sql, (order_id,))
             results = cursor.fetchall()
@@ -488,12 +557,33 @@ class MySQLConnection:
     #db.update_data("EventLog",("type",), ("test",), where="category='장애물'")
 
 #    db.close_connection()
+
+        #임시
+    def get_store_name(self):
+        db_pool = MySQLConnection.getInstance()
+        connection = db_pool.get_connection()
+        cursor = connection.cursor()
+
+
+        sql= f"""SELECT name FROM Stores"""
+        try:
+            cursor.execute(sql)
+            results = cursor.fetchall()
+            return results
+        except Exception as e:
+            print(f"쿼리 실행 중 오류: {e}")
+        finally:
+            cursor.close()  # 커서 닫기
+            connection.close() 
+
+
 def main():
     dbm = MySQLConnection.getInstance()
     
     
     #dbm.insert_orderdetails(90,1,2)
-    test=dbm.select_store_menu_id("마파궁전","짬뽕")
+    test=dbm.get_order_store_details_temp(231,"마파궁전")
+
     print(test)
     
 if __name__ == "__main__":

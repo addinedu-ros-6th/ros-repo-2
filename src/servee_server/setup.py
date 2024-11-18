@@ -19,9 +19,10 @@ setup(
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
-        'console_scripts': [
+       'console_scripts': [
             'path_planner_node=servee_server.path_planner:main',
             'robot_task_node=servee_server.task_manager:main',
+            'dummy_robot_node=servee_server.dummy_robot_state:main',
         ],
     },
 )
