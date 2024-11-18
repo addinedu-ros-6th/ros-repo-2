@@ -23,16 +23,7 @@ def generate_launch_description():
             'aruco_param.yaml'
         )
     )
-    
-    # 파일 존재 여부 확인
-    param_path = os.path.join(
-        get_package_share_directory('servee_robot'),
-        'param',
-        'aruco_param.yaml'
-    )
-    print(f"Parameter file path: {param_path}")
-    print(f"File exists: {os.path.exists(param_path)}")
-    
+       
     
     return LaunchDescription([
         DeclareLaunchArgument(

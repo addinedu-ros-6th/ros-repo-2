@@ -24,7 +24,7 @@ class ReceiveGoal(Behaviour):
         )
         
     def update(self) -> Status:
-        if self.blackboard.robot_state != "idle":
+        if self.blackboard.robot_state in ["idle", "receive_goal"]:
             return Status.SUCCESS
         
         else:

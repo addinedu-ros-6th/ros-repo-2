@@ -42,7 +42,17 @@ class ArucoAligning(Behaviour):
                 Twist, 
                 '/base_controller/cmd_vel_unstamped',
                 10)
-           
+            
+        self.node.declare_parameter(
+            'distance_tolerance_aligning', 0.15
+        )
+        
+        self.distance_tolerance = self.node.get_parameter(
+            'distance_tolerance_aligning'
+        ).value
+        
+        self.node.get_logger().warn(f"aligning self.distance_tolerance : {self.distance_tolerance}")
+
         
     def set_marker_data(self) -> None:
         self.marker_id = self.blackboard.aruco_maker_result['id']

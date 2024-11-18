@@ -15,7 +15,7 @@ class ArucoYawing(Behaviour):
         self.blackboard = self.attach_blackboard_client(name=self.name)
         self.blackboard.register_key(key='aruco_state', access=Access.WRITE)
         self.blackboard.register_key(key='aruco_state', access=Access.READ)
-        
+        self.blackboard.register_key(key="marker_detected", access=Access.READ)
         
         self.blackboard.register_key(key='scan', access=Access.READ)
         
@@ -28,22 +28,37 @@ class ArucoYawing(Behaviour):
                 '/base_controller/cmd_vel_unstamped',
                 10)
             
-        self.node.declare_parameter('closest_line_angle_tolerance', 5)
+        self.node.declare_parameter('closest_line_angle_tolerance', 5.0)
         self.closest_line_angle_tolerance = self.node.get_parameter('closest_line_angle_tolerance').get_parameter_value().double_value
         self.closest_line_distance =100
         self.closest_line_angle = 100
         self.scale = 700  # 기본값 설정
         self.hough_threshold = 60
-        self.ang_vel = 0.3
+        self.ang_vel = 0.1
         self.lin_vel = 0.08
         
+        self.dected_count = 0
+        
     def update(self):
+        if self.blackboard.aruco_state == "approach":
+            return Status.FAILURE
         if self.blackboard.aruco_state != "yawing":
             return Status.SUCCESS
         
-        self.node.get_logger().fatal("yawing")
-        self.detect_lines()
-        self.yawing()
+        if self.blackboard.marker_detected:  
+            self.dected_count = 0
+            self.node.get_logger().fatal("yawing")
+            self.detect_lines()
+            return self.yawing()
+            
+        else:
+            self.dected_count += 1
+            if self.dected_count >= 50:
+                self.blackboard.aruco_state = "search"
+                self.node.get_logger().info("Marker not found. Returning to Searching.")
+                return Status.SUCCESS
+            else:
+                return Status.SUCCESS
     
     def detect_lines(self):
         msg = self.blackboard.scan
@@ -108,7 +123,7 @@ class ArucoYawing(Behaviour):
         if abs(self.closest_line_angle) > self.closest_line_angle_tolerance:
             twist.angular.z = self.ang_vel * np.sign(self.closest_line_angle)
             
-            self.node.get_logger().fatal(f"yawing 이동: {twist.angular.z}")
+            self.node.get_logger().fatal(f"yawing 이동: {self.closest_line_angle}, 현재 한도: {self.closest_line_angle_tolerance}")
             self.twist_pub.publish(twist)
             return Status.FAILURE
             
