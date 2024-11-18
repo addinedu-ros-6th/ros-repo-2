@@ -19,30 +19,42 @@ class ObstacleAvoidanceMover(Behaviour):
         
     def setup(self, **kwargs: Any) -> None:
         self.node: Node = kwargs['node']
-    
-        self.node.declare_parameters(
-            namespace='',
-            parameters=[
-                ('avoidance_lieaner', 0.07),
-                ('avoidance_angular', 0.5),
-                ('wall_threshold', 0.125),
-            ]
-        )
-        
-        self.avoidance_lieaner = self.node.get_parameter('avoidance_lieaner').value
-        self.avoidance_angular = self.node.get_parameter('avoidance_angular').value
-        self.wall_threshold = self.node.get_parameter('wall_threshold').value
-        
-        self.node.get_logger().info(f"lieaner: {self.avoidance_lieaner}, angular: {self.avoidance_angular}")
+
+        # 파라미터 이름 및 기본값 정의
+        parameters_to_use = {
+            "avoidance_lieaner": 0.1,
+            "avoidance_angular": 0.5,
+            "wall_threshold": 0.13
+        }
+
+        # 파라미터 선언 및 재활용
+        for param_name, default_value in parameters_to_use.items():
+            if self.node.has_parameter(param_name):
+                # 이미 선언된 파라미터를 재활용
+                param_value = self.node.get_parameter(param_name).value
+                self.node.get_logger().info(f"Reusing parameter '{param_name}' with value: {param_value}")
+            else:
+                # 파라미터를 선언하고 기본값 설정
+                self.node.declare_parameter(param_name, default_value)
+                param_value = default_value
+                self.node.get_logger().info(f"Declared parameter '{param_name}' with default value: {param_value}")
+
+            # 파라미터 값을 인스턴스 변수로 저장
+            setattr(self, param_name, param_value)
+
+        # 최종 파라미터 값 확인
+        self.node.get_logger().info(f"lieaner: {self.avoidance_lieaner}, angular: {self.avoidance_angular}, wall_threshold: {self.wall_threshold}")
+
+        # Twist 메시지 퍼블리셔 생성
         self.cmd_vel = self.node.create_publisher(
-            Twist, 
-            '/base_controller/cmd_vel_unstamped', 
+            Twist,
+            '/base_controller/cmd_vel_unstamped',
             10
         )
      
     def update(self) -> Status:
         
-        if self.blackboard.robot_state in ['parking', 'idle', 'aruco']:
+        if self.blackboard.robot_state in ['idle', 'aruco']:
             return Status.SUCCESS
         
         self.scan = self.blackboard.scan

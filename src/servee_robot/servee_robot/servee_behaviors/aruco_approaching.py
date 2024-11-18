@@ -18,7 +18,7 @@ class ArucoApproaching(Behaviour):
         self.blackboard.register_key(key='aruco_state', access=Access.WRITE)
         self.blackboard.register_key(key='aruco_state', access=Access.READ)
         self.blackboard.register_key(key="robot_state", access=Access.WRITE)
-        
+        self.blackboard.register_key(key="marker_detected", access=Access.READ)
         self.blackboard.register_key(key="aruco_maker_result", access=Access.READ)
         
     def setup(self, **kwargs: Any) -> None:
@@ -33,15 +33,24 @@ class ArucoApproaching(Behaviour):
             'centerline_error_tolerance_approaching', 130  
         )
         
-        self.distance_tolerance = 0.2
+        self.node.declare_parameter(
+            'distance_tolerance_approach', 0.15
+        )
+        
+        self.distance_tolerance = self.node.get_parameter(
+            'distance_tolerance_approach'
+        ).value
+        
         self.centerline_error_tolerance = self.node.get_parameter(
             'centerline_error_tolerance_approaching'
         ).value
         
-        self.node.get_logger().warn(f"centerline_error_tolerance2: {self.centerline_error_tolerance}")
+        self.node.get_logger().warn(f"centerline_error_tolerance_approaching: {self.centerline_error_tolerance}")
 
         self.ang_vel = 0.3
-        self.lin_vel = 0.08
+        self.lin_vel = 0.05
+        self.node.get_logger().warn(f"approach self.distance_tolerance : {self.distance_tolerance}")
+
      
     def set_marker_data(self) -> None:
         self.marker_id = self.blackboard.aruco_maker_result['id']
@@ -55,6 +64,7 @@ class ArucoApproaching(Behaviour):
     def update(self) -> Status:
         if self.blackboard.aruco_state != "approach":
             return Status.SUCCESS
+        
         self.node.get_logger().fatal("approach")
         self.set_marker_data()
         
@@ -64,22 +74,25 @@ class ArucoApproaching(Behaviour):
         if math.hypot(self.marker_x, self.marker_z) > self.distance_tolerance:
             self.node.get_logger().fatal(f"거리 체크 {math.hypot(self.marker_x, self.marker_z)}")
             
-            # 중심점에서 벗어났다면
-            if abs(self.marker_centerline_error) > self.centerline_error_tolerance:
-                twist.linear.x = 0.0
-                twist.angular.z = -self.ang_vel * np.sign(self.marker_centerline_error)
             
-            # 전진
-            else:
-                twist.linear.x = self.lin_vel
-                twist.angular.z = 0.0
+            twist.linear.x = self.lin_vel
+            # # 중심점에서 벗어났다면
+            # if abs(self.marker_centerline_error) > self.centerline_error_tolerance:
+            #     twist.linear.x = 0.0
+            #     twist.angular.z = -self.ang_vel * np.sign(self.marker_centerline_error)
+            
+            # # 전진
+            # else:
+            #     twist.linear.x = self.lin_vel
+            #     twist.angular.z = 0.0
                 
                 
             self.twist_pub.publish(twist)
             return Status.SUCCESS
+
+    
+        # self.node.get_logger().info("Approaching Aruco marker...")
         
-            # self.node.get_logger().info("Approaching Aruco marker...")
-            
         # 마커와의 거리가 허용 오차 이내인 경우 상태를 'YAWING'으로 전환
         else:
             twist.linear.x = 0.0
@@ -89,3 +102,5 @@ class ArucoApproaching(Behaviour):
             self.blackboard.aruco_state = 'search'
             self.blackboard.robot_state = 'idle'
             return Status.FAILURE
+        
+

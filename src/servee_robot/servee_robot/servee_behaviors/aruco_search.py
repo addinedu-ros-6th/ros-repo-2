@@ -80,7 +80,7 @@ class ArucoSearch(Behaviour):
                 twist = Twist()
                 twist.angular.z = -self.ang_vel if self.marker_centerline_error > 0 else self.ang_vel
                 self.twist_pub.publish(twist)
-                # self.node.get_logger().warn(f"마커를 정면에서 보게 한다. {self.rotation_count}")
+                # self.node.get_logger().warn(f"마커를 정면에서 보게 한다. count: {self.rotation_count}")
                 return Status.SUCCESS
 
             else:
@@ -89,7 +89,7 @@ class ArucoSearch(Behaviour):
                 twist = Twist()
                 twist.angular.z = 0.0
                 self.twist_pub.publish(twist)
-                self.node.get_logger().fatal(f"마커를 정면에서 보는 중 {self.rotation_count}")
+                self.node.get_logger().fatal(f"마커를 정면에서 보는 중 count: {self.rotation_count}")
                 return Status.FAILURE
             
         # 마커가 안 보인다면 회전하며 마커를 찾는다.  
@@ -101,7 +101,6 @@ class ArucoSearch(Behaviour):
             self.rotation_count += 1
             
 
-            
             if self.rotation_count >= 100:  
                 # 시도를 했지만 결국 마커를 못 찾는 경우
                 twist.angular.z = 0.0

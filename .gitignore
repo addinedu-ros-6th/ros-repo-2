@@ -5,7 +5,9 @@ log/
 /install/
 /log/
 
+
 src/servee_robot/param/aruco_param.yaml
+src/servee_robot/param/obstacle_avoidance.yaml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
