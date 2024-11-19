@@ -11,7 +11,7 @@ from std_msgs.msg import String
 
 # 학습된 모델 로드
 # model = tf.keras.models.load_model('./servee_ai/EmptyTable_detector/scripts/table_check_model_final_ver.keras')
-model = tf.keras.models.load_model('/home/heechun/dev_ws/ros-repo-2/src/servee_ai/EmptyTable_detector/scripts/table_check_model_final_ver.keras')
+model = tf.keras.models.load_model('/home/heechun/dev_ws/ros-repo-2/src/servee_ai/EmptyTable_detector/scripts/1118_model_01.keras')
 
 # 테이블 ROI 설정: (x, y, width, height) 형식으로 4개의 테이블 지정
 # table_rois = {
