@@ -48,8 +48,8 @@ class RobotTask(Node):
 
         # ? actual code
         self.robots = {
-            'robot1': Robot(1, 'robot1', 'Server'),
-        #     'robot2': Robot(2, 'robot2', 'Server'),
+            'robot1': Robot(1, 'robot1', 'Server')
+        #     ,'robot2': Robot(2, 'robot2', 'Server'),
         #     'robot3': Robot(3, 'robot3', 'Retriever')
         }
    
@@ -64,12 +64,12 @@ class RobotTask(Node):
 
     def init_publishers(self):
 
-        task_publishers = { 
+        publishers = { 
             'robot1': self.create_publisher(TaskGoalData, '/robot1/task_goal_data', 10),
             # 'robot2': self.create_publisher(TaskGoalData, '/robot2/task_goal_data', 10),
             # 'robot3': self.create_publisher(TaskGoalData, '/robot3/task_goal_data', 10)
         }
-        return task_publishers
+        return publishers
 
     def init_subscriptions(self): 
         self.create_subscription(Pose, '/robot1/pose', self.robot_pose_callback('robot1'), 10, callback_group=self.group1)
@@ -279,12 +279,14 @@ class RobotTask(Node):
         task_goal_poses.goal_poses = pose_array
         task_goal_poses.aruco_id = aruco_ids
 
+        print(task_goal_poses)
+
         # 퍼블리시
         while True:
             print(f"Assigning task {task_id} to {robot.name}")
             self.task_publishers[robot.name].publish(task_goal_poses)
             time.sleep(0.2)
-            if robot.assigned_task_id:
+            if robot.assigned_task_id and robot.state=='running1':
                 break
 
         print(f"Assigned successfully!")

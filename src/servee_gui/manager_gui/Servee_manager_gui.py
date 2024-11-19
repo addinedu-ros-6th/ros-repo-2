@@ -134,8 +134,6 @@ class ManagerGUI(QMainWindow, ui_info):
         self.worker.update_signal.connect(self.get_status)
         self.worker.start()
 
-        self.status_list = []  # list[tuple[instance_id, status]]  (instance_id = order_id, instance_id = table_id)
-
         # DB 연결
         self.dbm = MySQLConnection.getInstance()
 
@@ -152,8 +150,11 @@ class ManagerGUI(QMainWindow, ui_info):
         self.label_legend_1 = [self.label_color_1_1, self.label_color_1_2, self.label_color_1_3]
         self.label_legend_2 = [self.label_color_2_1, self.label_color_2_2, self.label_color_2_3]
 
+        # 주문 상태 저장 리스트
+        self.status_list = []  # list[tuple[instance_id, status]]  (instance_id = order_id, instance_id = table_id)
+
         # 로봇 현황 시작
-        self.robot_type = []  # [{robot_id: type}, ...]
+        self.robot_type = []  # list[dict{robot_id: type}, ...]
         self.robots_pose = [None, None, None]
         self.robots_path = [None, None, None]
         self.robots_state = [None, None, None]
@@ -167,9 +168,11 @@ class ManagerGUI(QMainWindow, ui_info):
         header.setStretchLastSection(True)
         self.table_robots_status.setRowCount(len(robots))
 
+        # 테이블 초기 설정
         for i, robot_info in enumerate(robots):
             id_1 = QTableWidgetItem(f"Servee_Robot_{robot_info[0]}")
-            self.robot_type.append({id_1.text(): robot_info[1]})
+            # self.robot_type.append({id_1.text(): robot_info[1]})
+            self.robot_type.append({robot_info[0]: robot_info[1]})
             _state = QTableWidgetItem("Offline")
             _battery = QTableWidgetItem("0")
 
@@ -206,6 +209,7 @@ class ManagerGUI(QMainWindow, ui_info):
         self.worker.stop()
 
 
+    # 주문 상태 업데이트
     def get_status(self, result):
         print("data result:", result)
         if "UPDATE" in result:
@@ -224,6 +228,7 @@ class ManagerGUI(QMainWindow, ui_info):
             
             self.status_list.append({instance_id: status})
 
+    # 맵과 표 업데이트
     def update_map(self):
         rclpy.spin_once(self.node, timeout_sec=0.01)  # 제일 최근값 가져오는지 확인 필요. 
         
@@ -234,7 +239,7 @@ class ManagerGUI(QMainWindow, ui_info):
         self.robots_state = self.node.robots_state
         self.robots_battery = self.node.robots_battery
 
-        # 그리기 예제
+        # 그리기
         pixmap_copy = self.pixmap.copy()
         
         painter = QPainter(pixmap_copy)
@@ -266,7 +271,8 @@ class ManagerGUI(QMainWindow, ui_info):
 
         # 로봇 현황 업데이트
         for i in range(3):
-            if self.robot_type[i]['Servee_Robot_'+str(i+1)] == "서빙용":
+            # if self.robot_type[i]['Servee_Robot_'+str(i+1)] == "서빙용":
+            if self.robot_type[i][i+1] == "서빙용":
                 item_1 = QTableWidgetItem(self.robot_serving_state_map[self.robots_state[i]])
             else:
                 item_1 = QTableWidgetItem(self.robot_retrieving_state_map[self.robots_state[i]])
@@ -280,6 +286,7 @@ class ManagerGUI(QMainWindow, ui_info):
         # except Exception as e:
         #     pass
 
+    # 두번째 탭 클릭시 표 새로고침
     def tab_clicked_callback(self, index):
         if index == 1:
             stores = self.dbm.get_stores()
@@ -316,6 +323,7 @@ class ManagerGUI(QMainWindow, ui_info):
                 store_earning.setTextAlignment(Qt.AlignCenter)
                 self.table_stores_status.setItem(store_id-1, 2, store_earning)
 
+    # 로봇 현황 더블클릭 콜백
     def table_robot_dclicked(self, row, column):
         def date_start_callback():
             self.start_date = robot_status.date_start.date()
@@ -374,6 +382,7 @@ class ManagerGUI(QMainWindow, ui_info):
 
         robot_status.exec_()
 
+    # 매점 헌황 더블클릭 콜백
     def table_store_dclicked(self, row, column):
         dialog = StoreStatus()
 

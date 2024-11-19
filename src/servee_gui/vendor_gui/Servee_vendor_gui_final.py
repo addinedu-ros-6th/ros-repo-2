@@ -22,10 +22,12 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
-import datetime
+
+
+
 #import mplcursors
 from datetime import datetime
-import pandas as pd
+
 import matplotlib.dates as mdates
 
 #from etc.db.DBmanager import MySQLConnection
@@ -119,7 +121,22 @@ class Worker(QThread):
 
     def stop(self):
         self.running = False    
-        
+
+class PlotCanvas(FigureCanvas):
+    def __init__(self, parent=None):
+        fig = Figure()
+        self.ax = fig.add_subplot(111)
+        super().__init__(fig)
+        self.setParent(parent)
+
+    def plot(self, x, y):
+        self.ax.clear()  # 이전 그래프 지우기
+        self.ax.plot(x, y, 'r-')  # 그래프 그리기
+        self.ax.set_title('te')
+        self.ax.set_xlabel('Xlabel')
+        self.ax.set_ylabel('Ylabel')
+        self.draw()  # 그래프 새로 그리기
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -130,7 +147,7 @@ class MainWindow(QMainWindow):
         self.salesWindow = SalesWindow()
 
         self.store_widget = QWidget(self)
-        self.setCentralWidget(self.store_widget)
+        #self.setCentralWidget(self.store_widget)
         self.store_layout = QVBoxLayout(self.store_widget)
         
          
@@ -142,15 +159,17 @@ class MainWindow(QMainWindow):
         date_label.setText(f"<b><center>Today</center>{formatted_date}</b>")
         
         date_label.setFixedSize(131, 41)
-        
+        date_label.move(40, 30)
+        date_label.setParent(self)
        
-        self.store_layout.addWidget(date_label)
-        
-        self.store_layout.setContentsMargins(10, 1, 10, 1)
+        #self.store_layout.addWidget(date_label)
+        #
+        #self.store_layout.setContentsMargins(10, 1, 10, 1)
         
         self.store_comboBox = QComboBox(self)
         self.store_comboBox.setFixedSize(211, 25)
-        self.store_comboBox.move(20, 550)
+        self.store_comboBox.move(40, 550)
+        self.store_comboBox.setParent(self)
         # 서버 정보
         self.host = "localhost"
         self.port = 9999
@@ -164,10 +183,13 @@ class MainWindow(QMainWindow):
         self.store_table_dic = {} 
         self.call_states = {}
 
-        #self.sales_button = QtWidgets.QPushButton("매출현황",self)
-        #self.sales_button.setObjectName("button_sales")
-        #self.sales_button.clicked.connect(self.salesWindow.test)
-        
+        self.sales_button = QtWidgets.QPushButton("매출현황",self)
+        self.sales_button.setObjectName("button_sales")
+        self.sales_button.move(820, 20)
+        self.sales_button.clicked.connect(self.test)
+        self.sales_button.setParent(self)
+
+        #self.sales_button_2.clicked.connect(self.test)
         items = self.dbm.get_store_info()
         for item in items:
             if(str(item[0])=="101"):
@@ -180,11 +202,11 @@ class MainWindow(QMainWindow):
 
             store_table_widget = store_instance.get_table_widget()
             store_table_widget.setFixedSize(921, 361)
-            store_table_widget.move(40, 80)
+            store_table_widget.move(40, 120)
             self.store_layout.addWidget(store_table_widget)
             self.store_table_dic[store_id] = store_table_widget
-            
-
+            store_table_widget.setParent(self)
+        
         # 나머지 초기화 코드...
         self.client_first_receive = threading.Thread(target=self.ob_client.receive_updates)
         self.client_first_receive.start()
@@ -196,15 +218,32 @@ class MainWindow(QMainWindow):
         #self.orderlist_tableWidget.setColumnHidden(6, True)
         self.order_count = 1
 
-       
-        
         for widget in self.store_table_dic.values():
             widget.hide()
 
+        
         self.store_table_dic[str(items[0][0])].show()
         self.store_comboBox.currentIndexChanged.connect(self.on_combobox_changed)
-        
 
+        ##############################매출 그래프 불러오는 부분############################################
+
+    def make_box(self):
+        #self.sales_groupBox = QGroupBox("Sales Group Box")
+        self.sales_groupBox.setParent(self)
+        self.sales_groupBox.setFixedSize(921, 561)
+        self.sales_groupBox.move(40, 10)
+
+        return self.sales_groupBox
+
+    def test(self):
+        
+        self.box = self.salesWindow.make_tapwidget()
+        self.box.setParent(self)
+        #self.box = self.make_box()
+       #self.box.setParent(self.sales_groupBox)
+  
+        self.box.show()
+        
     def on_combobox_changed(self):
         # 스토어 이름 변경 시 주문 목록 업데이트
         self.update_order_list()
