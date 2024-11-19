@@ -14,6 +14,12 @@ import queue
 import threading
 import sys
 import time
+import os
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+relative_path = os.path.join(current_dir, '..', '..') # 상위 폴더로 이동
+absolute_path = os.path.abspath(relative_path)
+sys.path.append(relative_path)
 
 current_dir = os.path.dirname(os.path.abspath(__file__)) # 현재 스크립트의 디렉토리를 가져오고, 프로젝트 루트로 이동하는 상대 경로를 추가
 
@@ -29,13 +35,9 @@ from servee_gui.vendor_gui.Servee_sales_gui import SalesWindow
 
 '''
 TODO:
-### 장애물이랑 로봇 회피하는 행동 시각화 할거 준비하기
-### 특히 로봇은 서로의 경로까지 보여주기
-
 1. 사장 호출 버튼 수신 구현하기
 2. 매장별 매출 현황 띄우기 - 기달
 3. domain bridge 경로 어떻게 해야되는지 확인하기
-4. 로봇->task 도메인 브릿지 만들기
 5. 주석 처리 하기
 +
 - 로봇 위치랑 경로 3개까지 동시에 다 해보기
@@ -281,21 +283,23 @@ class ManagerGUI(QMainWindow, ui_info):
 
         # 로봇 현황 업데이트
         for i in range(3):
-            # if self.robot_type[i]['Servee_Robot_'+str(i+1)] == "서빙용":
-            print(i)
-            if self.robot_type[i][i+1] == "서빙용":
-                item_1 = QTableWidgetItem(self.robot_serving_state_map[self.robots_state[i]])
-            else:
-                item_1 = QTableWidgetItem(self.robot_retrieving_state_map[self.robots_state[i]])
-            # item_1 = QTableWidgetItem(self.robots_state[i])
-            item_2 = QTableWidgetItem(self.robots_battery[i])
-            item_1.setTextAlignment(Qt.AlignCenter)
-            item_2.setTextAlignment(Qt.AlignCenter)
-            self.table_robots_status.setItem(i, 1, item_1)
-            self.table_robots_status.setItem(i, 2, item_2)
 
-        # except Exception as e:
-        #     pass
+            try:
+                # if self.robot_type[i]['Servee_Robot_'+str(i+1)] == "서빙용":
+                if self.robot_type[i][i+1] == "서빙용":
+                    item_1 = QTableWidgetItem(self.robot_serving_state_map[self.robots_state[i]])
+                else:
+                    item_1 = QTableWidgetItem(self.robot_retrieving_state_map[self.robots_state[i]])
+                # item_1 = QTableWidgetItem(self.robots_state[i])
+                item_2 = QTableWidgetItem(self.robots_battery[i])
+                item_1.setTextAlignment(Qt.AlignCenter)
+                item_2.setTextAlignment(Qt.AlignCenter)
+                self.table_robots_status.setItem(i, 1, item_1)
+                self.table_robots_status.setItem(i, 2, item_2)
+
+
+            except Exception as e:
+                print(f"error from update_map() robot status update! exception: {e}")
 
     # 두번째 탭 클릭시 표 새로고침
     def tab_clicked_callback(self, index):

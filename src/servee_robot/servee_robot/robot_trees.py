@@ -153,7 +153,7 @@ def begin_tasks():
     battery_alarm = battery_low_alarm()
     standy = robot_standy.RobotStandy("robot_standy")
     
-    tasks.add_children([battery_alarm, path, move, parking, standy])
+    tasks.add_children([battery_alarm, path, move, standy, parking])
     return tasks
 
 

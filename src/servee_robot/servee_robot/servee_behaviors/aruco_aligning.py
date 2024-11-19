@@ -31,7 +31,7 @@ class ArucoAligning(Behaviour):
      
     def setup(self, **kwargs: Any) -> None:
         self.node:Node = kwargs['node']   
-        self.distance_tolerance = 0.25
+
         self.yaw_tolerance = 30
         self.initial_position = None
         self.initial_yaw = None
