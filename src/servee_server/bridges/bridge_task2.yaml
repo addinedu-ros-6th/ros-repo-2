@@ -1,0 +1,7 @@
+name: bridge_task2
+from_domain: 80
+to_domain: 82
+topics:
+  robot2/servee/task_goal_data:
+    type: servee_interfaces/msg/TaskGoalData
+    remap: servee/task_goal_data

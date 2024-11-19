@@ -19,7 +19,9 @@ class ArucoApproaching(Behaviour):
         self.blackboard.register_key(key='aruco_state', access=Access.READ)
         self.blackboard.register_key(key="robot_state", access=Access.WRITE)
         self.blackboard.register_key(key="marker_detected", access=Access.READ)
+        self.blackboard.register_key(key="marker_detected", access=Access.WRITE)
         self.blackboard.register_key(key="aruco_maker_result", access=Access.READ)
+          
         
     def setup(self, **kwargs: Any) -> None:
         self.node:Node = kwargs['node'] 
@@ -99,8 +101,12 @@ class ArucoApproaching(Behaviour):
             twist.angular.z = 0.0
             self.twist_pub.publish(twist)
             self.node.get_logger().fatal("주차 완료")
+            
             self.blackboard.aruco_state = 'search'
-            self.blackboard.robot_state = 'idle'
+            self.blackboard.robot_state = 'standy'
+            
+            
+                
             return Status.FAILURE
         
 

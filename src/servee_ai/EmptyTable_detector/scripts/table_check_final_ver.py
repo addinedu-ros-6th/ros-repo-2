@@ -11,7 +11,7 @@ from std_msgs.msg import String
 
 # 학습된 모델 로드
 # model = tf.keras.models.load_model('./servee_ai/EmptyTable_detector/scripts/table_check_model_final_ver.keras')
-model = tf.keras.models.load_model('/home/heechun/dev_ws/ros-repo-2/src/servee_ai/EmptyTable_detector/scripts/table_check_model_final_ver.keras')
+model = tf.keras.models.load_model('/home/heechun/dev_ws/ros-repo-2/src/servee_ai/EmptyTable_detector/scripts/1118_model_01.keras')
 
 # 테이블 ROI 설정: (x, y, width, height) 형식으로 4개의 테이블 지정
 # table_rois = {
@@ -22,10 +22,10 @@ model = tf.keras.models.load_model('/home/heechun/dev_ws/ros-repo-2/src/servee_a
 # }
 
 table_rois = {
-    1: (110, 70, 150, 90),    # 테이블 1 (x, y, x2 = x1+w, y2 = y1+h)
-    2: (410, 70, 140, 90),   # 테이블 2
-    3: (40, 270, 190, 140),   # 테이블 3
-    4: (430, 280, 190, 130)   # 테이블 4
+    1: (125, 65, 120, 100),    # 테이블 1 (x, y, x2 = x1+w, y2 = y1+h)
+    2: (420, 70, 125, 100),   # 테이블 2
+    3: (70, 270, 160, 135),   # 테이블 3
+    4: (440, 280, 180, 130)   # 테이블 4
 }
 
 # 최근 예측 결과를 저장할 큐

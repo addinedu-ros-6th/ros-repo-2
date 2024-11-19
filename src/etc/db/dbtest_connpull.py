@@ -394,14 +394,15 @@ class MySQLConnection:
 
     def get_robots(self):
         '''
-        robot_id와 type 반환
+        등록되어 있는 robot_id와 type 반환
         '''
         db_pool = MySQLConnection.getInstance()
         connection = db_pool.get_connection()
         cursor = connection.cursor()
 
         sql=f"""
-            select robot_id, type from Robots;
+            SELECT robot_id, type 
+            FROM Robots;
         """
         try:
             cursor.execute(sql)
@@ -422,7 +423,9 @@ class MySQLConnection:
         cursor = connection.cursor()
 
         sql=f"""
-            select type from Robots where robot_id = {robot_id};
+            sSELECT type 
+            FROM Robots 
+            WHERE robot_id = {robot_id};
         """
         try:
             cursor.execute(sql)
@@ -465,7 +468,9 @@ class MySQLConnection:
         cursor = connection.cursor()
 
         sql=f"""
-            select name from Stores where name != '퇴식구1';
+            SELECT name 
+            FROM Stores 
+            WHERE name != '퇴식구1';
         """
         try:
             cursor.execute(sql)
@@ -538,7 +543,9 @@ class MySQLConnection:
         cursor = connection.cursor()
 
         sql=f"""
-            SELECT store_id from Stores where name = "{store_name}";
+            SELECT store_id 
+            FROM Stores 
+            WHERE name = "{store_name}";
         """
         try:
             cursor.execute(sql)

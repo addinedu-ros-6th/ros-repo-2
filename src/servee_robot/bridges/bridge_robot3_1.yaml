@@ -1,0 +1,7 @@
+name: bridge_robot3_1
+from_domain: 83
+to_domain: 81
+topics:
+  servee/pose:
+    type: geometry_msgs/msg/Pose
+    remap: servee/robot3/pose

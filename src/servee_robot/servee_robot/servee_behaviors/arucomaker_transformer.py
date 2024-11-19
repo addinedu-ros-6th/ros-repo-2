@@ -23,7 +23,12 @@ class ArucoMakerTransformer(Behaviour):
         self.blackboard.register_key(key="marker_detected_time", access=Access.WRITE)
         self.blackboard.register_key(key='marker_detected', access=Access.WRITE)
         self.blackboard.register_key(key="robot_state", access=Access.READ)
+        
+        self.blackboard.register_key(key="aruco_ids", access=Access.READ)
+        self.blackboard.register_key(key="aruco_id_index", access=Access.READ)
+        
         self.blackboard.marker_detected  = False
+    
         
     def setup(self, **kwargs: Any) -> None:
         self.node: Node = kwargs['node']
@@ -48,9 +53,13 @@ class ArucoMakerTransformer(Behaviour):
     
     def update(self) -> Status:
         
-        if self.blackboard.robot_state not in ["aruco", "parking"]:
+        if self.blackboard.robot_state not in ["aruco"]:
             # self.node.get_logger().warn(f"{self.blackboard.robot_state}")
             return Status.SUCCESS
+        
+        if not self.blackboard.exists("aruco_ids"):
+            return Status.SUCCESS
+        
         
         
         frame = self.blackboard.picam_raw_image
@@ -127,6 +136,12 @@ class ArucoMakerTransformer(Behaviour):
         # 아루코마커가 검출됨. 
         if marker_data:
             closest_marker = min(marker_data, key=lambda x: x["distance"])
+
+            aruco_id_index = self.blackboard.aruco_id_index
+            if closest_marker["id"] != self.blackboard.aruco_ids[aruco_id_index]:
+                self.blackboard.marker_detected  = False
+                return Status.FAILURE
+                
             self.blackboard.aruco_maker_result = closest_marker
             self.blackboard.marker_detected_time = self.node.get_clock().now()
             
@@ -137,6 +152,8 @@ class ArucoMakerTransformer(Behaviour):
                 f"X: {closest_marker['x']:.2f}m, Y: {closest_marker['y']:.2f}m, Z: {closest_marker['z']:.2f}m, "
                 f"Yaw: {closest_marker['yaw']:.2f}°, Pitch: {closest_marker['pitch']:.2f}°, Roll: {closest_marker['roll']:.2f}°"
             )  
+            
+            
             self.blackboard.marker_detected  = True
             # self.node.get_logger().warn("아루코마커 검출 완료")
             return Status.FAILURE

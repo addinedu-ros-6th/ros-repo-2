@@ -16,7 +16,6 @@ class ArucoYawing(Behaviour):
         self.blackboard.register_key(key='aruco_state', access=Access.WRITE)
         self.blackboard.register_key(key='aruco_state', access=Access.READ)
         self.blackboard.register_key(key="marker_detected", access=Access.READ)
-        
         self.blackboard.register_key(key='scan', access=Access.READ)
         
         
@@ -126,6 +125,7 @@ class ArucoYawing(Behaviour):
             self.node.get_logger().fatal(f"yawing 이동: {self.closest_line_angle}, 현재 한도: {self.closest_line_angle_tolerance}")
             self.twist_pub.publish(twist)
             return Status.FAILURE
+            
             
         else:
             self.node.get_logger().fatal("어프로치로 넘어갑니다.")

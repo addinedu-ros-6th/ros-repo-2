@@ -1,0 +1,11 @@
+name: bridge_robot1
+from_domain: 81
+to_domain: 80
+topics:
+  servee/pose:
+    type: geometry_msgs/msg/Pose
+    remap: robot1/pose
+  
+  servee/state:
+    type: std_msgs/msg/String
+    remap: robot1/state

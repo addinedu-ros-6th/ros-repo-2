@@ -28,6 +28,7 @@ class WaypointArrivalChecker(Behaviour):
         self.blackboard.register_key(key="path", access=Access.READ)
         self.blackboard.register_key(key='odom_yaw_error', access=Access.WRITE)
         
+
         self.blackboard.target_distance = 0.0
         self.blackboard.waypoint = 0
         self.blackboard.robot_state = "idle"
@@ -40,15 +41,12 @@ class WaypointArrivalChecker(Behaviour):
 
     def update_next_waypoint_info(self):
         
-        if self.blackboard.waypoint>= len(self.path.poses) -1: 
-            # Path 완료 
-            # 추후에 path가 array로 전달되면 다 돌았는지 체크한 뒤에 parking으로 돌려야 한다.
+        if self.blackboard.waypoint>= len(self.path.poses) -1:             
             self.blackboard.robot_state = "aruco" 
             self.node.get_logger().warn(f"path 완료 {self.blackboard.robot_state}")
             
         else:
             # 다음 웨이포인트로
-            
             self.blackboard.waypoint += 1
             self.blackboard.odom_yaw_error = 0.0
             self.blackboard.next_pose = self.path.poses[self.blackboard.waypoint]
@@ -67,7 +65,7 @@ class WaypointArrivalChecker(Behaviour):
             return Status.FAILURE
         
         # 로봇이 이동 상태가 아닌 경우
-        if self.blackboard.robot_state not in ['task', 'home', 'parking']:
+        if self.blackboard.robot_state not in ['task', 'home']:
             return Status.FAILURE
         
         # self.node.get_logger().warn(f"way {self.blackboard.waypoint}, next: {self.blackboard.next_pose}")

@@ -33,7 +33,7 @@ class ClientObserverWithQueue(ClientObserver):
 
 if __name__ == "__main__":
     host = "localhost"
-    port = 9998
+    port = 9999
 
     # Initialize the shared queue
     shared_queue = queue.Queue(maxsize=100)  # Set a max size to prevent overfilling
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     try:
         # 서빙
         # time.sleep(3)
-        # client1.send_create_command("SE", order_id=1234, store_id=1, table_id=4)
+        client1.send_create_command("SE", order_id=1234, store_id=1, table_id=4)
         # time.sleep(3)
         # client1.send_update_command("SE", order_id=1234, new_status="waiting_serverbot")
 
@@ -59,12 +59,12 @@ if __name__ == "__main__":
         # time.sleep(3)
 
         # 회수
-        client1.send_create_command("RV", table_id=1)
-        time.sleep(3)
+        # client1.send_create_command("RV", table_id=1)
+        # time.sleep(3)
         
         # 회수 = RV,  서빙 = SE
-        client1.send_create_command("RV", table_id=2)
-        time.sleep(3)
+        # client1.send_create_command("RV", table_id=2)
+        # time.sleep(3)
 
         while True:
             if not shared_queue.empty():

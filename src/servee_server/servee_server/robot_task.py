@@ -4,7 +4,7 @@ from rclpy.executors import MultiThreadedExecutor
 
 from std_msgs.msg import String
 from geometry_msgs.msg import TransformStamped
-from servee_interfaces.msg import TaskGoalPose
+from servee_interfaces.msg import TaskGoalPose, TaskGoalData
 
 import threading
 import queue
@@ -111,9 +111,9 @@ class RobotTask(Node):
         # self.robot3_start_subscriber = self.create_subscription(String, '/robot3/servee/started', self.robot3_start_callback, 10)
 
         self.robot1_destination = TaskGoalPose()
-        self.robot1_dest_publisher = self.create_publisher(TaskGoalPose, '/robot1/servee/task_goal_pose', 10)
+        self.robot1_dest_publisher = self.create_publisher(TaskGoalData, '/robot1/servee/task_data', 10)
         self.robot2_destination = TaskGoalPose()
-        self.robot2_dest_publisher = self.create_publisher(TaskGoalPose, '/robot2/servee/task_goal_pose', 10)
+        self.robot2_dest_publisher = self.create_publisher(TaskGoalData, '/robot2/servee/task_data', 10)
         # self.robot3_destination = TaskGoalPose()
         # self.robot3_dest_publisher = self.create_publisher(TaskGoalPose, '/robot3/servee/task_goal_pose', 10)
 
