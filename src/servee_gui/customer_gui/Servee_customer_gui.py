@@ -9,7 +9,7 @@ relative_path = os.path.join(current_dir, '..', '..') # 상위 폴더로 이동
 absolute_path = os.path.abspath(relative_path) 
 
 sys.path.append(relative_path)
-
+print(relative_path)
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *

@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QMainWindow, QDialog, QApplication, QTableWidgetItem
 from PyQt5.QtGui import QPixmap, QPainter, QPen
 from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal, QDate
 from PyQt5 import uic
-
+import os
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
@@ -15,9 +15,17 @@ import threading
 import sys
 import time
 
+current_dir = os.path.dirname(os.path.abspath(__file__)) # 현재 스크립트의 디렉토리를 가져오고, 프로젝트 루트로 이동하는 상대 경로를 추가
+
+relative_path = os.path.join(current_dir, '..', '..') # 상위 폴더로 이동
+print(relative_path)
+absolute_path = os.path.abspath(relative_path) 
+
+sys.path.append(relative_path)
+
 from etc.db.dbtest_connpull import MySQLConnection
 from servee_gui.observer_subscriber import ClientObserver
-
+from servee_gui.vendor_gui.Servee_sales_gui import SalesWindow
 
 '''
 TODO:
@@ -133,6 +141,8 @@ class ManagerGUI(QMainWindow, ui_info):
         self.worker = Worker()
         self.worker.update_signal.connect(self.get_status)
         self.worker.start()
+
+        self.sales_test = SalesWindow()
 
         # DB 연결
         self.dbm = MySQLConnection.getInstance()
@@ -272,6 +282,7 @@ class ManagerGUI(QMainWindow, ui_info):
         # 로봇 현황 업데이트
         for i in range(3):
             # if self.robot_type[i]['Servee_Robot_'+str(i+1)] == "서빙용":
+            print(i)
             if self.robot_type[i][i+1] == "서빙용":
                 item_1 = QTableWidgetItem(self.robot_serving_state_map[self.robots_state[i]])
             else:
@@ -322,13 +333,18 @@ class ManagerGUI(QMainWindow, ui_info):
                 store_earning = QTableWidgetItem(f"{int(earning):,} 원")
                 store_earning.setTextAlignment(Qt.AlignCenter)
                 self.table_stores_status.setItem(store_id-1, 2, store_earning)
+        elif index ==2:
+            group = self.sales_test.make_groupbox()
 
+            self.sales_tabwidget.setParent(self.tab_manager)
+            group.setParent(self.tab_sales_overview)
+            
     # 로봇 현황 더블클릭 콜백
     def table_robot_dclicked(self, row, column):
         def date_start_callback():
             self.start_date = robot_status.date_start.date()
             print("start_date:", self.start_date)
-        
+
         def date_end_callback():
             self.end_date = robot_status.date_end.date()
             print("end_date:", self.end_date)
