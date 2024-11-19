@@ -16,7 +16,7 @@ from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
 import sensor_msgs.msg
 from servee_interfaces.msg import TaskGoalPose, ResPath
-from servee_robot.servee_behaviors import led_flasher, request_path, response_path, get_curr_pose, receive_goal, move_forward, robot_rotate, waypoint_arrival_checker, obstacle_avoidance, get_scan, picam_to_blackboard, image_sender, arucomaker_transformer,aruco_search, aruco_aligning, aruco_yawing, aruco_approaching, robot_data_sender, robot_standy
+from servee_robot.servee_behaviors import led_flasher, request_path, response_path, get_curr_pose, receive_goal, move_forward, robot_rotate, waypoint_arrival_checker, obstacle_avoidance, get_scan, picam_to_blackboard, image_sender, arucomaker_transformer,aruco_search, aruco_aligning, aruco_yawing, aruco_approaching, robot_data_sender, robot_standy, lidar_modifier
 
 from rclpy.qos import QoSProfile
 from rclpy.qos import QoSReliabilityPolicy, QoSHistoryPolicy
@@ -183,14 +183,14 @@ def receive_topic2bb():
     )
 
     laser_scan2bb = get_scan.GetScan("get_scan_node")
-    
+    lidar_mod = lidar_modifier.LidarModifier("lidar_modifier_node")
     # 현재위치
     cur_pose = get_curr_pose.GetCurrPose("get_curr_pose_node")
     
     # from sensor_msgs.msg import LaserScan
     
     # laser_scan2bb
-    topic2bb.add_children([battery2bb, cur_pose, laser_scan2bb])
+    topic2bb.add_children([battery2bb, cur_pose, laser_scan2bb, lidar_mod])
     return topic2bb
 
 def sender_data():

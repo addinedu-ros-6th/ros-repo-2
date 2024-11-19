@@ -48,9 +48,9 @@ if __name__ == "__main__":
     try:
         # 서빙
         # time.sleep(3)
-        client1.send_create_command("SE", order_id=1234, store_id=1, table_id=4)
-        # time.sleep(3)
-        # client1.send_update_command("SE", order_id=1234, new_status="waiting_serverbot")
+        client1.send_create_command("SE", order_id=1234, store_id=3, table_id=4)
+        time.sleep(3)
+        client1.send_update_command("SE", order_id=1234, new_status="waiting_serverbot")
 
         # time.sleep(3)
         # client1.send_create_command("SE", order_id=4321, store_id=2, table_id=2)
