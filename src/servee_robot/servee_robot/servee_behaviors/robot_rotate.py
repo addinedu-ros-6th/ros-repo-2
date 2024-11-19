@@ -37,8 +37,8 @@ class RobotRotate(Behaviour):
         
         self.max_angular_speed = self.blackboard.max_angular_speed
         self.blackboard.odom_yaw_error = 0.0
-        self.absolute_yaw_threshold = math.radians(10) 
-        self.smooth_turn_tolerance = math.radians(5)
+        self.absolute_yaw_threshold = math.radians(15) 
+        self.smooth_turn_tolerance = math.radians(10)
         self.cmd_vel_publisher = self.node.create_publisher(Twist, '/base_controller/cmd_vel_unstamped', 10)
         
         self.prev_time = None 

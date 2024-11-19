@@ -65,7 +65,7 @@ class ArucoApproaching(Behaviour):
         
     def update(self) -> Status:
         if self.blackboard.aruco_state != "approach":
-            return Status.SUCCESS
+            return Status.FAILURE
         
         self.node.get_logger().fatal("approach")
         self.set_marker_data()

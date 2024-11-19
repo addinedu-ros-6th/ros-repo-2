@@ -51,7 +51,7 @@ class WaypointArrivalChecker(Behaviour):
             self.blackboard.odom_yaw_error = 0.0
             self.blackboard.next_pose = self.path.poses[self.blackboard.waypoint]
             self.blackboard.target_distance = self.calculate_target_distance_absolute()
-            self.node.get_logger().warn(f"다음 Waypoint로 {self.blackboard.waypoint}")
+            self.node.get_logger().warn(f"다음 Waypoint:{self.blackboard.waypoint}, 좌표: {self.blackboard.next_pose}")
   
             
     def update(self) -> Status:

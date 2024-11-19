@@ -22,6 +22,7 @@ class RequestPath(Behaviour):
         self.blackboard.register_key(key="robot_state", access=Access.READ)
         
     def setup(self, **kwargs):
+        self.node: Node = kwargs['node']
         self.logger.debug(f"Request path: setup")
         self.blackboard.robot_state = "idle" 
         self.req_path_pub = RequestPathPublisher()
@@ -34,8 +35,11 @@ class RequestPath(Behaviour):
         if self.is_move() == True:
             return Status.SUCCESS
         
+        
+        
         goal_pose = self.blackboard.goal_pose
         curr_pose = self.blackboard.curr_pose
+        self.node.get_logger().fatal(f"Request path: {goal_pose}")
         
         self.req_path_pub.publish(curr_pose, goal_pose) 
         
@@ -59,7 +63,7 @@ class RequestPath(Behaviour):
         이동 중인 상태인지 체크한다.
         이동 중에는 트리가 Move로 바로 넘어갈 수 있게 처리한다.
         """
-        if self.blackboard.robot_state in ["move", "home", "parking"]:
+        if self.blackboard.robot_state in ["task", "home", "aruco"]:
             return True
 
         

@@ -89,6 +89,7 @@ class ArucoSearch(Behaviour):
                 twist = Twist()
                 twist.angular.z = 0.0
                 self.twist_pub.publish(twist)
+                
                 self.node.get_logger().fatal(f"마커를 정면에서 보는 중 count: {self.rotation_count}")
                 return Status.FAILURE
             

@@ -10,6 +10,7 @@ class ReceiveGoal(Behaviour):
     def __init__(self, name:str):
         super(ReceiveGoal, self).__init__(name)
         self.blackboard = self.attach_blackboard_client(name=self.name)
+        self.blackboard.register_key(key="goal_poses", access=Access.WRITE)
         self.blackboard.register_key(key="goal_pose", access=Access.WRITE)
         self.blackboard.register_key(key="robot_state", access=Access.READ)
         self.blackboard.register_key(key="robot_state", access=Access.WRITE)
@@ -20,13 +21,13 @@ class ReceiveGoal(Behaviour):
         self.node: Node = kwargs['node']
         self.node.create_subscription(
             TaskGoalData,
-            '/servee/task_goal_data',
+            '/robot1/task_goal_data',
             self.callback,
             10
         )
         
     def update(self) -> Status:
-        if self.blackboard.robot_state in ["idle", "receive_goal"]:
+        if self.blackboard.robot_state in ["receive_goal"]:
             return Status.SUCCESS
         
         else:
@@ -41,7 +42,7 @@ class ReceiveGoal(Behaviour):
         
         self.blackboard.goal_pose = self.blackboard.goal_poses.poses[0]
         self.blackboard.robot_state = "receive_goal"
-        
+
         # self.blackboard.goal_pose = msg.goal_pose
         # self.blackboard.robot_state = "receive_goal"
         
