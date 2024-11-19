@@ -22,10 +22,12 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
-import datetime
+
+
+
 #import mplcursors
 from datetime import datetime
-import pandas as pd
+
 import matplotlib.dates as mdates
 
 #from etc.db.DBmanager import MySQLConnection
@@ -44,71 +46,123 @@ from PyQt5 import QtWidgets, uic
 from functools import partial
 order_queue = queue.Queue()
 
-class Store:
-    def __init__(self, store_id):
-        self.store_id = store_id
-        self.order_count = 1
-        self.order_data = {}  # 주문 ID를 키로 하고 상태를 값으로 저장하는 딕셔너리
-        self.button_status = {}
+class PlotCanvas(FigureCanvas):
+    def __init__(self, parent=None):
+        fig = Figure()
+        self.ax = fig.add_subplot(111)
+        super().__init__(fig)
+        self.setParent(parent)
 
-        self.table_widget = QTableWidget()
-        self.table_widget.setObjectName(f"table_widget_{self.store_id}")
-        self.table_widget.setColumnCount(7)  # 필요한 컬럼 수 설정
-        self.table_widget.setHorizontalHeaderLabels(["주문번호", "음식명", "수량", "주문시간", "상태", "로봇호출", "order_id"])
-        column_width = 150
-
-        for i in range(self.table_widget.columnCount()):
-            self.table_widget.setColumnWidth(i, column_width)
-#
-        self.table_widget.setStyleSheet("QTableWidget { gridline-color: transparent; }"
-                                                 "QTableWidget::item { border: none; }")
-        
-        self.table_widget.verticalHeader().setVisible(False)
-        self.table_widget.horizontalHeader().setStretchLastSection(True)
-        self.table_widget.setColumnHidden(6, True)
-        
-
-    def add_order(self, order_id, order_store_data):
-        # 주문을 추가하고 상태를 초기화
-        if order_id in self.order_data:
-            self.order_data[order_id].append(order_store_data)  # 리스트에 추가
-        else:
-            self.order_data[order_id] = [order_store_data] 
-        
-        # 여기서 주문 데이터를 처리하는 로직을 추가할 수 있습니다.
-
-    def update_button_status(self, order_id, status):
-        # 주문 상태 업데이트
-        if order_id not in self.button_status:
-            self.button_status[order_id] = status
-
-    def get_button_status(self, order_id):
-        #return self.order_status.get(order_id, None)
-        return self.button_status.get(order_id, None)
-        
-    def get_table_widget(self):
-        return self.table_widget    
+    def plot(self, x, y):
+        self.ax.clear()  # 이전 그래프 지우기
+        self.ax.plot(x, y, 'r-')  # 그래프 그리기
+        self.ax.set_title('te')
+        self.ax.set_xlabel('Xlabel')
+        self.ax.set_ylabel('Ylabel')
+        self.draw()  # 그래프 새로 그리기
         
         
         
-class SalesWindow():
+class SalesWindow(QMainWindow):
     def __init__(self):
-    
+        super().__init__()
+
+        #self.sales_widget = QWidget(self)
+        #self.sales_layout = QVBoxLayout(self.sales_widget)
+        #self.sales_groupBox = QGroupBox("Sales Group Box")
+
+        #self.button1 = QPushButton("버튼 1")
+        #self.button1.setObjectName("button_sales_1" )
+        #self.button1.setGeometry(20, 60, 100, 30)
+        #self.button1.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding) 
+        #self.button2 = QPushButton("버튼 66")
+        #self.button2.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding) 
+
+        self.stacked_widget = QStackedWidget()
+        self.stacked_widget.setGeometry(400, 100, 550, 400)
+        #self.stacked_widget.setParent(self)
         
-        self.tab_widget = QTabWidget()
-        self.sales_layout = QVBoxLayout(self.tab_widget)
-        self.tab_widget.addTab(QLabel("Content of Tab 1"), "Tab 1")
-        self.tab_widget.addTab(QLabel("Content of Tab 2"), "Tab 2")
-        self.tab_widget.addTab(QLabel("Content of Tab 3"), "Tab 3")
-        #self.tab_widget.hide()
-        #self.setCentralWidget(self.tab_widget)
-       
+        page1 = QWidget()
+        page2 = QWidget()
+        page1_layout = QVBoxLayout(page1)
+        page2_layout = QVBoxLayout(page2)
+
+        canvas = PlotCanvas(page1)
+        canvas2 = PlotCanvas(page2)  # PlotCanvas 생성
+        page1_layout.addWidget(canvas)
+        page2_layout.addWidget(canvas2)
+
+
+        self.stacked_widget.addWidget(page1)
+        self.stacked_widget.addWidget(page2)
+        self.stacked_widget.setParent(self)
+
+
+        x = np.linspace(0, 10, 100)
+        y = np.sin(x)  # y = sin(x)
+        canvas.plot(x, y)  # 그래프 그리기
+
+        x2 = np.linspace(0, 50, 100)
+        y2 = np.sin(x2)  # y = sin(x)
+        canvas2.plot(x2, y2)  # 그래프 그리기
+
+        #self.button1.clicked.connect(lambda: self.show_content(0))
+        #self.button2.clicked.connect(lambda: self.show_content(1))
+        #self.button3.clicked.connect(lambda: self.show_content(2))
+
+    def make_tapwidget(self):
+        self.sales_tabwidget = QTabWidget()
+        self.sales_tabwidget.setParent(self)
+        self.sales_tabwidget.setFixedSize(921, 561)
+        self.sales_tabwidget.move(40, 10)
+
+        self.tab1 = QWidget()
+        self.tab2 = QWidget()
+        self.tab3 = QWidget()  # 3번째 탭
+
+        self.sales_tabwidget.addTab(self.tab1, "Tab 1")
+        self.sales_tabwidget.addTab(self.tab2, "Tab 2")
+        self.sales_tabwidget.addTab(self.tab3, "Tab 3")
+        self.sales_tabwidget.setParent(self)
+        group = self.make_groupbox()
+        group.setParent(self.tab3)
+
+        return self.sales_tabwidget
+
+    def make_groupbox(self):
+        self.sales_groupBox = QGroupBox("Sales Group Box")
+        self.sales_groupBox.setParent(self)
+        self.sales_groupBox.setFixedSize(921, 561)
+        self.sales_groupBox.move(40, 10)
+        #self.groupbox_layout = QHBoxLayout()
+        #self.sales_groupBox.setLayout(self.groupbox_layout)
+        self.make_button(self.sales_groupBox)
+        return self.sales_groupBox
+
+    def make_button(self,sales_groupBox):
         
-        
-    def test(self):
-        self.sales_layout.(self.tab_widget)
-        #self.tab_widget.show()
+        y=60
+        for i in range(4):
             
+            self.button_store = QPushButton(f"버튼_{i}")
+            self.button_store.setObjectName(f"button_store_{i}")
+            self.button_store.setParent(sales_groupBox)
+            #button_layout = QVBoxLayout()
+           
+            self.button_store.setGeometry(20, y, 100, 30)
+            y = y+70
+            #self.groupbox_layout.addWidget(self.button_store)
+            
+            #self.button1.setGeometry(20, 60, 100, 30)
+            #self.button1.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
+
+        #self.button_store.clicked.connect(lambda: self.show_content(i))
+
+
+    def show_content(self, index):
+        self.stacked_widget.setCurrentIndex(index)   
+    
 
     def on_combobox_changed(self):
         # 스토어 이름 변경 시 주문 목록 업데이트
