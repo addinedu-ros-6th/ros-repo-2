@@ -70,6 +70,7 @@ if __name__ == "__main__":
             if not shared_queue.empty():
                 message = shared_queue.get()
                 print(f"Processed message from queue: {message}")
+                
     except KeyboardInterrupt:
         print("Stopping ClientObserver...")
         client1.stop()

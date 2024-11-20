@@ -1,6 +1,6 @@
 from rclpy.node import Node
 from py_trees.behaviour import Behaviour
-from py_trees.common import Access
+from py_trees.common import Status, Access
 from tf_transformations import euler_from_quaternion
 
 from geometry_msgs.msg import Pose
@@ -30,6 +30,9 @@ class LidarModifier(Behaviour):
         self.robot3_pose_subscriber = self.node.create_subscription(Pose, '/robot3/pose', self.pose_callback_robot3, 10)
         
     def update(self):
+        if self.blackboard.exists("scan") == None:
+            return Status.SUCCESS
+        
         original_scan: LaserScan = self.blackboard.scan
         robot1_pose: Pose = self.blackboard.curr_pose
         
@@ -51,6 +54,12 @@ class LidarModifier(Behaviour):
             dy_1 = self.robot2_pose.position.y - robot1_pose.position.y
 
             distance_1 = math.hypot(dx_1, dy_1)
+
+            if distance_1 > 0.26:
+                distance_1 = distance_1 - 0.13
+            else:
+                distance_1 = 0.13
+
             angle_1 = math.atan2(dy_1, dx_1)
 
             # 로봇2 위치에 대한 라이다 값 인덱스
@@ -64,6 +73,12 @@ class LidarModifier(Behaviour):
                 original_scan.ranges[index_1-1] = distance_1 / math.cos(original_scan.angle_increment)
                 original_scan.ranges[index_1-2] = distance_1 / math.cos(original_scan.angle_increment*2)
 
+                original_scan.intensities[index_1] = 1016
+                original_scan.intensities[(index_1+1)%num_readings] = 1016
+                original_scan.intensities[(index_1+2)%num_readings] = 1016
+                original_scan.intensities[(index_1-1)] = 1016
+                original_scan.intensities[(index_1-2)] = 1016
+
                 # print("center index:", index_1)
                 # print("ranges[index_1]:", original_scan.ranges[index_1])
                 # print("ranges[index_1+1]:", original_scan.ranges[(index_1+1)%num_readings])
@@ -74,7 +89,11 @@ class LidarModifier(Behaviour):
         except Exception as e:
             print(e)
 
+            return Status.SUCCESS
+
         self.blackboard.scan = original_scan
+        
+        return Status.SUCCESS
         
     def pose_callback_robot2(self, msg: Pose):
         self.robot2_pose = msg

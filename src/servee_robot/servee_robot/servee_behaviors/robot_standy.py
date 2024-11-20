@@ -32,7 +32,7 @@ class RobotStandy(Behaviour):
             
             self.test_timer = 0
             
-            if self.blackboard.aruco_id_index >= len(self.blackboard.aruco_ids):
+            if self.blackboard.aruco_id_index >= len(self.blackboard.aruco_ids) -1:
                 # 모든 동선을 돌았다. (여기에 홈 추가할 예정.)
                 self.blackboard.robot_state = 'idle'
                 self.node.get_logger().warn(f"standby: idle 변환, 현재 동선: {self.blackboard.goal_poses}")

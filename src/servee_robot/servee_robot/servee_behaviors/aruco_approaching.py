@@ -22,6 +22,8 @@ class ArucoApproaching(Behaviour):
         self.blackboard.register_key(key="marker_detected", access=Access.WRITE)
         self.blackboard.register_key(key="aruco_maker_result", access=Access.READ)
           
+        self.blackboard.register_key(key="aruco_id_index", access=Access.READ)
+        self.blackboard.register_key(key="aruco_ids", access=Access.READ)
         
     def setup(self, **kwargs: Any) -> None:
         self.node:Node = kwargs['node'] 
@@ -36,10 +38,10 @@ class ArucoApproaching(Behaviour):
         )
         
         self.node.declare_parameter(
-            'distance_tolerance_approach', 0.15
+            'distance_tolerance_approach', [0.30, 0.30, 0.30, 0.30, 0.65, 0.65, 0.65, 0.65, 0.80, 0.80, 0.80]
         )
         
-        self.distance_tolerance = self.node.get_parameter(
+        self.distance_tolerance_array = self.node.get_parameter(
             'distance_tolerance_approach'
         ).value
         
@@ -51,7 +53,7 @@ class ArucoApproaching(Behaviour):
 
         self.ang_vel = 0.3
         self.lin_vel = 0.05
-        self.node.get_logger().warn(f"approach self.distance_tolerance : {self.distance_tolerance}")
+        # self.node.get_logger().warn(f"approach self.distance_tolerance : {self.distance_tolerance}")
 
      
     def set_marker_data(self) -> None:
@@ -70,11 +72,17 @@ class ArucoApproaching(Behaviour):
         self.node.get_logger().fatal("approach")
         self.set_marker_data()
         
+        aruco_id = 0
+        aruco_id = self.blackboard.aruco_ids[self.blackboard.aruco_id_index] -5
+        self.distance_tolerance = self.distance_tolerance_array[aruco_id]
+                
         twist = Twist()
         
         # 허용 오처 범위 밖이라면 
         if math.hypot(self.marker_x, self.marker_z) > self.distance_tolerance:
             self.node.get_logger().fatal(f"거리 체크 {math.hypot(self.marker_x, self.marker_z)}")
+            
+            
             
             
             twist.linear.x = self.lin_vel
