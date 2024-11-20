@@ -98,7 +98,7 @@ if __name__ == '__main__':
 # 웹캠 연결 및 프레임 표시: 개별 노트북의 웹캠을 통해 실시간으로 프레임을 가져오며, 상태를 GUI에 표시하고 ESC 키를 통해 종료할 수 있도록 구현
 
 # [INFO] [1731299198.417671473] [table_check_node]: Published: Table 1 Status: Not Empty
-# 1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 14ms/step
+# 1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 14ms/step                 
 # [INFO] [1731299198.456117654] [table_check_node]: Published: Table 2 Status: Not Empty
 # 1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 13ms/step
 # [INFO] [1731299198.494262766] [table_check_node]: Published: Table 3 Status: Not Empty
