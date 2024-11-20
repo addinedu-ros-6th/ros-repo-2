@@ -36,40 +36,44 @@ class LidarModifier(Behaviour):
         # 다른 로봇의 위치 정보를 original_scan에 추가해서 
         # 아래와 같이 수정해서 넣기
 
-        num_readings = 260
+        try:
+            num_readings = 260
 
-        # 로봇1 방향
-        robot1_yaw = euler_from_quaternion([0, 
-                                            0, 
-                                            robot1_pose.orientation.z, 
-                                            robot1_pose.orientation.w])[2]
-        scan_index_from_yaw = int((robot1_yaw - original_scan.angle_min) / original_scan.angle_increment)  # 회전 보상을 위한 라이다 인덱스 값
+            # 로봇1 방향
+            robot1_yaw = euler_from_quaternion([0, 
+                                                0, 
+                                                robot1_pose.orientation.z, 
+                                                robot1_pose.orientation.w])[2]
+            scan_index_from_yaw = int((robot1_yaw - original_scan.angle_min) / original_scan.angle_increment)  # 회전 보상을 위한 라이다 인덱스 값
 
-        # 로봇1 기준 로봇2의 거리와 각도
-        dx_1 = self.robot2_pose.position.x - robot1_pose.position.x
-        dy_1 = self.robot2_pose.position.y - robot1_pose.position.y
+            # 로봇1 기준 로봇2의 거리와 각도
+            dx_1 = self.robot2_pose.position.x - robot1_pose.position.x
+            dy_1 = self.robot2_pose.position.y - robot1_pose.position.y
 
-        distance_1 = math.hypot(dx_1, dy_1)
-        angle_1 = math.atan2(dy_1, dx_1)
+            distance_1 = math.hypot(dx_1, dy_1)
+            angle_1 = math.atan2(dy_1, dx_1)
 
-        # 로봇2 위치에 대한 라이다 값 인덱스
-        index_1 = (int((angle_1 - original_scan.angle_min) / original_scan.angle_increment) - scan_index_from_yaw - 130) % num_readings
+            # 로봇2 위치에 대한 라이다 값 인덱스
+            index_1 = (int((angle_1 - original_scan.angle_min) / original_scan.angle_increment) - scan_index_from_yaw - 130) % num_readings
 
-        # 장애물과의 거리보다 로봇과의 거리가 더 짧을 경우 라이다 값을 조작
-        if distance_1 < original_scan.ranges[index_1]:
-            original_scan.ranges[index_1] = distance_1
-            original_scan.ranges[(index_1+1)%num_readings] = distance_1 / math.cos(original_scan.angle_increment)
-            original_scan.ranges[(index_1+2)%num_readings] = distance_1 / math.cos(original_scan.angle_increment*2)
-            original_scan.ranges[index_1-1] = distance_1 / math.cos(original_scan.angle_increment)
-            original_scan.ranges[index_1-2] = distance_1 / math.cos(original_scan.angle_increment*2)
+            # 장애물과의 거리보다 로봇과의 거리가 더 짧을 경우 라이다 값을 조작
+            if distance_1 < original_scan.ranges[index_1]:
+                original_scan.ranges[index_1] = distance_1
+                original_scan.ranges[(index_1+1)%num_readings] = distance_1 / math.cos(original_scan.angle_increment)
+                original_scan.ranges[(index_1+2)%num_readings] = distance_1 / math.cos(original_scan.angle_increment*2)
+                original_scan.ranges[index_1-1] = distance_1 / math.cos(original_scan.angle_increment)
+                original_scan.ranges[index_1-2] = distance_1 / math.cos(original_scan.angle_increment*2)
 
-            # print("center index:", index_1)
-            # print("ranges[index_1]:", original_scan.ranges[index_1])
-            # print("ranges[index_1+1]:", original_scan.ranges[(index_1+1)%num_readings])
-            # print("ranges[index_1+2]:", original_scan.ranges[(index_1+2)%num_readings])
-            # print("ranges[index_1-1]:", original_scan.ranges[index_1-1])
-            # print("ranges[index_1-2]:", original_scan.ranges[index_1-2])
+                # print("center index:", index_1)
+                # print("ranges[index_1]:", original_scan.ranges[index_1])
+                # print("ranges[index_1+1]:", original_scan.ranges[(index_1+1)%num_readings])
+                # print("ranges[index_1+2]:", original_scan.ranges[(index_1+2)%num_readings])
+                # print("ranges[index_1-1]:", original_scan.ranges[index_1-1])
+                # print("ranges[index_1-2]:", original_scan.ranges[index_1-2])
         
+        except Exception as e:
+            print(e)
+
         self.blackboard.scan = original_scan
         
     def pose_callback_robot2(self, msg: Pose):

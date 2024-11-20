@@ -81,7 +81,7 @@ class AStarPlanner:
         print("Loading map start!")
 
         # 맵 정보를 담고 있는 YAML 파일의 경로를 설정하고 데이터를 로드
-        map_yaml_file = os.path.join(get_package_share_directory('minibot_navigation2'), 'maps', 'map_final_1.yaml')        
+        map_yaml_file = os.path.join(get_package_share_directory('minibot_navigation2'), 'maps', 'map_final_2.yaml')        
         map_yaml_data = yaml.full_load(open(map_yaml_file))
 
         # 맵 해상도(m/픽셀)와 맵의 원점 좌표 설정
