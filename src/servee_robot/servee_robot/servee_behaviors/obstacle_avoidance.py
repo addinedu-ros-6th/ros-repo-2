@@ -22,9 +22,9 @@ class ObstacleAvoidanceMover(Behaviour):
 
         # 파라미터 이름 및 기본값 정의
         parameters_to_use = {
-            "avoidance_lieaner": 0.1,
+            "avoidance_lieaner": 0.15,
             "avoidance_angular": 0.5,
-            "wall_threshold": 0.13
+            "wall_threshold": 0.14
         }
 
         # 파라미터 선언 및 재활용
@@ -128,7 +128,7 @@ class ObstacleAvoidanceMover(Behaviour):
             
             # self.node.get_logger().info(f"좌 우: {direction} : {twist.angular.z}")
             
-        self.node.get_logger().warn(f"{direction}, {void_twist.angular.z}, {self.blackboard.robot_state}") 
+        # self.node.get_logger().warn(f"{direction}, {void_twist.angular.z}, {self.blackboard.robot_state}") 
         self.cmd_vel.publish(void_twist)
         
                 

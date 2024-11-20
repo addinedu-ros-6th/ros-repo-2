@@ -24,10 +24,14 @@ class ArucoAligning(Behaviour):
         self.blackboard.register_key(key="curr_pose", access=Access.READ)
         # self.blackboard.register_key(key="odom_pose", access=Access.READ)
         
+        self.blackboard.register_key(key="aruco_id_index", access=Access.READ)
+        self.blackboard.register_key(key="aruco_ids", access=Access.READ)
         
         self.blackboard.register_key(key='aruco_state', access=Access.WRITE)
         self.blackboard.register_key(key='aruco_state', access=Access.READ)
         
+        
+     
      
     def setup(self, **kwargs: Any) -> None:
         self.node:Node = kwargs['node']   
@@ -44,14 +48,12 @@ class ArucoAligning(Behaviour):
                 10)
             
         self.node.declare_parameter(
-            'distance_tolerance_aligning', 0.15
+            'distance_tolerance_aligning', [0.35, 0.35, 0.35, 0.35, 0.70, 0.70, 0.70, 0.70, 0.80, 0.80, 0.80]
         )
         
-        self.distance_tolerance = self.node.get_parameter(
-            'distance_tolerance_aligning'
-        ).value
+        self.distance_tolerance_array = self.node.get_parameter('distance_tolerance_aligning').value
         
-        self.node.get_logger().warn(f"aligning self.distance_tolerance : {self.distance_tolerance}")
+        # self.node.get_logger().error(f"aligning self.distance_tolerance : {self.distance_tolerance_array}")
 
         
     def set_marker_data(self) -> None:
@@ -70,6 +72,17 @@ class ArucoAligning(Behaviour):
         
         if self.blackboard.marker_detected:
             self.set_marker_data()
+            
+            self.node.get_logger().error(f"index{self.blackboard.aruco_id_index}")
+            self.node.get_logger().error(f"aruco_ids: {self.blackboard.aruco_ids}")
+            
+            aruco_id = 0
+            aruco_id = self.blackboard.aruco_ids[self.blackboard.aruco_id_index] -5
+            self.node.get_logger().error(f"aruco_id: {aruco_id}")
+            self.node.get_logger().error(f"distance_tolerance_array {self.distance_tolerance_array}")
+            self.distance_tolerance = self.distance_tolerance_array[aruco_id]
+            
+            
             
             # 거리
             if math.hypot(self.marker_x, self.marker_z) < self.distance_tolerance:
@@ -92,7 +105,7 @@ class ArucoAligning(Behaviour):
                 
                 self.move_by_distance(distance*1.5)
                 # self.rotate_by_angle(np.sign(self.marker_theta) * math.pi / 4)
-                # self.node.get_logger().fatal(f"마커와 정렬되지 않아 다시 이동합니다. 거리: {distance} 좌표:{self.marker_x}, {self.marker_z}, yaw {abs(self.marker_yaw)}")
+                self.node.get_logger().fatal(f"마커와 정렬되지 않아 다시 이동합니다. 거리: {distance} 좌표:{self.marker_x}, {self.marker_z}, yaw {abs(self.marker_yaw)}")
                 return Status.SUCCESS
                     
         else:

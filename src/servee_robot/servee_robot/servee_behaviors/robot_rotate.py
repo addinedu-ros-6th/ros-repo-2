@@ -28,11 +28,11 @@ class RobotRotate(Behaviour):
         
         self.blackboard.register_key(key='max_angular_speed', access=Access.WRITE)
         self.blackboard.register_key(key='max_angular_speed', access=Access.READ)
-        self.blackboard.max_angular_speed = 0.8
+        self.blackboard.max_angular_speed = 1.25
         
     def setup(self, **kwargs: Any) -> None:
         self.node: Node = kwargs['node']
-        self.pid = RobotPIDController(1, 0.3, 0.05)
+        self.pid = RobotPIDController(0.30, 0.05, 0.01)
         
         
         self.max_angular_speed = self.blackboard.max_angular_speed
@@ -97,8 +97,16 @@ class RobotRotate(Behaviour):
             if self.prev_yaw is not None:
                 yaw_difference = curr_yaw - self.prev_yaw
                 yaw_difference = (yaw_difference + math.pi) % (2 * math.pi) - math.pi
+                
+                prev_error = self.blackboard.odom_yaw_error 
                 self.blackboard.odom_yaw_error -= yaw_difference
                 
+                if abs(prev_error) < abs(self.blackboard.odom_yaw_error):
+                    target_yaw = self.calculate_target_angle()
+                    yaw_error = target_yaw - self.blackboard.yaw
+                    yaw_error = (yaw_error + math.pi) % (2 * math.pi) - math.pi
+                    self.blackboard.odom_yaw_error = yaw_error
+                    
                 # self.node.get_logger().warn(f"현재 odom yaw 오차 {self.blackboard.odom_yaw_error}")
          
             angular_speed = max(min(self.pid.compute(self.blackboard.odom_yaw_error, dt), self.max_angular_speed), -self.max_angular_speed)
@@ -110,20 +118,21 @@ class RobotRotate(Behaviour):
             
             # 제자리 회전
             if abs(self.blackboard.odom_yaw_error) > self.smooth_turn_tolerance:
-                # self.node.get_logger().warn(f"너무 큰 오차 {self.blackboard.odom_yaw_error:.3f} way {self.blackboard.waypoint}")
+                self.node.get_logger().warn(f"너무 큰 오차 {self.blackboard.odom_yaw_error:.3f} way {self.blackboard.waypoint}")
                 self.twist_publish(angular_speed)
                 return Status.FAILURE
             
             # 선회하며 회전
             else:
                 # self.node.get_logger().warn(f"작은 오차 {self.blackboard.odom_yaw_error:.3f} way {self.blackboard.waypoint}")
-                self.twist_publish(angular_speed, 0.05)
+                
+                self.node.get_logger().warn(f"목적지: {self.blackboard.next_pose.position} 현재위치: {self.blackboard.curr_pose.position},  yaw: {self.blackboard.odom_yaw_error}")
+                self.twist_publish(angular_speed)
                 return Status.SUCCESS
                 
     
-    def twist_publish(self, angular_speed, linear_speed = 0.0):
+    def twist_publish(self, angular_speed):
         cmd_msg = Twist()
-        cmd_msg.linear.x = linear_speed
         cmd_msg.angular.z = angular_speed
         self.cmd_vel_publisher.publish(cmd_msg)
     
@@ -148,5 +157,5 @@ class RobotRotate(Behaviour):
             return False
         
         # 로봇이 이동 상태가 아닌 경우
-        if self.blackboard.robot_state not in ['task', 'home', 'aruco']:
+        if self.blackboard.robot_state not in ['task', 'home']:
             return False

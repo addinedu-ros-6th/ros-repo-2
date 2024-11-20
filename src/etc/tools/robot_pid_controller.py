@@ -25,4 +25,9 @@ class RobotPIDController:
         d = self.kd * (error - self.previous_error) / dt if dt > 0 else 0.0
         self.previous_error = error
         
-        return p + i + d
+        if output < 0:
+            output += -0.2
+        elif output > 0:
+            output += 0.2
+        
+        return output
