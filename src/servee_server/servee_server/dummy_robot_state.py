@@ -9,9 +9,9 @@ class TestPublisher(Node):
         super().__init__('test_publisher')
         
         # Pose publisher
-        self.pose_publisher = self.create_publisher(Pose, 'pose', 10)
+        self.pose_publisher = self.create_publisher(Pose, '/robot1/pose', 10)
         # State publisher
-        self.state_publisher = self.create_publisher(String, 'state', 10)
+        self.state_publisher = self.create_publisher(String, '/robot1/state', 10)
 
         # Timer to publish pose data every 0.1 seconds
         self.pose_timer = self.create_timer(0.1, self.publish_pose)
