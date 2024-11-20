@@ -14,22 +14,16 @@ from servee_interfaces.msg import TableState
 model = tf.keras.models.load_model('/home/heechun/dev_ws/ros-repo-2/src/servee_ai/EmptyTable_detector/scripts/1118_model_01.keras')
 
 # 테이블 ROI 설정: (x, y, width, height) 형식으로 4개의 테이블 지정
-# table_rois = {
-#     1: (50, 50, 200, 200),    # 테이블 1
-#     2: (300, 50, 200, 200),   # 테이블 2
-#     3: (50, 300, 200, 200),   # 테이블 3
-#     4: (300, 300, 200, 200)   # 테이블 4
-# }
 
 # table_rois = {
-#     1: (125, 65, 120, 100),    # 테이블 1 (x, y, x2 = x1+w, y2 = y1+h)
+#     1: (125, 65, 120, 100),    # 테이블 1 
 #     2: (420, 70, 125, 100),   # 테이블 2
 #     3: (70, 270, 160, 135),   # 테이블 3
 #     4: (440, 280, 180, 130)   # 테이블 4
 # }
 
 table_rois = {
-    1: (130, 65, 130, 60),    # 테이블 1 (x, y, x2 = x1+w, y2 = y1+h)
+    1: (125, 65, 120, 80),    # 테이블 1 
     2: (420, 75, 130, 70),   # 테이블 2
     3: (70, 270, 160, 125),   # 테이블 3
     4: (450, 280, 170, 110)   # 테이블 4
@@ -49,7 +43,8 @@ class TableCheckNode(Node):
     def __init__(self):
         super().__init__('table_check_node')
         self.publisher_ = self.create_publisher(TableState, 'table_status', 10)
-        self.cap = cv2.VideoCapture(2)  # 로컬 웹캠 연결
+        self.cap = cv2.VideoCapture(0)  # 로컬 웹캠 연결
+        # self.cap = cv2.VideoCapture('/dev/920_cam')  # 로컬 웹캠 연결
         self.timer = self.create_timer(0.1, self.timer_callback)  # 주기적 콜백
 
     def timer_callback(self):
@@ -77,6 +72,10 @@ class TableCheckNode(Node):
 
         # ROS2 메시지 전송
         msg = TableState()
+
+        table_statuses = [bool(status) for status in table_statuses]
+
+
         msg.status = table_statuses
         self.publisher_.publish(msg)
         self.get_logger().info(f'Published: {msg.status}')
