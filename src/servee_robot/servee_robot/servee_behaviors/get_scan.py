@@ -22,6 +22,7 @@ class GetScan(Behaviour):
         super(GetScan, self).__init__(name)
         self.blackboard = self.attach_blackboard_client(name=self.name)
         self.blackboard.register_key(key="scan", access=Access.WRITE)
+        self.blackboard.scan = None
         
     def setup(self, **kwargs: Any) -> None:
         self.node: Node = kwargs['node']

@@ -23,6 +23,7 @@ class ClientObserverWithQueue(ClientObserver):
                             self.shared_queue.put(result)
                         else:
                             print("Shared queue is not initialized.")
+                            
                 except ConnectionResetError:
                     print("Connection lost. Attempting to reconnect...")
                     break
@@ -48,7 +49,7 @@ if __name__ == "__main__":
     try:
         # 서빙
         # time.sleep(3)
-        client1.send_create_command("SE", order_id=1234, store_id=3, table_id=4)
+        client1.send_create_command("SE", order_id=1234, store_id=1, table_id=1)
         time.sleep(3)
         client1.send_update_command("SE", order_id=1234, new_status="waiting_serverbot")
 
@@ -70,6 +71,7 @@ if __name__ == "__main__":
             if not shared_queue.empty():
                 message = shared_queue.get()
                 print(f"Processed message from queue: {message}")
+                
     except KeyboardInterrupt:
         print("Stopping ClientObserver...")
         client1.stop()
