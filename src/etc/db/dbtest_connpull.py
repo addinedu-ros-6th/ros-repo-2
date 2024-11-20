@@ -3,6 +3,7 @@ from mysql.connector import Error
 from datetime import datetime
 from functools import singledispatch
 from mysql.connector import pooling
+import pandas as pd
 class MySQLConnection:
     _instance = None
 
@@ -63,27 +64,6 @@ class MySQLConnection:
     #    if self.connection and self.connection.is_connected():
     #        self.connection.close()
     #        print("MySQL 연결이 닫혔습니다.")
-
-    def get_obstacle_by_time(self,selected_start_time,selected_end_time):
-        sql= f"""
-        SELECT 
-            COALESCE(CAST(DrivingLog.speed AS SIGNED), 'N/A') AS speed, 
-            COALESCE(EventLog.category, 'N/A') AS category,  
-            COALESCE(EventLog.type, 'N/A') AS type, 
-            DrivingLog.time
-        FROM    
-            EventLog 
-        RIGHT JOIN 
-            DrivingLog ON DrivingLog.time = EventLog.occurtime
-        WHERE 
-            DrivingLog.time > '{selected_start_time}' AND 
-            DrivingLog.time < '{selected_end_time}'"""
-        
-
-        print("select_data: ", sql)
-        self.cursor.execute(sql)
-        obstacle_results = self.cursor.fetchall()
-        return obstacle_results
     
 
     def get_store_info(self):
@@ -590,24 +570,40 @@ class MySQLConnection:
             cursor.close()
             connection.close() 
 
+    def get_sales_by_month(self,store_name,year):
+        db_pool = MySQLConnection.getInstance()
+        connection = db_pool.get_connection()
+        cursor = connection.cursor()
 
-# 사용 예시
-#def main():
-    #db = MySQLConnection.getInstance()
-    #db.db_connect("192.168.0.130",3306, "deep_project", "yhc", "1234")
-    #current_time = datetime.now()
 
-    #select query
-    #result = db.select_data("LogMessage",where="id='1'")
-    #if result:
-    #    for row in result:
-    #        print(row)
-    
-    
-   
-    #db.update_data("EventLog",("type",), ("test",), where="category='장애물'")
-
-#    db.close_connection()
+        sql= f"""
+        SELECT 
+            SUM(m.price * od.quantity) AS total_amount,
+            DATE_FORMAT(oc.call_time, '%Y-%m') AS order_month
+        FROM 
+            OrderCalls AS oc
+        JOIN 
+            OrderDetails AS od ON oc.order_id = od.order_id
+        JOIN 
+            Menus AS m ON od.menu_id = m.menu_id
+        JOIN 
+            Stores AS s ON m.store_id = s.store_id
+        WHERE 
+            s.name = '{store_name}'
+            AND YEAR(oc.call_time) = '{year}' 
+        GROUP BY 
+            order_month
+        ORDER BY 
+            order_month;
+            """
+        try:
+            df = pd.read_sql_query(sql, connection)
+            return df
+        except Exception as e:
+            print(f"쿼리 실행 중 오류: {e}")
+        finally:
+            cursor.close()  # 커서 닫기
+            connection.close() 
 
         #임시
     def get_store_name(self):
@@ -633,7 +629,7 @@ def main():
     
     
     #dbm.insert_orderdetails(90,1,2)
-    test=dbm.get_order_store_details_temp(231,"마파궁전")
+    test=dbm.get_sales_by_month("마파궁전","2024")
 
     print(test)
     

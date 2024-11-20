@@ -22,7 +22,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
-
+import matplotlib.ticker as ticker
 
 
 #import mplcursors
@@ -48,121 +48,138 @@ order_queue = queue.Queue()
 
 class PlotCanvas(FigureCanvas):
     def __init__(self, parent=None):
-        fig = Figure()
+        fig = Figure(figsize=(16, 6))
         self.ax = fig.add_subplot(111)
         super().__init__(fig)
         self.setParent(parent)
 
     def plot(self, x, y):
-        self.ax.clear()  # 이전 그래프 지우기
-        self.ax.plot(x, y, 'r-')  # 그래프 그리기
-        self.ax.set_title('te')
+        self.ax.clear()
+        self.ax.bar(x ,y, color='skyblue')  # 이전 그래프 지우기
+        #self.ax.plot(x, y)  # 그래프 그리기
+        self.ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda val, pos: f'{int(val):,}'))
+        #self.ax.set_title('te')
         self.ax.set_xlabel('Xlabel')
-        self.ax.set_ylabel('Ylabel')
+        self.ax.set_ylabel('매출액(월)')
         self.draw()  # 그래프 새로 그리기
-        
         
         
 class SalesWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-
+        self.sales_groupBox = QGroupBox()
         #self.sales_widget = QWidget(self)
-        #self.sales_layout = QVBoxLayout(self.sales_widget)
-        #self.sales_groupBox = QGroupBox("Sales Group Box")
 
-        #self.button1 = QPushButton("버튼 1")
-        #self.button1.setObjectName("button_sales_1" )
-        #self.button1.setGeometry(20, 60, 100, 30)
-        #self.button1.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding) 
-        #self.button2 = QPushButton("버튼 66")
-        #self.button2.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding) 
-
+        self.dbm = MySQLConnection.getInstance()
         self.stacked_widget = QStackedWidget()
         self.stacked_widget.setGeometry(400, 100, 550, 400)
-        #self.stacked_widget.setParent(self)
+    
+
+    def make_stackedwidget(self,sales_groupBox, x,y,w,h):
+        self.sales_stackedwidget = QStackedWidget()
+        self.sales_stackedwidget.setParent(self)
+        self.sales_stackedwidget.setGeometry(x,y,w,h)
         
-        page1 = QWidget()
-        page2 = QWidget()
-        page1_layout = QVBoxLayout(page1)
-        page2_layout = QVBoxLayout(page2)
+        self.sales_stackedwidget.setParent(sales_groupBox)
 
-        canvas = PlotCanvas(page1)
-        canvas2 = PlotCanvas(page2)  # PlotCanvas 생성
-        page1_layout.addWidget(canvas)
-        page2_layout.addWidget(canvas2)
+        results=self.dbm.get_stores()
 
+        for index, name in enumerate(results):
+            print(name[0])
+            self.store_stacked = PlotCanvas()
+            self.store_stacked.setObjectName(f"stacked_{str(index)}")
+            #self.button_store.setParent(sales_groupBox)
+            self.sales_stackedwidget.addWidget(self.store_stacked)
 
-        self.stacked_widget.addWidget(page1)
-        self.stacked_widget.addWidget(page2)
-        self.stacked_widget.setParent(self)
+        return self.sales_stackedwidget
+    
 
+    def make_graph(self, sales_groupbox, x,y,w,h):
+        
+        date_year=self.sales_by_month_year.currentText()
 
-        x = np.linspace(0, 10, 100)
-        y = np.sin(x)  # y = sin(x)
-        canvas.plot(x, y)  # 그래프 그리기
+        year = date_year.strip().replace('년', '')
+        df=self.dbm.get_sales_by_month(self.button_text,year)
+        
+        self.graph_widget = QWidget()
+        graph_layout = QVBoxLayout()  # 그래프 위젯의 레이아웃 생성
+        self.graph_widget.setLayout(graph_layout)
+        
+        self.sales_graph = PlotCanvas()
+        
+        total_amount = df["total_amount"]
+        month = df["order_month"]
 
-        x2 = np.linspace(0, 50, 100)
-        y2 = np.sin(x2)  # y = sin(x)
-        canvas2.plot(x2, y2)  # 그래프 그리기
+        self.sales_graph.plot(month,total_amount)
+        graph_layout.addWidget(self.sales_graph, stretch=1) 
+        self.graph_widget.setGeometry(x,y,w,h)
+        
+        self.sales_graph.setParent(self.graph_widget)
+        self.graph_widget.setParent(sales_groupbox)
+        
+        self.graph_widget.show()
 
-        #self.button1.clicked.connect(lambda: self.show_content(0))
-        #self.button2.clicked.connect(lambda: self.show_content(1))
-        #self.button3.clicked.connect(lambda: self.show_content(2))
-
-    def make_tapwidget(self):
-        self.sales_tabwidget = QTabWidget()
-        self.sales_tabwidget.setParent(self)
-        self.sales_tabwidget.setFixedSize(921, 561)
-        self.sales_tabwidget.move(40, 10)
-
-        self.tab1 = QWidget()
-        self.tab2 = QWidget()
-        self.tab3 = QWidget()  # 3번째 탭
-
-        self.sales_tabwidget.addTab(self.tab1, "Tab 1")
-        self.sales_tabwidget.addTab(self.tab2, "Tab 2")
-        self.sales_tabwidget.addTab(self.tab3, "Tab 3")
-        self.sales_tabwidget.setParent(self)
-        group = self.make_groupbox()
-        group.setParent(self.tab3)
-
-        return self.sales_tabwidget
-
-    def make_groupbox(self):
-        self.sales_groupBox = QGroupBox("Sales Group Box")
+    def make_groupbox(self, x,y,w,h):
+        
+        
         self.sales_groupBox.setParent(self)
-        self.sales_groupBox.setFixedSize(921, 561)
-        self.sales_groupBox.move(40, 10)
-        #self.groupbox_layout = QHBoxLayout()
-        #self.sales_groupBox.setLayout(self.groupbox_layout)
-        self.make_button(self.sales_groupBox)
+        #elf.sales_groupBox.setGeometry(40,10,921,561)
+        self.sales_groupBox.setGeometry(x,y,w,h)
+        self.sales_groupBox.setStyleSheet("background-color: lightblue;")
+        self.store_label = QLabel()
+        self.store_label.setStyleSheet("background-color: transparent; color: black;")
+        self.store_label.setGeometry(650,3,200,80)
+        self.store_label.setParent(self.sales_groupBox)
+        #self.make_button(self.sales_groupBox,)
         return self.sales_groupBox
 
-    def make_button(self,sales_groupBox):
+    def make_button_search_by_month(self,sales_groupBox, x,y,w,h):
         
-        y=60
-        for i in range(4):
+
+        self.search_by_month_year = QPushButton("검색")
+        self.search_by_month_year.setObjectName(f"search_by_month_year")
+        self.search_by_month_year.setGeometry(x, y, w, h)
+
+        self.search_by_month_year.setParent(sales_groupBox)
+        
+        self.search_by_month_year.clicked.connect(partial(self.make_graph,self.sales_groupBox,350,50,741,251))
+
+    def make_combobox_by_month(self,sales_groupBox, x,y,w,h):
+        self.sales_by_month_year = QComboBox()
+        self.sales_by_month_year.setObjectName(f"combo_by_month_year")
+        self.sales_by_month_year.setGeometry(x, y, w, h)
+        for i in range(2015,2025):
+            self.sales_by_month_year.addItem(f"{i}년")
+
+        self.sales_by_month_year.setParent(sales_groupBox)
+
+        
+
+    def make_store_button(self,sales_groupBox, x,y,w,h,addwidth):
+
+        results=self.dbm.get_stores()
+
+        for name in results:
             
-            self.button_store = QPushButton(f"버튼_{i}")
-            self.button_store.setObjectName(f"button_store_{i}")
+            self.button_store = QPushButton(name[0])
+            self.button_store.setObjectName(f"button_store_{str(name[0])}")
             self.button_store.setParent(sales_groupBox)
             #button_layout = QVBoxLayout()
-           
-            self.button_store.setGeometry(20, y, 100, 30)
-            y = y+70
-            #self.groupbox_layout.addWidget(self.button_store)
             
-            #self.button1.setGeometry(20, 60, 100, 30)
-            #self.button1.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+            self.button_store.setGeometry(x, y, w, h)
+            y = y+addwidth
 
+            self.button_store.clicked.connect(partial(self.store_button_state, self.button_store))
+        self.button_store.setText
 
-        #self.button_store.clicked.connect(lambda: self.show_content(i))
-
-
-    def show_content(self, index):
-        self.stacked_widget.setCurrentIndex(index)   
-    
+    def store_button_state(self, button_state):
+        self.button_text = button_state.text()
+        self.store_label.setText(f"{self.button_text}의 월 매출현황")
+        #self.box = self.make_groupbox(40,10,1021,561)
+        #self.button = self.make_button(self.box, 20,60,120,60,100)
+        #self.graph = self.make_graph(self.sales_groupBox, 450,50,541,251)
+        #self.box.setParent(self.sales_groupBox)
+        #self.graph.show()
 
     def on_combobox_changed(self):
         # 스토어 이름 변경 시 주문 목록 업데이트

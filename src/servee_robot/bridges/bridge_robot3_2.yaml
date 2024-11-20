@@ -2,6 +2,6 @@ name: bridge_robot3_2
 from_domain: 83
 to_domain: 82
 topics:
-  servee/pose:
+  robot3/pose:
     type: geometry_msgs/msg/Pose
     remap: servee/robot3/pose
