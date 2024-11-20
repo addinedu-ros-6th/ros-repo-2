@@ -33,7 +33,7 @@ class ArucoSearch(Behaviour):
     def setup(self, **kwargs: Any) -> None:
         
         self.node:Node = kwargs['node']
-        self.ang_vel = (self.blackboard.max_angular_speed - 0.35)
+        self.ang_vel = (self.blackboard.max_angular_speed - 1.00)
         self.rotation_count = 0
         
         self.node.declare_parameter(

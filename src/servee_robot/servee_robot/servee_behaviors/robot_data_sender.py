@@ -17,9 +17,12 @@ class RobotDataSender(Behaviour):
         self.blackboard.register_key(key="robot_state", access=Access.READ)
         self.blackboard.register_key(key="curr_pose", access=Access.READ)
         self.blackboard.register_key(key="curr_pose", access=Access.WRITE)
+        self.blackboard.register_key(key="home_pose", access=Access.WRITE)
+        self.blackboard.register_key(key="home_aruco_id", access=Access.WRITE)
         
     def setup(self, **kwargs):
         self.node : Node = kwargs['node']
+        self.node.declare_parameter('home_aruco_id', 9)
         
         self.node.declare_parameter('home_position_x', 0.025)
         self.node.declare_parameter('home_position_y', 0.200)
@@ -29,6 +32,9 @@ class RobotDataSender(Behaviour):
         self.node.declare_parameter('home_orientation_z', -0.00416502)
         self.node.declare_parameter('home_orientation_w', 1.000)
 
+
+        self.blackboard.home_aruco_id = self.node.get_parameter('home_aruco_id').value
+        
         self.init_p_x = self.node.get_parameter('home_position_x').get_parameter_value().double_value
         self.init_p_y = self.node.get_parameter('home_position_y').get_parameter_value().double_value
         
@@ -71,11 +77,12 @@ class RobotDataSender(Behaviour):
     
     
     def init_pose(self):
-        self.node.get_logger().warn("init_pose")
+        
         time.sleep(1)
         pose = PoseWithCovarianceStamped()
         pose.header.stamp = self.node.get_clock().now().to_msg()
         pose.header.frame_id = "map"
+
 
         # 위치 설정
         pose.pose.pose.position.x = self.init_p_x
@@ -88,6 +95,12 @@ class RobotDataSender(Behaviour):
         pose.pose.pose.orientation.w = self.init_o_w
         
         # self.blackboard.curr_pose = pose.pose.pose
+        home_pose = Pose()
+        home_pose.position.x = pose.pose.pose.position.x
+        home_pose.position.y = pose.pose.pose.position.y
+
+        self.blackboard.home_pose = home_pose
+        self.node.get_logger().warn(f"init_pose {home_pose}")
         self.publisher_init.publish(pose)
     
     
@@ -115,7 +128,14 @@ class RobotDataSender(Behaviour):
                 robot_state.data = "running2"
                 
             elif self.blackboard.aruco_id_index == 2:
-                robot_state.data = "returning_home"    
+                robot_state.data = "returning_home"   
+                
+        elif self.blackboard.robot_state == "standy":
+            if self.blackboard.aruco_id_index == 0:
+                robot_state.data = "standby1"
+                
+            elif self.blackboard.aruco_id_index == 1:
+                robot_state.data = "standby2"
                 
         
         # "idle"

@@ -102,6 +102,7 @@ class Server:
 
     def start(self):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server_socket.bind((self.host, self.port))
         self.server_socket.listen(5)
         print(f"Server running on {self.host}:{self.port}...")
@@ -115,7 +116,12 @@ class Server:
     def stop(self):
         self.running = False
         if self.server_socket:
-            self.server_socket.close()
+            try:
+                self.server_socket.shutdown(socket.SHUT_RDWR)  # 읽기/쓰기 중단
+            except OSError:
+                pass  # 이미 닫힌 소켓 예외 무시
+            finally:
+                self.server_socket.close()  # 소켓 닫기
 
 # ------------------- commands -------------------
 class Command(ABC):

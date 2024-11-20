@@ -4,6 +4,7 @@ from rclpy.node import Node
 from py_trees.behaviour import Behaviour
 from py_trees.common import Status, Access
 from servee_interfaces.msg import TaskGoalData
+from geometry_msgs.msg import Pose
 
 class ReceiveGoal(Behaviour):
     
@@ -14,8 +15,13 @@ class ReceiveGoal(Behaviour):
         self.blackboard.register_key(key="goal_pose", access=Access.WRITE)
         self.blackboard.register_key(key="robot_state", access=Access.READ)
         self.blackboard.register_key(key="robot_state", access=Access.WRITE)
+        
         self.blackboard.register_key(key="aruco_ids", access=Access.WRITE)
         self.blackboard.register_key(key="aruco_id_index", access=Access.WRITE)
+        self.blackboard.register_key(key="home_aruco_id", access=Access.READ)
+        
+        self.blackboard.register_key(key='odom_yaw_error', access=Access.WRITE)
+        self.blackboard.register_key(key="home_pose", access=Access.READ)
         
     def setup(self, **kwargs: Any) -> None:
         self.node: Node = kwargs['node']
@@ -33,11 +39,26 @@ class ReceiveGoal(Behaviour):
         else:
             return Status.RUNNING
         
-    def callback(self, msg):    
-        self.blackboard.goal_poses = msg.goal_poses
-        self.blackboard.aruco_ids = msg.aruco_id
-        self.blackboard.aruco_id_index = 0
+    def callback(self, msg): 
+
+        goal_poses = msg.goal_poses  # PoseArray 타입이라고 가정
+
+        # home_pose를 Pose 객체로 추가
+        home_pose = self.blackboard.home_pose
+
+        # PoseArray의 poses 필드에 추가
+        goal_poses.poses.append(home_pose)
+
         
+        
+        aruco_ids = msg.aruco_id
+        aruco_ids.append(self.blackboard.home_aruco_id)
+        
+        self.blackboard.goal_poses = goal_poses
+        self.blackboard.aruco_ids = aruco_ids
+
+        self.blackboard.aruco_id_index = 0
+        self.blackboard.odom_yaw_error = 0.0
         self.node.get_logger().info(f"배열로 받은 목적지 {self.blackboard.goal_poses}")
         
         self.blackboard.goal_pose = self.blackboard.goal_poses.poses[0]

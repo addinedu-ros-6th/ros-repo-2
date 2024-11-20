@@ -46,6 +46,7 @@ class MoveForward(Behaviour):
         cmd_msg = Twist()
         cmd_msg.linear.x = self.max_linear_speed
         self.cmd_vel_publisher.publish(cmd_msg)
+        
         return Status.SUCCESS
     
     

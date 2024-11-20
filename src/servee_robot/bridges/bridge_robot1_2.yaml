@@ -4,4 +4,4 @@ to_domain: 82
 topics:
   robot1/pose:
     type: geometry_msgs/msg/Pose
-    remap: servee/robot1/pose
+    remap: robot1/pose

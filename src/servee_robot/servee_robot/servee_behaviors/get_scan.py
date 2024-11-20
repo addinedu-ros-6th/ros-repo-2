@@ -31,7 +31,7 @@ class GetScan(Behaviour):
         qos_profile_sensor_data = QoSProfile(
             reliability=QoSReliabilityPolicy.BEST_EFFORT,  # RELIABILITY를 BEST_EFFORT로 설정
             history=QoSHistoryPolicy.KEEP_LAST,
-            depth=10
+            depth=100
         )
         self.node.create_subscription(
             LaserScan,

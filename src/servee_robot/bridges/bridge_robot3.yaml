@@ -2,10 +2,10 @@ name: bridge_robot3
 from_domain: 83
 to_domain: 80
 topics:
-  robot3/pose:
+  robot1/pose:
     type: geometry_msgs/msg/Pose
     remap: robot3/pose
   
-  robot3/state:
+  robot1/state:
     type: std_msgs/msg/String
     remap: robot3/state
