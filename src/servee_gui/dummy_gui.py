@@ -1,4 +1,4 @@
-from observer_subscriber import ClientObserver
+from observer_subscriber_ac import ClientObserver
 import threading
 import time
 import queue
@@ -8,31 +8,31 @@ import socket
 class ClientObserverWithQueue(ClientObserver):
     def __init__(self, host, port, shared_queue):
         super().__init__(host, port, shared_queue)
-
+        
     def receive_updates(self):
-        # Continuously receive notifications from the server
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
-            client_socket.connect((self.host, self.port))
-            print("Connected to server for receiving updates.")
-            while self.running:
-                try:
-                    message = client_socket.recv(1024).decode('utf-8')
-                    if message:
-                        result = self.parse_message(message)
-                        if self.shared_queue:  # Check if shared_queue is valid
-                            self.shared_queue.put(result)
-                        else:
-                            print("Shared queue is not initialized.")
-                except ConnectionResetError:
-                    print("Connection lost. Attempting to reconnect...")
-                    break
-                except queue.Full:
-                    print("Shared queue is full. Message dropped.")
-                except Exception as e:
-                    print(f"An error occurred while receiving updates: {e}")
+            with self.tls_context.wrap_socket(client_socket, server_hostname=self.host) as tls_socket:
+                tls_socket.connect((self.host, self.port))
+                print("Connected to server for receiving updates.")
+                while self.running:
+                    try:
+                        message = tls_socket.recv(1024).decode('utf-8')
+                        if message:
+                            result = self.parse_message(message)
+                            if self.shared_queue:  # Check if shared_queue is valid
+                                self.shared_queue.put(result)
+                            else:
+                                print("Shared queue is not initialized.")
+                    except ConnectionResetError:
+                        print("Connection lost. Attempting to reconnect...")
+                        break
+                    except queue.Full:
+                        print("Shared queue is full. Message dropped.")
+                    except Exception as e:
+                        print(f"An error occurred while receiving updates: {e}")
 
 if __name__ == "__main__":
-    host = "localhost"
+    host = "192.168.0.155"
     port = 9999
 
     # Initialize the shared queue
@@ -47,7 +47,7 @@ if __name__ == "__main__":
     # Example usage of available methods
     try:
         # 서빙
-        # time.sleep(3)
+        time.sleep(3)
         client1.send_create_command("SE", order_id=1234, store_id=3, table_id=4)
         time.sleep(3)
         client1.send_update_command("SE", order_id=1234, new_status="waiting_serverbot")

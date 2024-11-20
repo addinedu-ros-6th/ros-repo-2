@@ -11,7 +11,7 @@ import time
 import math
 from datetime import datetime
 import re
-from .observer_publisher import Server, ServingInstance, RetrievalInstance, Command, \
+from .observer_publisher_ac import Server, ServingInstance, RetrievalInstance, Command, \
     CreateInstanceCommand, UpdateStatusCommand, DeleteInstanceCommand, DBManager
 
 class Robot:
@@ -185,7 +185,7 @@ class RobotTask(Node):
         # Check for 'Server' robots and assign serving tasks if available
         available_serverbots = [r for r in self.robots.values() if r.robot_type == 'Server' and not r.assigned_task_id]
         available_retrieverbots = [r for r in self.robots.values() if r.robot_type == 'Retriever' and not r.assigned_task_id]
-        print(f"assign_tasks: {available_serverbots}")
+        # print(f"assign_tasks: {available_serverbots}")
         
         if self.serving_task_queue and available_serverbots:
             order = self.serving_task_queue.get()  # Get the position of the first task
@@ -313,7 +313,7 @@ class RobotTask(Node):
 
 def main(args=None):
 
-    host = "localhost"
+    host = "192.168.0.155"
     port = 9999
 
     db_manager = DBManager(
