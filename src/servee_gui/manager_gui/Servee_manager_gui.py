@@ -338,11 +338,19 @@ class ManagerGUI(QMainWindow, ui_info):
                 store_earning.setTextAlignment(Qt.AlignCenter)
                 self.table_stores_status.setItem(store_id-1, 2, store_earning)
         elif index ==2:
-            group = self.sales_test.make_groupbox()
+            self.box = self.sales_test.make_groupbox(130,10,821,561)
+            self.sales_test.make_store_button(self.box, 20,60,120,60,100)
 
-            self.sales_tabwidget.setParent(self.tab_manager)
-            group.setParent(self.tab_sales_overview)
-            
+            self.sales_test.make_combobox_by_month(self.box, 300,60,60,60)
+            self.sales_test.make_button_search_by_month(self.box, 300,150,60,60)
+
+            self.box.setParent(self)
+
+            #self.tab_sales_overview.setParent(self.tab_manager)
+            self.box.setParent(self.tab_sales_overview)
+
+
+            self.box.show()
     # 로봇 현황 더블클릭 콜백
     def table_robot_dclicked(self, row, column):
         def date_start_callback():

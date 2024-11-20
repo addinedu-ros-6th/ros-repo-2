@@ -23,8 +23,6 @@ from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 
-
-
 #import mplcursors
 from datetime import datetime
 
@@ -236,12 +234,15 @@ class MainWindow(QMainWindow):
         return self.sales_groupBox
 
     def test(self):
-        
-        self.box = self.salesWindow.make_tapwidget()
+    
+        self.box = self.salesWindow.make_groupbox(40,10,1021,561)
+        self.salesWindow.make_store_button(self.box, 20,60,120,60,100)
+    
+        self.salesWindow.make_combobox_by_month(self.box, 300,60,60,60)
+        self.salesWindow.make_button_search_by_month(self.box, 300,150,60,60)
+
         self.box.setParent(self)
-        #self.box = self.make_box()
-       #self.box.setParent(self.sales_groupBox)
-  
+  #
         self.box.show()
         
     def on_combobox_changed(self):
