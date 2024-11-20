@@ -1,10 +1,6 @@
 from rclpy.node import Node
 from py_trees.behaviour import Behaviour
-<<<<<<< HEAD
 from py_trees.common import Status, Access
-=======
-from py_trees.common import Access, Status
->>>>>>> 0a6ad589f7401c53755567db01ef2cad65a33c14
 from tf_transformations import euler_from_quaternion
 
 from geometry_msgs.msg import Pose
@@ -96,10 +92,7 @@ class LidarModifier(Behaviour):
             return Status.SUCCESS
 
         self.blackboard.scan = original_scan
-<<<<<<< HEAD
-
-=======
->>>>>>> 0a6ad589f7401c53755567db01ef2cad65a33c14
+        
         return Status.SUCCESS
         
     def pose_callback_robot2(self, msg: Pose):
