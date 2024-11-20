@@ -66,10 +66,7 @@ class RequestPath(Behaviour):
         if self.blackboard.robot_state in ["task", "home", "aruco"]:
             return True
 
-        
-        
-   
-   
+
 class RequestPathPublisher(Node):
     def __init__(self):
         super().__init__("request_path_publisher_node")
