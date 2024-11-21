@@ -80,29 +80,27 @@ class RobotStandy(Behaviour):
         self.test_timer += 1
         
         if self.test_timer >= 50:
-            
-            if self.blackboard.aruco_id_index >= len(self.blackboard.aruco_ids) -1:
-                self.blackboard.robot_state = 'idle'
-                self.node.get_logger().warn(f"standby: idle 변환, 현재 동선: {self.blackboard.goal_poses}")
-
-            else:
-                self.test_timer = 0
-                self.request_next_path()
+            self.test_timer = 0
+            self.request_next_path()
+        
              
-           
         # 쿨타임 체크     
         else:
             self.test_timer += 1
 
-        
 
-        
     def update(self):
         # 현재 상태 확인하고 
         if self.blackboard.robot_state not in ['standy']:
             return Status.FAILURE
         
-        self.is_serving_complete()
+        if self.blackboard.aruco_id_index >= len(self.blackboard.aruco_ids) -1:
+            self.blackboard.robot_state = 'idle'
+            self.node.get_logger().warn(f"standby: idle 변환, 현재 동선: {self.blackboard.goal_poses}")
+            
+        else:
+            self.is_serving_complete()
+            
         return Status.SUCCESS
         
 

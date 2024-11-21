@@ -113,9 +113,9 @@ def move_to_goal():
     avoid = obstacle_avoidance.ObstacleAvoidanceMover("obstacle_avoidance_node")
     
     go = Sequence("Forward", memory=False)
-    go.add_children([avoid, rotate, forward])
+    go.add_children([human_stop_and_go, avoid, rotate, forward])
     
-    movement.add_children([human_check, waypoint_check, go])
+    movement.add_children([waypoint_check, go])
     
     return movement
 
