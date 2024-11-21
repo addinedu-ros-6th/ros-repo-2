@@ -410,7 +410,7 @@ class MainWindow(QMainWindow):
                 time.sleep(0.03)   
 
     def update_ordertable(self,results):
-        
+        time.sleep(2)
         print("업데이트 오더테이블 : ", results)
 
         command_type = results.split(',')[0]
