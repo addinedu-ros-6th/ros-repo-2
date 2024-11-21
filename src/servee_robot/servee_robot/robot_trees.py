@@ -16,7 +16,7 @@ from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
 import sensor_msgs.msg
 from servee_interfaces.msg import TaskGoalPose, ResPath
-from servee_robot.servee_behaviors import led_flasher, request_path, response_path, get_curr_pose, receive_goal, move_forward, robot_rotate, waypoint_arrival_checker, obstacle_avoidance, get_scan, picam_to_blackboard, image_sender, arucomaker_transformer,aruco_search, aruco_aligning, aruco_yawing, aruco_approaching, robot_data_sender, robot_standy, lidar_modifier
+from servee_robot.servee_behaviors import led_flasher, request_path, response_path, get_curr_pose, receive_goal, move_forward, robot_rotate, waypoint_arrival_checker, obstacle_avoidance, get_scan, picam_to_blackboard, image_sender, arucomaker_transformer,aruco_search, aruco_aligning, aruco_yawing, aruco_approaching, robot_data_sender, robot_standy, lidar_modifier, human_stop_and_go
 
 from rclpy.qos import QoSProfile
 from rclpy.qos import QoSReliabilityPolicy, QoSHistoryPolicy
@@ -103,6 +103,8 @@ def move_to_goal():
         - 
     """
     movement = Sequence("Movement", memory=False)
+    human_check =  human_stop_and_go.HumanStopAndGo("human_stop_and_go_node")
+    
     waypoint_check = waypoint_arrival_checker.WaypointArrivalChecker("waypoint_check_node")
         
     rotate = robot_rotate.RobotRotate("robot_ratate_node")
@@ -113,7 +115,7 @@ def move_to_goal():
     go = Sequence("Forward", memory=False)
     go.add_children([avoid, rotate, forward])
     
-    movement.add_children([waypoint_check, go])
+    movement.add_children([human_check, waypoint_check, go])
     
     return movement
 

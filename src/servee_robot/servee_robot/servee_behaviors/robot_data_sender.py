@@ -19,6 +19,7 @@ class RobotDataSender(Behaviour):
         self.blackboard.register_key(key="curr_pose", access=Access.WRITE)
         self.blackboard.register_key(key="home_pose", access=Access.WRITE)
         self.blackboard.register_key(key="home_aruco_id", access=Access.WRITE)
+        self.blackboard.register_key(key="robot_type", access=Access.WRITE)
         
     def setup(self, **kwargs):
         self.node : Node = kwargs['node']
@@ -31,10 +32,10 @@ class RobotDataSender(Behaviour):
         self.node.declare_parameter('home_orientation_y', 0.0)
         self.node.declare_parameter('home_orientation_z', -0.00416502)
         self.node.declare_parameter('home_orientation_w', 1.000)
-
+        self.node.declare_parameter("robot_type", "serving")
 
         self.blackboard.home_aruco_id = self.node.get_parameter('home_aruco_id').value
-        
+    
         self.init_p_x = self.node.get_parameter('home_position_x').get_parameter_value().double_value
         self.init_p_y = self.node.get_parameter('home_position_y').get_parameter_value().double_value
         
@@ -42,6 +43,9 @@ class RobotDataSender(Behaviour):
         self.init_o_y = self.node.get_parameter('home_orientation_y').get_parameter_value().double_value
         self.init_o_z = self.node.get_parameter('home_orientation_z').get_parameter_value().double_value
         self.init_o_w = self.node.get_parameter('home_orientation_w').get_parameter_value().double_value
+
+        
+        self.blackboard.robot_type = self.node.get_parameter("robot_type").value
         self.blackboard.curr_pose = None
         
         self.publisher_init = self.node.create_publisher(
