@@ -338,17 +338,22 @@ class ManagerGUI(QMainWindow, ui_info):
                 store_earning.setTextAlignment(Qt.AlignCenter)
                 self.table_stores_status.setItem(store_id-1, 2, store_earning)
         elif index ==2:
-            self.box = self.sales_test.make_groupbox(130,10,821,561)
-            self.sales_test.make_store_button(self.box, 20,60,120,60,100)
+            
+            self.box = self.sales_test.make_groupbox(40,10,821,631)
 
-            self.sales_test.make_combobox_by_month(self.box, 300,60,60,60)
-            self.sales_test.make_button_search_by_month(self.box, 300,150,60,60)
-
-            self.box.setParent(self)
-
-            #self.tab_sales_overview.setParent(self.tab_manager)
-            self.box.setParent(self.tab_sales_overview)
-
+            #self.sales_test.make_store_button(self.box, 20,60,120,60,100)
+#
+            #self.sales_test.make_label_month(650,-20,200,80)
+            #self.sales_test.make_combobox_by_month(self.box, 300,60,80,60)
+            #self.sales_test.make_button_search_by_month(self.box, 300,150,80,60,400,50,741,251)
+            #self.sales_test.make_graph_month(self.box,400,50,741,251)
+#
+            #self.sales_test.make_label_day(650,290,200,80)
+            #self.sales_test.make_combobox_year_by_day(self.box, 300,360,80,60)
+            #self.sales_test.make_combobox_month_by_day(self.box, 300,450,80,60)
+            #self.sales_test.make_button_search_by_day(self.box, 300,540,80,60,400,360,741,251)
+            #self.sales_test.make_graph_day(self.box,400,360,741,251)
+#
 
             self.box.show()
     # 로봇 현황 더블클릭 콜백

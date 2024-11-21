@@ -86,66 +86,6 @@ class SalesWindow(QMainWindow):
 
         self.button_text ="마파궁전"
         
-    def make_label_month(self,x,y,w,h):
-        self.store_label = QLabel()
-        self.store_label.setStyleSheet("background-color: transparent; color: black;")
-        self.store_label.setGeometry(x,y,w,h)
-        self.store_label.setParent(self.sales_groupBox)
-        self.store_label.setText(f"{self.button_text}의 월 매출현황")
-    
-    def make_graph_month(self, sales_groupbox,gx,gy,gw,gh):
-       
-        print(self.button_text)
-        date_year=self.sales_by_month_year.currentText()
-
-        year = date_year.strip().replace('년', '')
-        df=self.dbm.get_sales_by_month(self.button_text,year)
-        print(df)
-        
-        #graph_layout = QVBoxLayout()  # 그래프 위젯의 레이아웃 생성
-        #self.graph_widget.setLayout(graph_layout)
-        self.graph_widget = QWidget()
-        self.sales_graph = PlotCanvas()
-        
-        total_amount = df["total_amount"]
-        month = df["order_month"]
-
-        self.sales_graph.plot(month,total_amount)
-        
-        #graph_layout.addWidget(self.sales_graph, stretch=1) 
-        #self.graph_widget.setGeometry(x,y,w,h)
-        
-        self.sales_graph.setParent(self.graph_widget)
-        self.graph_widget.setParent(sales_groupbox)
-        self.graph_widget.setGeometry(gx,gy,gw,gh)
-        self.graph_widget.show()
-
-    def make_default_graph_month(self, sales_groupbox,gx,gy,gw,gh):
-       
-        date_year=self.sales_by_month_year.currentText()
-
-        year = date_year.strip().replace('년', '')
-        df=self.dbm.get_sales_by_month(self.button_text,year)
-        print(df)
-        
-        #graph_layout = QVBoxLayout()  # 그래프 위젯의 레이아웃 생성
-        #self.graph_widget.setLayout(graph_layout)
-        self.graph_widget = QWidget()
-        self.sales_graph = PlotCanvas()
-        
-        total_amount = df["total_amount"]
-        month = df["order_month"]
-
-        self.sales_graph.plot(month,total_amount)
-        
-        #graph_layout.addWidget(self.sales_graph, stretch=1) 
-      
-        
-        self.sales_graph.setParent(self.graph_widget)
-        self.graph_widget.setParent(sales_groupbox)
-        self.graph_widget.setGeometry(gx,gy,gw,gh)
-        self.graph_widget.show()
-
 
     def make_groupbox(self, x,y,w,h):
         
@@ -158,8 +98,70 @@ class SalesWindow(QMainWindow):
         #self.make_button(self.sales_groupBox,)
         return self.sales_groupBox
 
-    def make_button_search_by_month(self,sales_groupBox, x,y,w,h,gx,gy,gw,gh):
+    def make_label_month(self,x,y,w,h):
+        self.store_label_month = QLabel()
+        self.store_label_month.setStyleSheet("background-color: transparent; color: black;")
+        self.store_label_month.setGeometry(x,y,w,h)
+        self.store_label_month.setParent(self.sales_groupBox)
+        self.store_label_month.setText(f"{self.button_text}의 월 매출현황")
+
+    def make_label_day(self,x,y,w,h):
+        self.store_label_day = QLabel()
+        self.store_label_day.setStyleSheet("background-color: transparent; color: black;")
+        self.store_label_day.setGeometry(x,y,w,h)
+        self.store_label_day.setParent(self.sales_groupBox)
+        self.store_label_day.setText(f"{self.button_text}의 일 매출현황")    
+    
+    def make_graph_month(self, sales_groupbox,gx,gy,gw,gh):
+       
+        date_year=self.sales_by_month_year.currentText()
+
+        year = date_year.strip().replace('년', '')
+        df=self.dbm.get_sales_by_month(self.button_text,year)
+   
+        #graph_layout = QVBoxLayout()  # 그래프 위젯의 레이아웃 생성
+        #self.graph_widget.setLayout(graph_layout)
+        self.graph_widget_month = QWidget()
+        self.sales_graph = PlotCanvas()
         
+        total_amount = df["total_amount"]
+        month = df["order_month"]
+
+        self.sales_graph.plot(month,total_amount)
+        #graph_layout.addWidget(self.sales_graph, stretch=1) 
+        #self.graph_widget.setGeometry(x,y,w,h)
+        self.sales_graph.setParent(self.graph_widget_month)
+        self.graph_widget_month.setParent(sales_groupbox)
+        self.graph_widget_month.setGeometry(gx,gy,gw,gh)
+        self.graph_widget_month.show()
+
+    def make_graph_day(self, sales_groupbox,gx,gy,gw,gh):
+       
+        date_year=self.sales_by_month_year.currentText()
+        year = date_year.strip().replace('년', '')
+
+        date_month=self.sales_by_day_month.currentText()
+        month = date_month.strip().replace('월', '')
+
+        df=self.dbm.get_sales_by_day(self.button_text,year,month)
+   
+        #graph_layout = QVBoxLayout()  # 그래프 위젯의 레이아웃 생성
+        #self.graph_widget.setLayout(graph_layout)
+        self.graph_widget_day = QWidget()
+        self.sales_graph = PlotCanvas()
+        
+        total_amount = df["total_amount"]
+        month = df["order_date"]
+
+        self.sales_graph.plot(month,total_amount)
+        #graph_layout.addWidget(self.sales_graph, stretch=1) 
+        #self.graph_widget.setGeometry(x,y,w,h)
+        self.sales_graph.setParent(self.graph_widget_day)
+        self.graph_widget_day.setParent(sales_groupbox)
+        self.graph_widget_day.setGeometry(gx,gy,gw,gh)
+        self.graph_widget_day.show()    
+
+    def make_button_search_by_month(self,sales_groupBox, x,y,w,h,gx,gy,gw,gh):
 
         self.search_by_month_year = QPushButton("검색")
         self.search_by_month_year.setObjectName(f"search_by_month_year")
@@ -168,6 +170,17 @@ class SalesWindow(QMainWindow):
         self.search_by_month_year.setParent(sales_groupBox)
         
         self.search_by_month_year.clicked.connect(partial(self.make_graph_month,self.sales_groupBox,gx,gy,gw,gh))
+    
+
+    def make_button_search_by_day(self,sales_groupBox, x,y,w,h,gx,gy,gw,gh):
+        
+        self.search_by_month_year = QPushButton("검색")
+        self.search_by_month_year.setObjectName(f"search_by_day")
+        self.search_by_month_year.setGeometry(x, y, w, h)
+
+        self.search_by_month_year.setParent(sales_groupBox)
+        
+        self.search_by_month_year.clicked.connect(partial(self.make_graph_day,self.sales_groupBox,gx,gy,gw,gh))    
 
     def make_combobox_by_month(self,sales_groupBox, x,y,w,h):
         self.sales_by_month_year = QComboBox()
@@ -178,8 +191,24 @@ class SalesWindow(QMainWindow):
 
         self.sales_by_month_year.setParent(sales_groupBox)
 
-        
+    def make_combobox_year_by_day(self,sales_groupBox, x,y,w,h):
+        self.sales_by_day_year = QComboBox()
+        self.sales_by_day_year.setObjectName(f"combo_by_day_year")
+        self.sales_by_day_year.setGeometry(x, y, w, h)
+        for i in range(2024,2015,-1):
+            self.sales_by_day_year.addItem(f"{i}년")
 
+        self.sales_by_day_year.setParent(sales_groupBox)
+
+    def make_combobox_month_by_day(self,sales_groupBox, x,y,w,h):
+        self.sales_by_day_month = QComboBox()
+        self.sales_by_day_month.setObjectName(f"combo_by_day_month")
+        self.sales_by_day_month.setGeometry(x, y, w, h)
+        for i in range(1,13):
+            self.sales_by_day_month.addItem(f"{i}월")
+
+        self.sales_by_day_month.setParent(sales_groupBox)    
+        
     def make_store_button(self,sales_groupBox, x,y,w,h,addwidth):
 
         results=self.dbm.get_stores()
@@ -200,20 +229,22 @@ class SalesWindow(QMainWindow):
     def store_button_state(self, button_store):
         self.button_text = button_store.text()
         
-        self.store_label.setText(f"{self.button_text}의 월 매출현황")
-        #self.box = self.make_groupbox(40,10,1021,561)
-        #self.button = self.make_button(self.box, 20,60,120,60,100)
-        #self.graph = self.make_graph(self.sales_groupBox, 450,50,541,251)
-        #self.box.setParent(self.sales_groupBox)
-        #self.graph.show()
+        self.store_label_month.setText(f"{self.button_text}의 월 매출현황")
+        self.store_label_day.setText(f"{self.button_text}의 일 매출현황")
 
-    def on_combobox_changed(self):
-        # 스토어 이름 변경 시 주문 목록 업데이트
-        self.update_order_list()
+    def make_exit_button(self):
+        self.search_by_month_year = QPushButton("나가기")
+        self.search_by_month_year.setObjectName(f"exit")
+        self.search_by_month_year.setGeometry(10,560,100,60)
 
-   
-    def closeEvent(self, event):
-        event.accept()
+        self.search_by_month_year.setParent(self.sales_groupBox)
+        
+        self.search_by_month_year.clicked.connect((self.exit))
+
+    def exit(self):
+        self.sales_groupBox.hide()         
+
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
