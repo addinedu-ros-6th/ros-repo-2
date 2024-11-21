@@ -223,24 +223,19 @@ class MainWindow(QMainWindow):
 
         ##############################매출 그래프 불러오는 부분############################################
 
-    def make_box(self):
-        #self.sales_groupBox = QGroupBox("Sales Group Box")
-        self.sales_groupBox.setParent(self)
-        self.sales_groupBox.setFixedSize(921, 561)
-        self.sales_groupBox.move(40, 10)
-
-        return self.sales_groupBox
 
     def test(self):
     
         self.box = self.salesWindow.make_groupbox(40,10,1021,561)
+        
         self.salesWindow.make_store_button(self.box, 20,60,120,60,100)
-    
-        self.salesWindow.make_combobox_by_month(self.box, 300,60,60,60)
-        self.salesWindow.make_button_search_by_month(self.box, 300,150,60,60)
-
+        self.salesWindow.make_label_month(650,-20,200,80)
+        #self.salesWindow.graph_month_geometery(400,50,741,251)
+        self.salesWindow.make_combobox_by_month(self.box, 300,60,80,60)
+        self.salesWindow.make_button_search_by_month(self.box, 300,150,80,60,400,40,741,251)
+        self.salesWindow.make_default_graph_month(self.box,400,40,741,251)
         self.box.setParent(self)
-  #
+  
         self.box.show()
         
     def on_combobox_changed(self):
