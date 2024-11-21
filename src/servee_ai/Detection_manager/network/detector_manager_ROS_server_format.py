@@ -37,7 +37,7 @@ class ServerFormat():
         #데이터 수집
         while True:
             try:
-
+                
                 frame = self.shared_queue.get()
 
                 # 압축된 이미지를 직렬화하여 전송

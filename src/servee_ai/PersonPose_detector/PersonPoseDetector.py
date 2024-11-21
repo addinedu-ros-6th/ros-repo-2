@@ -31,8 +31,9 @@ class ROS2SocketNode(Node):
        #변수 선언
         
         self.result=""
-        self.robot_1_motion_client = ClientFormat(host="192.168.0.130",port=9998,topic="robot1",nodeName="robot1_pub_node")
-       
+        # self.robot_1_motion_client = ClientFormat(host="192.168.0.130",port=9998,topic="robot1",nodeName="robot1_pub_node")
+        self.robot_1_motion_client = ClientFormat(host="192.168.0.49",port=9998,topic="robot1",nodeName="robot1_pub_node")
+
         self.robot_2_motion_client = ClientFormat(host="localhost",port=9996,topic="robot2",nodeName="robot2_pub_node")
 
         self.robot_3_motion_client = ClientFormat(host="localhost",port=9994,topic="robot3",nodeName="robot3_pub_node")
