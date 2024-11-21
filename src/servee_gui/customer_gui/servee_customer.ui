@@ -44,7 +44,7 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>40</x>
+      <x>20</x>
       <y>40</y>
       <width>671</width>
       <height>501</height>
@@ -243,9 +243,9 @@
    <widget class="QTableWidget" name="shopping_tableWidget">
     <property name="geometry">
      <rect>
-      <x>740</x>
+      <x>720</x>
       <y>70</y>
-      <width>531</width>
+      <width>571</width>
       <height>261</height>
      </rect>
     </property>
@@ -331,7 +331,7 @@
    <widget class="QLabel" name="label_shopping_2">
     <property name="geometry">
      <rect>
-      <x>280</x>
+      <x>300</x>
       <y>0</y>
       <width>231</width>
       <height>41</height>
@@ -411,9 +411,9 @@
    <widget class="QTableWidget" name="order_tableWidget">
     <property name="geometry">
      <rect>
-      <x>730</x>
+      <x>720</x>
       <y>460</y>
-      <width>531</width>
+      <width>571</width>
       <height>321</height>
      </rect>
     </property>
@@ -570,7 +570,7 @@
    <widget class="QComboBox" name="table_comboBox">
     <property name="geometry">
      <rect>
-      <x>40</x>
+      <x>20</x>
       <y>10</y>
       <width>111</width>
       <height>25</height>

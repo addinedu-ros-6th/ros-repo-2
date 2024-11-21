@@ -209,9 +209,9 @@ class ManagerGUI(QMainWindow, ui_info):
         self.table_stores_status.cellDoubleClicked.connect(self.table_store_dclicked)
 
         # 매출 현황 조회에서 버튼 클릭하면 식당 페이지로 이동
-        self.btn_store_1.clicked.connect(lambda: self.show_content(0))
-        self.btn_store_2.clicked.connect(lambda: self.show_content(1))
-        self.btn_store_3.clicked.connect(lambda: self.show_content(2))
+        #self.btn_store_1.clicked.connect(lambda: self.show_content(0))
+        #self.btn_store_2.clicked.connect(lambda: self.show_content(1))
+        #self.btn_store_3.clicked.connect(lambda: self.show_content(2))
 
 
     def __del__(self):
@@ -339,20 +339,20 @@ class ManagerGUI(QMainWindow, ui_info):
                 self.table_stores_status.setItem(store_id-1, 2, store_earning)
         elif index ==2:
             
-            self.box = self.sales_test.make_groupbox(40,10,821,631)
+            self.box = self.sales_test.make_groupbox(0,0,1011,571)
+            self.box.setParent(self.tab_sales_overview)
+            self.sales_test.make_store_button(self.box, 20,60,120,60,100)
 
-            #self.sales_test.make_store_button(self.box, 20,60,120,60,100)
-#
-            #self.sales_test.make_label_month(650,-20,200,80)
-            #self.sales_test.make_combobox_by_month(self.box, 300,60,80,60)
-            #self.sales_test.make_button_search_by_month(self.box, 300,150,80,60,400,50,741,251)
-            #self.sales_test.make_graph_month(self.box,400,50,741,251)
-#
-            #self.sales_test.make_label_day(650,290,200,80)
-            #self.sales_test.make_combobox_year_by_day(self.box, 300,360,80,60)
-            #self.sales_test.make_combobox_month_by_day(self.box, 300,450,80,60)
-            #self.sales_test.make_button_search_by_day(self.box, 300,540,80,60,400,360,741,251)
-            #self.sales_test.make_graph_day(self.box,400,360,741,251)
+            self.sales_test.make_label_month(650,-20,200,80)
+            self.sales_test.make_combobox_by_month(self.box, 300,60,80,60)
+            self.sales_test.make_button_search_by_month(self.box, 300,150,80,60,400,50,741,251)
+            self.sales_test.make_graph_month(self.box,400,50,741,201)
+
+            self.sales_test.make_label_day(650,290,200,80)
+            self.sales_test.make_combobox_year_by_day(self.box, 300,360,80,60)
+            self.sales_test.make_combobox_month_by_day(self.box, 300,450,80,60)
+            self.sales_test.make_button_search_by_day(self.box, 300,540,80,60,400,360,741,251)
+            self.sales_test.make_graph_day(self.box,400,360,741,251)
 #
 
             self.box.show()

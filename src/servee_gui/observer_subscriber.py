@@ -40,14 +40,19 @@ class ClientObserver:
             client_socket.connect((self.host, self.port))
             print("Connected to server for receiving updates.")
             while self.running:
-                try:
-                    message = client_socket.recv(1024).decode('utf-8')
-                    if message:
-                        result = self.parse_message(message)
-                        self.shared_queue.put(result)
-                except ConnectionResetError:
-                    print("Connection lost. Attempting to reconnect...")
-                    break
+                print("running to server for receiving updates.")
+                print("도는중이냐? : " ,self.running)
+               #try:
+                message = client_socket.recv(1024).decode('utf-8')
+                print("메시지 확인 : ", message)
+                if message:
+                    print("데이터 통신 완료.")
+                    result = self.parse_message(message)
+                    
+                    self.shared_queue.put(result)
+                #except ConnectionResetError:
+                #    print("Connection lost. Attempting to reconnect...")
+                #    break
                         
     def send_create_command(self, call_type, order_id=None, store_id=None, table_id=None):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
@@ -57,7 +62,7 @@ class ClientObserver:
             if call_type == "SE":
                 command = f"CREATE,{call_type},{order_id},{store_id},{table_id},{call_time}"
             elif call_type == "RV":
-                store_id = 101  # Specify store_id separately if needed
+                store_id = 0  # Specify store_id separately if needed
                 command = f"CREATE,{call_type},{store_id},{table_id},{call_time}"
             else:
                 print("Unknown call_type provided.")

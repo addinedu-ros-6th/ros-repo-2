@@ -57,7 +57,7 @@ order_queue = queue.Queue()
 
 class PlotCanvas(FigureCanvas):
     def __init__(self, parent=None):
-        self.fig = Figure(figsize=(6, 2.5))
+        self.fig = Figure(figsize=(6, 2))
         self.ax = self.fig.add_subplot(111)
         super().__init__(self.fig)
         self.setParent(parent)

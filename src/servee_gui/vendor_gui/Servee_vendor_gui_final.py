@@ -380,6 +380,16 @@ class MainWindow(QMainWindow):
             #self.update_order_list(result)
             order_id = result.split(',')[2]
             call_state = result.split(',')[3]
+            if call_state =="waiting_serverbot":
+                call_state = "서빙봇 대기중"
+                #call_state = "서빙완료"
+            elif call_state =="waiting_handover":
+                call_state = "음식 인계 대기중"
+            elif call_state =="serving":
+                call_state = "서빙중"
+            elif call_state =="done_serving":
+                call_state = "서빙완료"       
+
 
             self.call_states[order_id] = call_state
 
