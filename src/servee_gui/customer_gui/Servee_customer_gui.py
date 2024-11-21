@@ -73,7 +73,7 @@ class MainWindow(QMainWindow):
         self.scrollArea_1.setVisible(True)
         self.scrollArea_2.setVisible(False)
         self.scrollArea_3.setVisible(True)
-        self.button_retrieve.setEnabled(False) 
+        self.button_retrieve.setEnabled(True) 
 
         self.menu_list_make('scrollArea_1',1)
         self.menu_list_make('scrollArea_2',2)
@@ -95,8 +95,6 @@ class MainWindow(QMainWindow):
         self.button_service_call.clicked.connect(self.service_alarm)
         self.order_tableWidget.setColumnHidden(5, True)
         self.button_retrieve.clicked.connect(self.retrieve_alarm)
-
-        #self.button_retrieve.setEnabled(False)
 
         self.shopping_tableWidget.horizontalHeader().setStretchLastSection(True)  # 마지막 열이 남은 공간을 차지하도록 설정
         self.order_tableWidget.horizontalHeader().setStretchLastSection(True)
@@ -366,7 +364,7 @@ class MainWindow(QMainWindow):
 
             self.order_tableWidget.setColumnHidden(column_count, True)
 
-            QTimer.singleShot(2000, lambda row=row: self.updateOrderStatus(row+current_row_count))
+            QTimer.singleShot(500, lambda row=row: self.updateOrderStatus(row+current_row_count))
 
         
 
@@ -402,6 +400,7 @@ class MainWindow(QMainWindow):
             try:
 
                 results = self.order_queue.get()
+                print("데이터가 들어왔다는 증거")
                 #빈공간 제거 해야 함
                 if("UPDATE" in results):
                     self.update_ordertable(results.replace(" ", ""))
@@ -427,8 +426,8 @@ class MainWindow(QMainWindow):
 
             if(item == order_id):
                 if call_state =="waiting_serverbot":
-                    call_state = "로봇 호출중"
-                    
+                    call_state = "서빙봇 대기중"
+                    #call_state = "서빙완료"
                 elif call_state =="waiting_handover":
                     call_state = "음식 인계 대기중"
                 elif call_state =="serving":
@@ -437,8 +436,9 @@ class MainWindow(QMainWindow):
                     call_state = "서빙완료"             
                 self.order_tableWidget.setItem(row, 4, QTableWidgetItem(call_state))
         
-       
+        
         state = self.order_tableWidget.item(row_count-1, 4).text()
+        print("스테이트 뭐냐 : ",state)
         if state == "서빙완료":
             self.button_retrieve.setEnabled(True)
         else:
