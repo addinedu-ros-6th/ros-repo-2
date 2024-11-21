@@ -95,10 +95,12 @@ class Worker(QThread):
         super().__init__()
      
         self.running = True
+        
 
     def run(self):
         self.receive_state()
         
+
     def receive_state(self):
 
         #데이터 수집
@@ -376,16 +378,8 @@ class MainWindow(QMainWindow):
             order_id = result.split(',')[2]
             call_state = result.split(',')[3]
 
-            
-            if call_state=="waiting_serverbot":
-                call_state="서빙봇 대기중"
-            elif call_state=="waiting_handover":
-                call_state="음식인계 대기중"
-            elif call_state=="serving":
-                call_state="서빙중"
-            elif call_state=="done_serving":
-                call_state="서빙완료"              
             self.call_states[order_id] = call_state
+
             # 콤보 박스 변경 시 상태를 업데이트
             self.update_order_list()
 
