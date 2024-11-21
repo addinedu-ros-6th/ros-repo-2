@@ -93,7 +93,7 @@ class SubscriberNode(Node):
         self.robots_state = [None, None, None]
         self.robots_battery = [100, 100, 100]
 
-        self.pose_sub_1 = self.create_subscription(Pose, '/pose', self.robot_pose_callback(0), 10)
+        self.pose_sub_1 = self.create_subscription(Pose, '/robot1/pose', self.robot_pose_callback(0), 10)
         self.pose_sub_2 = self.create_subscription(Pose, '/robot2/pose', self.robot_pose_callback(1), 10)
         self.pose_sub_3 = self.create_subscription(Pose, '/robot3/pose', self.robot_pose_callback(2), 10)
 
@@ -101,7 +101,7 @@ class SubscriberNode(Node):
         self.path_sub_2 = self.create_subscription(Path, '/robot2/plan', self.robot_path_callback(1), 10)
         self.path_sub_3 = self.create_subscription(Path, '/robot3/plan', self.robot_path_callback(2), 10)
 
-        self.state_sub_1 = self.create_subscription(String, '/state', self.robot_state_callback(0), 10)
+        self.state_sub_1 = self.create_subscription(String, '/robot1/state', self.robot_state_callback(0), 10)
         self.state_sub_2 = self.create_subscription(String, '/robot2/state', self.robot_state_callback(1), 10)
         self.state_sub_3 = self.create_subscription(String, '/robot3/state', self.robot_state_callback(2), 10)
 
@@ -209,9 +209,9 @@ class ManagerGUI(QMainWindow, ui_info):
         self.table_stores_status.cellDoubleClicked.connect(self.table_store_dclicked)
 
         # 매출 현황 조회에서 버튼 클릭하면 식당 페이지로 이동
-        self.btn_store_1.clicked.connect(lambda: self.show_content(0))
-        self.btn_store_2.clicked.connect(lambda: self.show_content(1))
-        self.btn_store_3.clicked.connect(lambda: self.show_content(2))
+        # self.btn_store_1.clicked.connect(lambda: self.show_content(0))
+        # self.btn_store_2.clicked.connect(lambda: self.show_content(1))
+        # self.btn_store_3.clicked.connect(lambda: self.show_content(2))
 
 
     def __del__(self):
@@ -338,22 +338,22 @@ class ManagerGUI(QMainWindow, ui_info):
                 store_earning.setTextAlignment(Qt.AlignCenter)
                 self.table_stores_status.setItem(store_id-1, 2, store_earning)
         elif index ==2:
-            
-            self.box = self.sales_test.make_groupbox(40,10,821,631)
+            self.box = self.sales_test.make_groupbox(0, 0, 1011, 571)
+            self.box.setParent(self.tab_sales_overview)
 
-            #self.sales_test.make_store_button(self.box, 20,60,120,60,100)
-#
-            #self.sales_test.make_label_month(650,-20,200,80)
-            #self.sales_test.make_combobox_by_month(self.box, 300,60,80,60)
-            #self.sales_test.make_button_search_by_month(self.box, 300,150,80,60,400,50,741,251)
-            #self.sales_test.make_graph_month(self.box,400,50,741,251)
-#
-            #self.sales_test.make_label_day(650,290,200,80)
-            #self.sales_test.make_combobox_year_by_day(self.box, 300,360,80,60)
-            #self.sales_test.make_combobox_month_by_day(self.box, 300,450,80,60)
-            #self.sales_test.make_button_search_by_day(self.box, 300,540,80,60,400,360,741,251)
-            #self.sales_test.make_graph_day(self.box,400,360,741,251)
-#
+            self.sales_test.make_store_button(self.box, 20, 20, 111, 51, 70)
+
+            self.sales_test.make_label_month(320, 5, 671, 21)
+            self.sales_test.make_combobox_by_month(self.box, 210, 30, 101, 41)
+            self.sales_test.make_button_search_by_month(self.box, 210, 80, 101, 41, 320, 30, 701, 221)
+            self.sales_test.make_graph_month(self.box, 320, 30, 701, 221)
+
+            self.sales_test.make_label_day(320, 285, 671, 21)
+            self.sales_test.make_combobox_year_by_day(self.box, 210, 310, 101, 41)
+            self.sales_test.make_combobox_month_by_day(self.box, 210, 360, 101, 41)
+            self.sales_test.make_button_search_by_day(self.box, 210, 410, 101, 41, 320, 310, 671, 221)
+            self.sales_test.make_graph_day(self.box, 320, 310, 671, 221)
+
 
             self.box.show()
     # 로봇 현황 더블클릭 콜백

@@ -57,7 +57,7 @@ order_queue = queue.Queue()
 
 class PlotCanvas(FigureCanvas):
     def __init__(self, parent=None):
-        self.fig = Figure(figsize=(6, 2.5))
+        self.fig = Figure(figsize=(6.5, 2.3))
         self.ax = self.fig.add_subplot(111)
         super().__init__(self.fig)
         self.setParent(parent)
@@ -104,6 +104,7 @@ class SalesWindow(QMainWindow):
         self.store_label_month.setGeometry(x,y,w,h)
         self.store_label_month.setParent(self.sales_groupBox)
         self.store_label_month.setText(f"{self.button_text}의 월 매출현황")
+        self.store_label_month.setAlignment(Qt.AlignHCenter)
 
     def make_label_day(self,x,y,w,h):
         self.store_label_day = QLabel()
@@ -111,6 +112,7 @@ class SalesWindow(QMainWindow):
         self.store_label_day.setGeometry(x,y,w,h)
         self.store_label_day.setParent(self.sales_groupBox)
         self.store_label_day.setText(f"{self.button_text}의 일 매출현황")    
+        self.store_label_day.setAlignment(Qt.AlignHCenter)
     
     def make_graph_month(self, sales_groupbox,gx,gy,gw,gh):
        
