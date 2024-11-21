@@ -4,6 +4,7 @@ from datetime import datetime
 from functools import singledispatch
 from mysql.connector import pooling
 import pandas as pd
+
 class MySQLConnection:
     _instance = None
 
@@ -595,6 +596,42 @@ class MySQLConnection:
             order_month
         ORDER BY 
             order_month;
+            """
+        try:
+            df = pd.read_sql_query(sql, connection)
+            return df
+        except Exception as e:
+            print(f"쿼리 실행 중 오류: {e}")
+        finally:
+            cursor.close()  # 커서 닫기
+            connection.close() 
+
+    def get_sales_by_day(self,store_name,year,month):
+        db_pool = MySQLConnection.getInstance()
+        connection = db_pool.get_connection()
+        cursor = connection.cursor()
+
+
+        sql= f"""
+        SELECT 
+            SUM(m.price * od.quantity) AS total_amount,
+            DATE_FORMAT(oc.call_time, '%d') AS order_date
+        FROM 
+            OrderCalls AS oc
+        JOIN 
+            OrderDetails AS od ON oc.order_id = od.order_id
+        JOIN 
+            Menus AS m ON od.menu_id = m.menu_id
+        JOIN 
+            Stores AS s ON m.store_id = s.store_id
+        WHERE 
+            s.name = '{store_name}'
+            AND YEAR(oc.call_time) = '{year}'
+            AND MONTH(oc.call_time) = '{month}'  
+        GROUP BY 
+            order_date
+        ORDER BY 
+            order_date;
             """
         try:
             df = pd.read_sql_query(sql, connection)

@@ -48,7 +48,7 @@ class RobotTask(Node):
 
         # ? actual code
         self.robots = {
-            'robot1': Robot(1, 'robot1', 'Server')
+            'robot1': Robot(1, 'robot1', 'Retriever')
         #     ,'robot2': Robot(2, 'robot2', 'Server'),
         #     'robot3': Robot(3, 'robot3', 'Retriever')
         }
@@ -190,12 +190,7 @@ class RobotTask(Node):
         if self.serving_task_queue and available_serverbots:
             order = self.serving_task_queue.get()  # Get the position of the first task
             print("Assigning order ", order.order_id)
-   
-            # # ! code for communication test
-            # store_data_string = "x:1.2, y:3.4, z:5.6, qx:0.1, qy:0.2, qz:0.3, qw:0.4"
-            # table_data_string = "x:9.2, y:9.4, z:9.6, qx:9.1, qy:9.2, qz:9.3, qw:9.4"
 
-            # ? actual code
             store_data_string = order.store_location
             table_data_string = order.table_location
             store_arucomarker_id = order.store_arucomarker_id
@@ -220,11 +215,6 @@ class RobotTask(Node):
             retrieval = self.retrieving_task_queue.get()  # Get the position of the first task
             print("Assigning retrieval ", retrieval.table_id)
 
-            # # ! code for communication test
-            # store_data_string = "x:1.2, y:3.4, z:5.6, qx:0.1, qy:0.2, qz:0.3, qw:0.4"
-            # table_data_string = "x:9.2, y:9.4, z:9.6, qx:9.1, qy:9.2, qz:9.3, qw:9.4"
-
-            # ? actual code
             store_data_string = retrieval.store_location
             table_data_string = retrieval.table_location
             store_arucomarker_id = retrieval.store_arucomarker_id
@@ -234,7 +224,8 @@ class RobotTask(Node):
             table_goalpose = self.location_parser(table_data_string)
 
             if store_goalpose and table_goalpose:
-                optimal_retrieverbot = min(available_retrieverbots, key=lambda r: r.calculate_distance(table_goalpose[:2]))
+                optimal_retrieverbot = min(available_retrieverbots, key=lambda r: (r.executed_tasks, 
+                                                                             r.calculate_distance(table_goalpose[:2])))
                 print("Task assigned to : ", optimal_retrieverbot.name)
                 self.assign_task_to_robot(optimal_retrieverbot, retrieval.table_id, table_goalpose, 
                                           store_goalpose, table_arucomarker_id, store_arucomarker_id)
