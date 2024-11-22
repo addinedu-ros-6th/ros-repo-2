@@ -16,7 +16,7 @@ class ImageSender(Behaviour):
     def setup(self, **kwargs: Any) -> None:
         self.node: Node = kwargs['node']
         
-        self.node.declare_parameter('client_ip', '192.168.0.130')
+        self.node.declare_parameter('client_ip', '192.168.0.49')
         self.node.declare_parameter('client_port', 9999)
         
         client_ip = self.node.get_parameter('client_ip').get_parameter_value().string_value

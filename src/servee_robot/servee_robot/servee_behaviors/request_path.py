@@ -63,7 +63,7 @@ class RequestPath(Behaviour):
         이동 중인 상태인지 체크한다.
         이동 중에는 트리가 Move로 바로 넘어갈 수 있게 처리한다.
         """
-        if self.blackboard.robot_state in ["task", "home", "aruco"]:
+        if self.blackboard.robot_state in ["task", "aruco"]:
             return True
 
         

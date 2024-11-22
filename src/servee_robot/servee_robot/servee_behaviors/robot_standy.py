@@ -28,16 +28,19 @@ class RobotStandy(Behaviour):
         
         self.node.create_subscription(
             TableState,
-            "table_status",
+            "/table_check",
             self.callback,
             10
         )
         
         
     def callback(self, msg):
-                
+              
+        
+          
         # 로봇 타입 키 존재 여부 확인
         if self.blackboard.exists("robot_type") == False:
+            self.node.get_logger().warn(f"robot_type: {self.blackboard.robot_type}")
             return
         
         # 현재 상태 확인하고 
@@ -46,18 +49,26 @@ class RobotStandy(Behaviour):
         
         # 회수 로봇인지 확인하고
         if self.blackboard.robot_type == "serving":
+            self.node.get_logger().warn(f"IS serving: {self.blackboard.robot_type}")
             return
         
         # 회수용 로봇은 첫 방문지가 테이블이다. 
         if self.blackboard.aruco_id_index != 0:
+            self.node.get_logger().warn(f"index : {self.blackboard.aruco_id_index}")
             return
         
         
-        aruco_id = self.blackboard.aruco_ids[self.blackboard.aruco_id_index] -5
-        table_id = aruco_id - 12
+        aruco_id = self.blackboard.aruco_ids[self.blackboard.aruco_id_index]
+        self.node.get_logger().warn(f"aruco_id : {aruco_id}")
         
-        if msg.data[table_id] == True:
+        table_id = aruco_id - 12
+        self.node.get_logger().warn(f"table_id : {table_id}")
+        
+        # self.node.get_logger().warn(f"msg.data[table_id]: : {msg.status[table_id]}")
+        
+        if msg.status[table_id] == True:
             self.request_next_path()
+        
  
  
     def request_next_path(self):
@@ -73,13 +84,17 @@ class RobotStandy(Behaviour):
         if self.blackboard.robot_type != "serving":
             return
         
+        if self.blackboard.aruco_id_index == 0:
+            self.request_next_path()
+        
         # 서빙 로봇은 두번째 방문지가 테이블이다. 
         if self.blackboard.aruco_id_index != 1:
             return
         
-        self.test_timer += 1
-        
+        self.node.get_logger().warn(f"Timer Check")
+                
         if self.test_timer >= 50:
+            self.node.get_logger().error(f"다음 동선으로")
             self.test_timer = 0
             self.request_next_path()
         

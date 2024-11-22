@@ -73,12 +73,12 @@ class ArucoAligning(Behaviour):
         if self.blackboard.marker_detected:
             self.set_marker_data()
             
-            self.node.get_logger().error(f"index{self.blackboard.aruco_id_index}")
-            self.node.get_logger().error(f"aruco_ids: {self.blackboard.aruco_ids}")
+            # self.node.get_logger().error(f"index{self.blackboard.aruco_id_index}")
+            # self.node.get_logger().error(f"aruco_ids: {self.blackboard.aruco_ids}")
             
             aruco_id = 0
             aruco_id = self.blackboard.aruco_ids[self.blackboard.aruco_id_index] -5
-            self.node.get_logger().error(f"aruco_id: {aruco_id}")
+            # self.node.get_logger().error(f"aruco_id: {aruco_id}")
             self.node.get_logger().error(f"distance_tolerance_array {self.distance_tolerance_array}")
             self.distance_tolerance = self.distance_tolerance_array[aruco_id]
             
@@ -110,7 +110,7 @@ class ArucoAligning(Behaviour):
                     
         else:
             self.blackboard.aruco_state = "search"
-            self.node.get_logger().info("Marker not found. Returning to Searching.")
+            # self.node.get_logger().info("Marker not found. Returning to Searching.")
             return Status.SUCCESS
     
     
@@ -161,7 +161,7 @@ class ArucoAligning(Behaviour):
         if dist_moved < target_distance:
             twist.linear.x = self.lin_vel
             self.twist_pub.publish(twist)
-            self.node.get_logger().fatal(f"속도: {self.lin_vel}")  
+            # self.node.get_logger().fatal(f"속도: {self.lin_vel}")  
 
 
         # 목표 거리에 도달한 경우

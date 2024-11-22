@@ -19,6 +19,8 @@ class YoloPose:
         # LabelEncoder 객체 생성 및 클래스에 맞게 fit
         self.label_encoder = LabelEncoder()
         self.label_encoder.fit(["standing", "running", "walking", "sitting"])
+        # self.label_encoder.fit(["running", "running", "running", "running"])
+
     
         # 고정된 시퀀스 길이 설정 (예: 30 프레임)
         self.fixed_time_steps = 15

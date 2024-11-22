@@ -27,7 +27,7 @@ class ArucoYawing(Behaviour):
                 '/base_controller/cmd_vel_unstamped',
                 10)
             
-        self.node.declare_parameter('closest_line_angle_tolerance', 5.0)
+        self.node.declare_parameter('closest_line_angle_tolerance', 3.0)
         self.closest_line_angle_tolerance = self.node.get_parameter('closest_line_angle_tolerance').get_parameter_value().double_value
         self.closest_line_distance =100
         self.closest_line_angle = 100
@@ -46,7 +46,7 @@ class ArucoYawing(Behaviour):
         
         if self.blackboard.marker_detected:  
             self.dected_count = 0
-            self.node.get_logger().fatal("yawing")
+            # self.node.get_logger().fatal("yawing")
             self.detect_lines()
             return self.yawing()
             
@@ -54,7 +54,7 @@ class ArucoYawing(Behaviour):
             self.dected_count += 1
             if self.dected_count >= 50:
                 self.blackboard.aruco_state = "search"
-                self.node.get_logger().info("Marker not found. Returning to Searching.")
+                # self.node.get_logger().info("Marker not found. Returning to Searching.")
                 return Status.SUCCESS
             else:
                 return Status.SUCCESS

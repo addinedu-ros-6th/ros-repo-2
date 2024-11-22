@@ -1,7 +1,7 @@
 robot_data_sender:
   ros__parameters:
     home_position_x: 0.025
-    home_position_y: 0.190
+    home_position_y: 0.830
     home_orientation_x: 0.0
     home_orientation_y: 0.0
     home_orientation_z: -0.00416502

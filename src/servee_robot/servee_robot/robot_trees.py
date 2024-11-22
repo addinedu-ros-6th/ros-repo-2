@@ -185,14 +185,14 @@ def receive_topic2bb():
     )
 
     laser_scan2bb = get_scan.GetScan("get_scan_node")
-    lidar_mod = lidar_modifier.LidarModifier("lidar_modifier_node")
+    # lidar_mod = lidar_modifier.LidarModifier("lidar_modifier_node")
     # 현재위치
     cur_pose = get_curr_pose.GetCurrPose("get_curr_pose_node")
     
     # from sensor_msgs.msg import LaserScan
     
     # laser_scan2bb
-    topic2bb.add_children([battery2bb, cur_pose, laser_scan2bb, lidar_mod])
+    topic2bb.add_children([battery2bb, cur_pose, laser_scan2bb])
     return topic2bb
 
 def sender_data():

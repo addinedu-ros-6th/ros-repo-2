@@ -26,8 +26,8 @@ class RobotPIDController:
         self.previous_error = error
         output = p + i + d
         if output < 0:
-            output += -0.2
+            output += -0.3
         elif output > 0:
-            output += 0.2
+            output += 0.3
         
         return output

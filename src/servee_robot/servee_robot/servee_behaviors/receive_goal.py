@@ -40,7 +40,7 @@ class ReceiveGoal(Behaviour):
             return Status.RUNNING
         
     def callback(self, msg): 
-
+        # self.node.get_logger().error(f"목표좌표: {msg.data}")
         goal_poses = msg.goal_poses  # PoseArray 타입이라고 가정
 
         # home_pose를 Pose 객체로 추가
@@ -59,7 +59,7 @@ class ReceiveGoal(Behaviour):
 
         self.blackboard.aruco_id_index = 0
         self.blackboard.odom_yaw_error = 0.0
-        self.node.get_logger().info(f"배열로 받은 목적지 {self.blackboard.goal_poses}")
+        self.node.get_logger().error(f"배열로 받은 목적지 {self.blackboard.goal_poses}")
         
         self.blackboard.goal_pose = self.blackboard.goal_poses.poses[0]
         self.blackboard.robot_state = "receive_goal"

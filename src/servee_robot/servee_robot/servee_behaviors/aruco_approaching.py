@@ -80,7 +80,7 @@ class ArucoApproaching(Behaviour):
         
         # 허용 오처 범위 밖이라면 
         if math.hypot(self.marker_x, self.marker_z) > self.distance_tolerance:
-            self.node.get_logger().fatal(f"거리 체크 {math.hypot(self.marker_x, self.marker_z)}")
+            # self.node.get_logger().fatal(f"거리 체크 {math.hypot(self.marker_x, self.marker_z)}")
             
             
             

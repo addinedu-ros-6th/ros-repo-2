@@ -17,6 +17,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/TaskGoalPoses.msg"
   "msg/TaskGoalData.msg"
   "msg/TableState.msg"
+  "msg/ArucoMarkerResult.msg"
   "msg/ReqPath.msg"
   "msg/ResPath.msg"  
   DEPENDENCIES geometry_msgs std_msgs

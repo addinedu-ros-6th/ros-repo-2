@@ -26,7 +26,7 @@ class RobotDataSender(Behaviour):
         self.node.declare_parameter('home_aruco_id', 9)
         
         self.node.declare_parameter('home_position_x', 0.025)
-        self.node.declare_parameter('home_position_y', 0.200)
+        self.node.declare_parameter('home_position_y', 0.830)
         
         self.node.declare_parameter('home_orientation_x', 0.0)
         self.node.declare_parameter('home_orientation_y', 0.0)
@@ -47,6 +47,8 @@ class RobotDataSender(Behaviour):
         
         self.blackboard.robot_type = self.node.get_parameter("robot_type").value
         self.blackboard.curr_pose = None
+        
+        self.node.get_logger().error(f"self.blackboard.robot_type")
         
         self.publisher_init = self.node.create_publisher(
             PoseWithCovarianceStamped, 
@@ -124,7 +126,7 @@ class RobotDataSender(Behaviour):
         if self.blackboard.robot_state == "idle":
             robot_state.data = "idle"
             
-        elif self.blackboard.robot_state in ["receive_goal", "request_path", "task", "home"]:
+        elif self.blackboard.robot_state in ["receive_goal", "request_path", "task", "home", "aruco"]:
             if self.blackboard.aruco_id_index == 0:
                 robot_state.data = "running1"
             
@@ -132,6 +134,7 @@ class RobotDataSender(Behaviour):
                 robot_state.data = "running2"
                 
             elif self.blackboard.aruco_id_index == 2:
+                self.node.get_logger().error(f"returning_home, 현재 상태: {self.blackboard.robot_state}")
                 robot_state.data = "returning_home"   
                 
         elif self.blackboard.robot_state == "standy":

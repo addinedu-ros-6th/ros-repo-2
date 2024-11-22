@@ -14,7 +14,7 @@ class PicamProcessor(Node):
         
         # Declare parameters to be loaded from YAML
         self.declare_parameter('data_path', "~/Downloads/ArucoMarker/calibration_data.npz")
-        self.declare_parameter('client_ip', '192.168.0.130')
+        self.declare_parameter('client_ip', '192.168.0.49')
         self.declare_parameter('client_port', 9999)
         self.declare_parameter('marker_length', 0.15)
 

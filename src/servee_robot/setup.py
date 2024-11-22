@@ -26,7 +26,8 @@ setup(
         'console_scripts': [
             'robot_trees = servee_robot.robot_trees:main',
             'battery_state_pub = servee_robot.battery_state_pub:main',
-            'servee_goal_test_node = servee_robot.receive_goal_test:main'
+            'servee_goal_test_node = servee_robot.receive_goal_test:main',
+            'picam_processor = servee_robot.picam_processor:main',
         ],
     },
 )

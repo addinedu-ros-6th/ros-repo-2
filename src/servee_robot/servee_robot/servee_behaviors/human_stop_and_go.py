@@ -19,16 +19,16 @@ class HumanStopAndGo(Behaviour):
     
         self.node.create_subscription(
             String,
-            "table_status",
+            "robot1",
             self.callback,
             10
         )
     
     def update(self) -> Status:
         if self.blackboard.is_human_detected: 
-            return Status.SUCCESS
-        else:
             return Status.FAILURE
+        else:
+            return Status.SUCCESS
     
     
     def callback(self, msg):
