@@ -1,8 +1,10 @@
 # ros-repo-2
 파이널 프로젝트 2조 저장소. 푸드코트 서빙 로봇
+## 발표 자료
+링크
 ## 1. 개요
 ![main_image](https://github.com/user-attachments/assets/16a02216-99ca-4f24-ab51-0b98795a14fa)
-<br>[발표자료 링크 넣는 자리]
+
 ### 1.1. 프로젝트 설명
 서비?
 서비는 주문 관리, 서빙, 그릇 회수, 매장 상태 모니터링 등 매장 운영 전반을 체계적인 관리하는 시스템
@@ -48,3 +50,19 @@ Customer GUI<br>
 ![vendor_gui](https://github.com/user-attachments/assets/d350bd1c-1639-4718-b318-4f54f543311c)
 <br><br>Manager GUI<br>
 ![manager_gui1](https://github.com/user-attachments/assets/17901211-5531-4e51-b82f-1519852eff81)
+### 2.4. 데이터베이스 설계
+![DB_structure](https://github.com/user-attachments/assets/dc8d1728-9747-4861-ad4e-f8d0853a5b8b)
+## 3. 기능 구현
+### 3.1. 로봇 간 충돌 회피 알고리즘
+### 3.2. 서빙 주행
+### 3.3. 회수 주행
+## 4. 핵심 기술
+### 4.1 위치 보정
+아르코 마커
+<br> 라이다
+### 4.2 딥러닝
+자세추정 모델
+<br> 테이블 상태 체크 모델
+## 5. 개발 환경
+개발 기간 : 24.10.17 ~ 24.11.25 (5주
+![timeline](https://github.com/user-attachments/assets/ae7ca6c8-e6dd-41f2-94b1-6f3422da15b0)
