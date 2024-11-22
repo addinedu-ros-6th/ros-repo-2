@@ -397,20 +397,20 @@ class MainWindow(QMainWindow):
 
         #데이터 수집
         while self.running:
-            try:
-
+            #try:
+                print("데이터 수집중 : ", self.running)
                 results = self.order_queue.get()
-                print("데이터가 들어왔다는 증거")
+                print("통신 데이터 : ", results)
                 #빈공간 제거 해야 함
                 if("UPDATE" in results):
                     self.update_ordertable(results.replace(" ", ""))
                 else:
                     pass
-            except queue.Empty:
-                time.sleep(0.03)   
-
+            #except queue.Empty:
+            #    #time.sleep(0.03)   
+            #    pass
     def update_ordertable(self,results):
-        
+        time.sleep(2)
         print("업데이트 오더테이블 : ", results)
 
         command_type = results.split(',')[0]

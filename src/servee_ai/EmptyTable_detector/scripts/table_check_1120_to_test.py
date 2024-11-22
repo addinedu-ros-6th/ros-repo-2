@@ -42,7 +42,7 @@ def predict_table_status(roi):
 class TableCheckNode(Node):
     def __init__(self):
         super().__init__('table_check_node')
-        self.publisher_ = self.create_publisher(TableState, 'table_status', 10)
+        self.publisher_ = self.create_publisher(TableState, 'table_check', 10)
         self.cap = cv2.VideoCapture(0)  # 로컬 웹캠 연결
         # self.cap = cv2.VideoCapture('/dev/920_cam')  # 로컬 웹캠 연결
         self.timer = self.create_timer(0.1, self.timer_callback)  # 주기적 콜백

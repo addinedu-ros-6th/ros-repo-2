@@ -95,10 +95,12 @@ class Worker(QThread):
         super().__init__()
      
         self.running = True
+        
 
     def run(self):
         self.receive_state()
         
+
     def receive_state(self):
 
         #데이터 수집
@@ -182,7 +184,7 @@ class MainWindow(QMainWindow):
         self.sales_button = QtWidgets.QPushButton("매출현황",self)
         self.sales_button.setObjectName("button_sales")
         self.sales_button.move(820, 20)
-        self.sales_button.clicked.connect(self.test)
+        self.sales_button.clicked.connect(self.sales_page)
         self.sales_button.setParent(self)
 
         #self.sales_button_2.clicked.connect(self.test)
@@ -224,16 +226,24 @@ class MainWindow(QMainWindow):
         ##############################매출 그래프 불러오는 부분############################################
 
 
-    def test(self):
+    def sales_page(self):
     
-        self.box = self.salesWindow.make_groupbox(40,10,1021,561)
+        self.box = self.salesWindow.make_groupbox(40,10,1021,631)
         
         self.salesWindow.make_store_button(self.box, 20,60,120,60,100)
+
         self.salesWindow.make_label_month(650,-20,200,80)
-        #self.salesWindow.graph_month_geometery(400,50,741,251)
         self.salesWindow.make_combobox_by_month(self.box, 300,60,80,60)
-        self.salesWindow.make_button_search_by_month(self.box, 300,150,80,60,400,40,741,251)
-        self.salesWindow.make_default_graph_month(self.box,400,40,741,251)
+        self.salesWindow.make_button_search_by_month(self.box, 300,150,80,60,400,50,741,251)
+        self.salesWindow.make_graph_month(self.box,400,50,741,251)
+
+        self.salesWindow.make_label_day(650,290,200,80)
+        self.salesWindow.make_combobox_year_by_day(self.box, 300,360,80,60)
+        self.salesWindow.make_combobox_month_by_day(self.box, 300,450,80,60)
+        self.salesWindow.make_button_search_by_day(self.box, 300,540,80,60,400,360,741,251)
+        self.salesWindow.make_graph_day(self.box,400,360,741,251)
+        self.salesWindow.make_exit_button()
+
         self.box.setParent(self)
   
         self.box.show()
@@ -370,17 +380,19 @@ class MainWindow(QMainWindow):
             #self.update_order_list(result)
             order_id = result.split(',')[2]
             call_state = result.split(',')[3]
+            if call_state =="waiting_serverbot":
+                call_state = "서빙봇 대기중"
+                #call_state = "서빙완료"
+            elif call_state =="waiting_handover":
+                call_state = "음식 인계 대기중"
+            elif call_state =="serving":
+                call_state = "서빙중"
+            elif call_state =="done_serving":
+                call_state = "서빙완료"       
 
-            
-            if call_state=="waiting_serverbot":
-                call_state="서빙봇 대기중"
-            elif call_state=="waiting_handover":
-                call_state="음식인계 대기중"
-            elif call_state=="serving":
-                call_state="서빙중"
-            elif call_state=="done_serving":
-                call_state="서빙완료"              
+
             self.call_states[order_id] = call_state
+
             # 콤보 박스 변경 시 상태를 업데이트
             self.update_order_list()
 

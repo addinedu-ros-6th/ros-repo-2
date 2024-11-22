@@ -20,7 +20,7 @@ from scripts.pose_estimate_final_ver import YoloPose
 
 
 class ClientFormat(Node):
-    def __init__(self,host="localhost", port=9999,shared_queue=None,topic="chatter",nodeName="motion_node"):
+    def __init__(self,host="localhost", port=9999,shared_queue=None,topic="pose_check",nodeName="motion_node"):
         super().__init__(nodeName)
         self.host = host
         self.port = port
@@ -40,37 +40,11 @@ class ClientFormat(Node):
         #client_socket.connect((self.host, self.port))
         #data = b""
         #payload_size = struct.calcsize("Q")
-        
+        # print("test up")
         while True:
-        #    # 패킷 수신
-        #    print("수신중")
-        #    while len(data) < payload_size:
-        #        packet, addr = self.client_socket.recvfrom(4*1024)  # 수신 버퍼 크기 설정
-        #        if not packet:
-        #            break
-        #        data += packet
-#
-        #    # 데이터 크기 추출
-        #    packed_msg_size = data[:payload_size]
-        #    data = data[payload_size:]
-        #    msg_size = struct.unpack("Q", packed_msg_size)[0]
-#
-        #    # 실제 프레임 데이터 수신
-        #    while len(data) < msg_size:
-        #        packet, addr = self.client_socket.recvfrom(4*1024)
-        #        if not packet:
-        #            break
-        #        data += packet
-#
-        #    frame_data = data[:msg_size]
-        #    data = data[msg_size:]
-#
-        #    # 받은 데이터를 복원하여 JPG 형식에서 OpenCV 이미지로 변환
-        #    frame_encoded = pickle.loads(frame_data)
-        #    frame = cv2.imdecode(frame_encoded, cv2.IMREAD_COLOR)
-        #    
+            # print("test down")
             packet, addr = self.client_socket.recvfrom(65536)  # 수신할 최대 크기 설정
-
+            # print("test frame")
             # 수신한 데이터를 OpenCV 이미지로 변환
             frame = cv2.imdecode(np.frombuffer(packet, np.uint8), cv2.IMREAD_COLOR)
             self.result= self.yolo_pose.predict_pose(frame)
@@ -80,6 +54,7 @@ class ClientFormat(Node):
             else:    
                 self.msg.data = self.result
             print(self.result)
+            # print("ssss")
             self.publisher.publish(self.msg)
             self.get_logger().info(f'Publishing: {self.msg.data} topic: {self.topic}')
             

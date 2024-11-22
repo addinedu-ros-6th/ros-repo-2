@@ -666,7 +666,7 @@ def main():
     
     
     #dbm.insert_orderdetails(90,1,2)
-    test=dbm.get_sales_by_month("마파궁전","2024")
+    test=dbm.get_sales_by_day("마파궁전","2024","11")
 
     print(test)
     

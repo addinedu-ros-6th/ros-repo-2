@@ -32,6 +32,7 @@ class ClientFormat:
         
         while True:
             packet, addr = self.client_socket.recvfrom(65536)
+            
             self.shared_queue.put(packet)
             ## 패킷 수신
 #

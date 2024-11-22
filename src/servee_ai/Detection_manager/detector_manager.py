@@ -35,9 +35,11 @@ class ROS2SocketNode(Node):
         # 로봇 클라이언트 및 서버 인스턴스 추가
         # 각 로봇은 ClientFormat을 통해 비디오 데이터를 받고, ServerFormat을 통해 데이터를 전송
         # 로봇마다 고유한 포트가 할당
-        self.client_robot1 = ClientFormat("192.168.0.130", 9999, data_queue_robot1) #9999 포트로 데이터를 받고
-        self.server_robot1 = ServerFormat("192.168.0.130", 9998, data_queue_robot1) #9998 포트로 데이터를 보냄
-        
+        # self.client_robot1 = ClientFormat("192.168.0.130", 9999, data_queue_robot1) #9999 포트로 데이터를 받고
+        self.client_robot1 = ClientFormat("192.168.0.49", 9999, data_queue_robot1)
+        # self.server_robot1 = ServerFormat("192.168.0.130", 9998, data_queue_robot1) #9998 포트로 데이터를 보냄
+        self.server_robot1 = ServerFormat("192.168.0.49", 9998, data_queue_robot1)
+
         self.client_robot2 = ClientFormat("localhost", 9997, data_queue_robot2)
         self.server_robot2 = ServerFormat("localhost", 9996, data_queue_robot2)
 
@@ -73,9 +75,9 @@ class ROS2SocketNode(Node):
         self.subscription_robot3  
 
         ## 소켓 서버 스레드 시작
-        #self.socket_thread_1 = threading.Thread(target=self.robot1_send_video)
-        #self.socket_thread_1.start()
-#
+        # self.socket_thread_1 = threading.Thread(target=self.robot1_send_video)
+        # self.socket_thread_1.start()
+
         #time.sleep(1)
         #self.socket_thread_2 = threading.Thread(target=self.robot2_send_video)
         #self.socket_thread_2.start()
@@ -89,7 +91,7 @@ class ROS2SocketNode(Node):
         time.sleep(1)
         self.robot1_client_thread = threading.Thread(target=self.client_robot1.client_start)
         self.robot1_client_thread.start()
-
+#
         time.sleep(1)
         self.robot1_server_thread = threading.Thread(target=self.server_robot1.server_start)
         self.robot1_server_thread.start()
@@ -131,7 +133,7 @@ class ROS2SocketNode(Node):
     def robot1_send_video(self):
         robot1_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         robot1_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        host = '192.168.0.130'  # Raspberry Pi의 IP 주소
+        host = '192.168.0.49'  # Raspberry Pi의 IP 주소
         port = 9999
 
         # 소켓 바인딩 및 수신 대기 설정
@@ -139,7 +141,7 @@ class ROS2SocketNode(Node):
         print(f"Listening on {host}:{port}...")
 
         # 카메라 연결 로봇 1
-        cap = cv2.VideoCapture(0)
+        cap = cv2.VideoCapture(2)
 
         while cap.isOpened():
             ret, frame = cap.read()
