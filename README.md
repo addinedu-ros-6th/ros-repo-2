@@ -66,3 +66,6 @@ Customer GUI<br>
 ## 5. 개발 환경
 개발 기간 : 24.10.17 ~ 24.11.25 (5주
 ![timeline](https://github.com/user-attachments/assets/ae7ca6c8-e6dd-41f2-94b1-6f3422da15b0)
+<br><br><br>
+개발 방법론 : V모델<br>
+![vmodel](https://github.com/user-attachments/assets/a6e1c5d1-9abc-46c3-a782-83bd78243baf)
