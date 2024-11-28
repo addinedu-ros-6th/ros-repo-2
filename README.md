@@ -136,26 +136,27 @@ Customer GUI<br>
 <br> 1) 벽과 충돌: Costmap의 inflation Layer를 너무 줄일 경우 벽과 충돌하는 문제 발생
 <br> 2) 경로 변경 반복: Costmap 계산을 새로 할 때마다 좁은 통로를 갈지 말지 결정이 지연
 ![4 2 1  - 확률 문제](https://github.com/user-attachments/assets/715d7348-abbf-447f-b5af-7dd270dbbcae)
-### 5.2.1. 해결 방안
+
+### 5.2 해결 방안
 <br>
-1. 경로 계획
+1) 경로 계획
 <br>A* 알고리즘 사용
 <br>Slam으로 제작된 맵 파일로 경로 계획(정적데이터)
 <br>경로가 동적으로 변경되는 문제 해결
 <br>
-<br>
-2. 로봇 주행 구현
+
+2) 로봇 주행 구현
 <br> 2.1 이동한 거리 계산
 <br> 미끄러짐 등의 드리프트로 인한 오차가 누적되지만 단거리에서는 꽤 정확한 Odomeytry
 <br> Odomeytry로 이동한 거리로 목적지까지의 남은 거리를 계산
 <br>
 <br> 2.2 목적지 도착 여부 확인
-<br> - 확률로 위치를 추정하는 AMCL를 매번 좌표가 흔들린다는 문제가 발생.
-<br> - 오차범위 내에서는 꽤 정확함.
-<br> - 로봇이 waypoint에 도착하면 로봇의 AMCL 좌표가 허용 범위 안인지 확인.
-<br> - AMCL좌표는 확률 기반이라 때론 로봇이 벽과 충돌하는 문제가 발생
-<br> - 라이다로 벽과의 거리를 체크해서 벽과 멀어지는 알고리즘으로 해결.
-![개선후](https://github.com/user-attachments/assets/e48ac9f2-f97d-4f20-9ba4-db064bae00bf)
+<br> 확률로 위치를 추정하는 AMCL를 매번 좌표가 흔들린다는 문제가 발생.
+<br> 오차범위 내에서는 꽤 정확함.
+<br> 로봇이 waypoint에 도착하면 로봇의 AMCL 좌표가 허용 범위 안인지 확인
+<br> AMCL좌표는 확률 기반이라 때론 로봇이 벽과 충돌하는 문제가 발생
+<br> 라이다로 벽과의 거리를 체크해서 벽과 멀어지는 알고리즘으로 해결
+![개선후](https://github.com/user-attachments/assets/b04e9871-afd6-43d0-a177-cab2dd25f2fa)
 
 
 ## 6. 개발 환경
