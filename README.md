@@ -33,9 +33,9 @@
 | 기능    | 기능 설명 |
 |----------|---------------|
 | 고객 서비스 및 <br>운영, 매장 관리자 | 고객 주문 기능 및 주문 현황, 매장 현황, 로봇 현황 조회 |, 
-| 로봇 서빙 제어   | 서빙 로봇 자동 호출, 서빙 로봇 자동 배정, 서빙 로봇 자동 배정 (그룹)|
-| 로봇 회수 제어   | 고객 호출 시 해당 테이블로 주행, 회수 차례 순서 출력, 대기시간 기준치 초과 시 퇴식구로 주행 - 어디까지 구현되었는지 확실하지 앟음 | 
-| 주행 상태 제어   | 로봇 주행 - 여기도 마찬가지 
+| 로봇 서빙 제어 | 서빙 로봇 자동 호출, 서빙 로봇 자동 배정, 서빙 로봇 자동 배정 (그룹)|
+| 로봇 회수 제어 | 고객 호출 시 해당 테이블로 주행, 회수 차례 순서 출력, 대기시간 기준치 초과 시 퇴식구로 주행 - 어디까지 구현되었는지 확실하지 앟음 | 
+| 주행 상태 제어 | 로봇 주행 - 여기도 마찬가지 
 ### 2.2. 시스템 구성도
 ![system_structure](https://github.com/user-attachments/assets/df17b161-81dc-4d0f-9514-bc72f5c13e40)
 ### 2.3. 주요 시나리오
@@ -55,11 +55,33 @@ Customer GUI<br>
 ## 3. 기능 구현
 ### 3.1. 로봇 간 충돌 회피 알고리즘
 ### 3.2. 서빙 주행
+서빙 (1/4)
+![2조-발표 자료(최종)](https://github.com/user-attachments/assets/af096b01-f8fd-4556-bf95-a0c337f10c9e)
+<br>서빙 (2/4)
+<br>서빙(정상주행)
+<br>충전소 > 매장 > 테이블 이동
+<br> -아래의 이미지를 클릭하면 영상을 볼 수 있습니다.
+[![영상보기](https://github.com/user-attachments/assets/f78e1bf7-a68e-4b3e-a502-9ea3d6d49f37)](https://drive.google.com/file/d/1JY-tyPiFlq8X7RqE-y3h2twX7MDIrPx1/view)
+<br>
+<br>
+서빙(3/4)
+<br>서빙(충돌 회피 주행)
+<br>넓은 공간: 오른쪽으로 서로를 회피
+<br>좁은 공간: 한대만 오른쪽으로 회피
+<br> - 아래의 이미지를 클릭하면 영상을 볼 수 있습니다.
+[![영상보기](https://github.com/user-attachments/assets/7a679b34-68f3-4323-98d8-dfaf8cad23dc)](https://drive.google.com/file/d/1VPksvb4nGBH0s23Fag2mS7aWTKAE_U5n/view)
+[![영상보기](https://github.com/user-attachments/assets/576291cc-bc7a-41db-9745-1b99d7f73df8)](https://drive.google.com/file/d/1eEzcYA_rjczE5vspLd7MERSeqw1W9p40/view)
+<br>
+<br>
+서빙(4/4)
+<br> 서빙(충돌 회피 주행)
+<br> 사람이 뛰는 동시에 로봇 방향으로 이동하는 경우 주행 정지
+
 ### 3.3. 회수 주행
+
 ## 4. 핵심 기술
 ### 4.1 위치 보정
-아르코 마커
-<br> 라이다
+아르코 마커와 라이다
 ### 4.2 딥러닝
 자세추정 모델
 <br> 테이블 상태 체크 모델
