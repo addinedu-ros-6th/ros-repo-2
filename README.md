@@ -1,5 +1,10 @@
 # ros-repo-2
 파이널 프로젝트 2조 저장소. 푸드코트 서빙 로봇
+## 시연 풀영상
+- 아래의 이미지를 클릭하면 영상을 볼 수 있습니다.
+[![영상보기](https://github.com/user-attachments/assets/f78e1bf7-a68e-4b3e-a502-9ea3d6d49f37)](https://drive.google.com/file/d/11n8TmEqF2lIWvv2bNaJOQPRYmwpDtWcu/view)
+
+
 ## 발표 자료
 [발표자료_링크](https://docs.google.com/presentation/d/1bO1ZOO_CHZOZPhwl_kTbt7kyJYsiErI16zEfxeV0qEo/edit?usp=sharing)
 ## 1. 개요
