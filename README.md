@@ -131,6 +131,8 @@ Customer GUI<br>
 ## 4. 핵심 기술
 ### 4.1 위치 보정
 아르코 마커와 라이다
+<br>주행 결과: 목적지까지 가로 거리 기준 5cm 이내로 도달 가능
+<br>![주차](https://github.com/user-attachments/assets/752e2d25-b052-4e81-b9df-2ab72ba785af)
 ### 4.2 딥러닝
 자세추정 모델
 <br> 테이블 상태 체크 모델
