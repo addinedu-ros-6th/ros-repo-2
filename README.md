@@ -114,8 +114,9 @@ Customer GUI<br>
 서빙(4/4)
 <br> 서빙(충돌 회피 주행)
 <br> 사람이 뛰는 동시에 로봇 방향으로 이동하는 경우 주행 정지
-<br> - 아래의 이미지를 클릭하면 영상을 볼 수 있습니다.
-[![영상보기](https://github.com/user-attachments/assets/fba3cc81-83bc-4fbc-bce1-7869b4036cab)](https://drive.google.com/file/d/1hi7HLdslX-P8V-ys0-Rwj_h3-9rZysuG/view)
+<!-- <br> - 아래의 이미지를 클릭하면 영상을 볼 수 있습니다.
+[![영상보기](https://github.com/user-attachments/assets/fba3cc81-83bc-4fbc-bce1-7869b4036cab)](https://drive.google.com/file/d/1hi7HLdslX-P8V-ys0-Rwj_h3-9rZysuG/view) -->
+![42_avoidance_person_resized](https://github.com/user-attachments/assets/20620a5e-4009-4927-98df-d3a27b113572)
 <br>
 <br>
 ### 3.3. 회수 주행
