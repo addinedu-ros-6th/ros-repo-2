@@ -96,7 +96,7 @@ Customer GUI<br>
 <br>서빙(정상주행)
 <br>충전소 > 매장 > 테이블 이동
 <!-- <br> -아래의 이미지를 클릭하면 영상을 볼 수 있습니다. -->
-![47_manager_gui](https://github.com/user-attachments/assets/94979fd5-04fb-4eea-bfb1-b5b87eb980c6)
+![40_serving_full_video_compressed_2](https://github.com/user-attachments/assets/9e872ffa-2b13-4092-9902-6e1346a03066)
 <br>
 <br>
 서빙(3/4)
@@ -127,8 +127,8 @@ Customer GUI<br>
 <br> 2) AI체크 테이블 위의 빈 접시가 모두 회수 되었는지 확인
 <br> 3) 테이블 위의 접시가 모두 회수되면 퇴식구로 이동
 <br> 4) 잔여 작업이 존재하면 다음 작업을 수행하고 없으면 충전소로 이동
-<br> - 아래의 이미지를 클릭하면 영상을 볼 수 있습니다.
-[![영상보기](https://github.com/user-attachments/assets/5b2cec89-3032-440a-921f-fcb09e6715bd)](https://drive.google.com/file/d/1CzSa1qBtON9nKYdYrcurn_nb_pnXPykP/view)
+<!-- <br> - 아래의 이미지를 클릭하면 영상을 볼 수 있습니다. -->
+![44_retrieve_full_video_resized](https://github.com/user-attachments/assets/12ec8451-ec19-4e55-9875-60e617391a78)
 <br>
 
 ## 4. 핵심 기술
