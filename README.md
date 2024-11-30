@@ -95,20 +95,20 @@ Customer GUI<br>
 <br>서빙 (2/4)
 <br>서빙(정상주행)
 <br>충전소 > 매장 > 테이블 이동
-<br> -아래의 이미지를 클릭하면 영상을 볼 수 있습니다.
-[![영상보기](https://github.com/user-attachments/assets/f78e1bf7-a68e-4b3e-a502-9ea3d6d49f37)](https://drive.google.com/file/d/1JY-tyPiFlq8X7RqE-y3h2twX7MDIrPx1/view)
+<!-- <br> -아래의 이미지를 클릭하면 영상을 볼 수 있습니다. -->
+![47_manager_gui](https://github.com/user-attachments/assets/94979fd5-04fb-4eea-bfb1-b5b87eb980c6)
 <br>
 <br>
 서빙(3/4)
 <br>서빙(충돌 회피 주행)
 <br>넓은 공간: 오른쪽으로 서로를 회피
-<br> - 아래의 이미지를 클릭하면 영상을 볼 수 있습니다.
+<!-- <br> - 아래의 이미지를 클릭하면 영상을 볼 수 있습니다. -->
 <br>
-[![영상보기](https://github.com/user-attachments/assets/7a679b34-68f3-4323-98d8-dfaf8cad23dc)](https://drive.google.com/file/d/1VPksvb4nGBH0s23Fag2mS7aWTKAE_U5n/view)
+![41_avoidance_robot_1_compressed](https://github.com/user-attachments/assets/9c513595-ccf0-45ff-83d6-782a0b6b85d8)
 <br>좁은 공간: 한대만 오른쪽으로 회피
-<br> - 아래의 이미지를 클릭하면 영상을 볼 수 있습니다.
+<!-- <br> - 아래의 이미지를 클릭하면 영상을 볼 수 있습니다. -->
 <br>
-[![영상보기](https://github.com/user-attachments/assets/576291cc-bc7a-41db-9745-1b99d7f73df8)](https://drive.google.com/file/d/1eEzcYA_rjczE5vspLd7MERSeqw1W9p40/view)
+![41_avoidance_robot_2_compressed](https://github.com/user-attachments/assets/71e77e11-cf44-4f68-8cc3-7915ccd40682)
 <br>
 <br>
 서빙(4/4)
