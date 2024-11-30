@@ -51,11 +51,11 @@
 ![network_protocol](https://github.com/user-attachments/assets/a82f8b8d-4349-42eb-a1ee-5a02a0956240)
 ### 2.4. GUI 설계
 Customer GUI<br>
-![customer_gui](https://github.com/user-attachments/assets/30148a26-b684-46f7-859a-590b0379e447)
+![38_customer_gui](https://github.com/user-attachments/assets/bf2d7955-6865-4cff-9ddc-127d9598bacd)
 <br><br>Vendor GUI<br>
-![vendor_gui](https://github.com/user-attachments/assets/d350bd1c-1639-4718-b318-4f54f543311c)
+![38_vendor_gui](https://github.com/user-attachments/assets/04c8237e-2256-4aa8-9dcf-87791059366b)
 <br><br>Manager GUI<br>
-![manager_gui1](https://github.com/user-attachments/assets/17901211-5531-4e51-b82f-1519852eff81)
+![47_manager_gui](https://github.com/user-attachments/assets/94979fd5-04fb-4eea-bfb1-b5b87eb980c6)
 ### 2.4. 데이터베이스 설계
 ![DB_structure](https://github.com/user-attachments/assets/dc8d1728-9747-4861-ad4e-f8d0853a5b8b)
 
