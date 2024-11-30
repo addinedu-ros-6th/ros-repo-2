@@ -101,10 +101,12 @@ Customer GUI<br>
 서빙(3/4)
 <br>서빙(충돌 회피 주행)
 <br>넓은 공간: 오른쪽으로 서로를 회피
-<br>좁은 공간: 한대만 오른쪽으로 회피
 <br> - 아래의 이미지를 클릭하면 영상을 볼 수 있습니다.
 <br>
 [![영상보기](https://github.com/user-attachments/assets/7a679b34-68f3-4323-98d8-dfaf8cad23dc)](https://drive.google.com/file/d/1VPksvb4nGBH0s23Fag2mS7aWTKAE_U5n/view)
+<br>좁은 공간: 한대만 오른쪽으로 회피
+<br> - 아래의 이미지를 클릭하면 영상을 볼 수 있습니다.
+<br>
 [![영상보기](https://github.com/user-attachments/assets/576291cc-bc7a-41db-9745-1b99d7f73df8)](https://drive.google.com/file/d/1eEzcYA_rjczE5vspLd7MERSeqw1W9p40/view)
 <br>
 <br>
