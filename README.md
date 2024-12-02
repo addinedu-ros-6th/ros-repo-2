@@ -153,6 +153,7 @@ Customer GUI<br>
 <br>A* 알고리즘 사용
 <br>Slam으로 제작된 맵 파일로 경로 계획(정적데이터)
 <br>경로가 동적으로 변경되는 문제 해결
+<br>![1](https://github.com/user-attachments/assets/3d0074d0-3194-495e-87e0-45a34a6b5ca0)
 
 로봇 주행 구현
 <br> 2-1) 이동한 거리 계산
