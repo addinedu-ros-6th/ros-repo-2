@@ -139,34 +139,50 @@ Customer GUI<br>
 <br>![주차](https://github.com/user-attachments/assets/752e2d25-b052-4e81-b9df-2ab72ba785af)
 ### 4.2 딥러닝
 **테이블 상태 체크 모델**
+**목표**
+- 로봇이 테이블 위의 상태(Empty/Not Empty)를 실시간으로 인식하여 음식 회수 작업을 자동화하고 효율성을 향상
 
-직접 수집: 프로젝트에 사용된 데이터는 실제 세트장 환경에서 직접 촬영한 테이블 이미지로 구성하였음.
+**사용기술**
+**모델: MobileNetV2**
+- 경량화된 CNN 구조로 실시간 예측 및 제한된 리소스 환경에서도 높은 성능 제공.
+- ImageNet 사전 학습 가중치로 초기화하여 적은 데이터로도 학습 속도와 성능을 확보.
 
-이미지 예시: 비어 있는 테이블과 비어 있지 않은 테이블의 두 가지 상태로 구성하였으며, 영상에서 각 상태별로 1,000장의 이미지를 추출함. 이렇게 수집된 데이터는 테이블 상태를 분류하는 데 필요한 다양성을 제공함.
-![image](https://github.com/user-attachments/assets/145c8e0c-485a-4a72-b40e-4273c3182868) ![image](https://github.com/user-attachments/assets/188f2a5c-7393-4c78-b2be-4ffd37680250)  ![image](https://github.com/user-attachments/assets/a497f31e-6bae-4213-a370-9fea78190102)
+**프레임워크** : TensorFlow, Keras
 
+**데이터 처리**
+- 2,000개 이상의 테이블 이미지를 수집하여 두 가지 상태로 분류(Empty/Not Empty).
+- 데이터 증강: 회전, 이동, 밝기 조정 등으로 모델의 일반화 성능 향상.
+- 모든 이미지 크기를 224x224로 조정 및 정규화(rescale = 1.0/255).
 
-
+**성과**
+- 검증 정확도 95.25% 달성.
+- 안정적인 손실 감소를 통해 과적합 방지 및 높은 일반화 성능 확보.
+- 후처리를 활용하여 테이블 번호와 상태를 매핑해 로봇 동선을 최적화.
 
 <br> **자세추정 모델 **
+**목표**
+- 로봇이 고객의 행동(걷기, 뛰기, 서기, 앉기)과 방향(정면/다른 방향)을 실시간으로 인식하여 안전한 매장 운영 지원.
 
-데이터 수집
-데이터 구성: 프로젝트에 사용된 데이터는 행동(서 있음, 달리고 있음, 걷고 있음, 앉아 있음)을 인식하기 위해, 사람의 17개 관절 좌표를 추출하여 특정 시퀀스 길이(15 프레임)로 데이터를 구성하였음.
+**사용기술**
+**모델: YOLOv8 Pose nano & Bidirectional LSTM**
+- YOLOv8 Pose nano: 17개 관절 좌표를 실시간으로 추출해 행동 상태 분석.
+- Bidirectional LSTM: 관절 좌표의 시계열 데이터를 학습하여 행동 패턴 분류.
 
-촬영 조건: 각 행동별로 다양한 방향(앞, 왼쪽, 오른쪽)에서 촬영한 동영상을 사용하여 모델의 다양성을 보장함.
+**데이터 처리**
+- 15 프레임 단위로 관절 좌표를 시퀀스화하여 학습 데이터 구성.
+- 다양한 행동과 방향 데이터를 수집하여 모델의 다양성 확보.
 
-데이터 예시:
+**프레임 워크** : TensorFlow, Keras
 
-"서 있음": standing_front.MOV, standing_left.MOV, standing_right.MOV
-
-"달리고 있음": running_front.MOV, running_left.MOV, running_right.MOV
-
-"걷고 있음": walking_front.MOV, walking_left.MOV, walking_right.MOV
-
-"앉아 있음": sitting_front.MOV, sitting_left.MOV, sitting_right.MOV
-![image](https://github.com/user-attachments/assets/58f7d8fb-ab14-4794-9f9f-12e273cc1672) ![image](https://github.com/user-attachments/assets/d8c756ca-c0aa-4bfb-9a37-458e3e8be354)
+**성과**
+- 검증 정확도 95.17% 달성.
+- 충돌 회피 알고리즘에 기여하여 로봇이 안전한 경로로 이동 가능.
+- 이동 방향 정보(정면/다른 방향) 활용으로 로봇 동선을 최적화.
 
 
+**결론**
+- **테이블 상태 체크 모델**은 음식 회수 작업의 정확도와 효율성을 높 oversetting하며, **행동 추정 모델**은 고객의 행동과 방향을 실시간으로 파악해 로봇의 안전성과 서비스 품질을 향상.
+- 두 모델 모두 데이터 증강, 정규화 등 과적합 방지 기법을 적극 활용하며, 높은 검증 정확도로 실시간 애플리케이션에 적합.
 
 ## 5. 트러블 슈팅
 ### 5.1 기존 패키지 문제 - 노이즈와 확률
