@@ -138,14 +138,17 @@ Customer GUI<br>
 <br>주행 결과: 목적지까지 가로 거리 기준 5cm 이내로 도달 가능
 <br>![주차](https://github.com/user-attachments/assets/752e2d25-b052-4e81-b9df-2ab72ba785af)
 ### 4.2 딥러닝
-자세추정 모델
+자세추정 모델 테이블 상태 체크 모델
 
 직접 수집: 프로젝트에 사용된 데이터는 실제 세트장 환경에서 직접 촬영한 테이블 이미지로 구성하였음.
 
 이미지 예시: 비어 있는 테이블과 비어 있지 않은 테이블의 두 가지 상태로 구성하였으며, 영상에서 각 상태별로 1,000장의 이미지를 추출함. 이렇게 수집된 데이터는 테이블 상태를 분류하는 데 필요한 다양성을 제공함.
+![image](https://github.com/user-attachments/assets/145c8e0c-485a-4a72-b40e-4273c3182868) ![image](https://github.com/user-attachments/assets/188f2a5c-7393-4c78-b2be-4ffd37680250)  ![image](https://github.com/user-attachments/assets/a497f31e-6bae-4213-a370-9fea78190102)
 
 
-<br> 테이블 상태 체크 모델
+
+
+<br> 자세추정 모델 
 
 데이터 수집
 데이터 구성: 프로젝트에 사용된 데이터는 행동(서 있음, 달리고 있음, 걷고 있음, 앉아 있음)을 인식하기 위해, 사람의 17개 관절 좌표를 추출하여 특정 시퀀스 길이(15 프레임)로 데이터를 구성하였음.
@@ -161,6 +164,8 @@ Customer GUI<br>
 "걷고 있음": walking_front.MOV, walking_left.MOV, walking_right.MOV
 
 "앉아 있음": sitting_front.MOV, sitting_left.MOV, sitting_right.MOV
+![image](https://github.com/user-attachments/assets/58f7d8fb-ab14-4794-9f9f-12e273cc1672) ![image](https://github.com/user-attachments/assets/d8c756ca-c0aa-4bfb-9a37-458e3e8be354)
+
 
 
 ## 5. 트러블 슈팅
