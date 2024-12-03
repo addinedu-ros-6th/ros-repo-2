@@ -141,6 +141,7 @@ Customer GUI<br>
 ### 4.2 딥러닝
 
 #### **테이블 상태 체크 모델**
+![table_check_demo](https://github.com/user-attachments/assets/3b23542d-b166-44f7-9368-1b7fb61b6aa9)
 
 **목표**  
 - 로봇이 테이블 위의 상태(Empty/Not Empty)를 실시간으로 인식하여 음식 회수 작업을 자동화하고 효율성을 향상시키는 것.
@@ -172,6 +173,11 @@ Customer GUI<br>
 ---
 
 #### **자세 추정 모델**
+![running_forward_demo](https://github.com/user-attachments/assets/59bf3042-6eac-4449-97fb-82e95f296783)
+![sitting_demo](https://github.com/user-attachments/assets/2ff34ce3-5208-41d4-bd69-3f856bbca297)
+![standing_demo](https://github.com/user-attachments/assets/cb8e0062-84ea-4730-ad2d-5676080964b5)
+![walk_side_demo](https://github.com/user-attachments/assets/f10da982-6d7f-4ecb-bd87-decfd8ea8434)
+
 
 **목표**  
 - 로봇이 고객의 행동(걷기, 뛰기, 서기, 앉기)과 방향(정면/다른 방향)을 실시간으로 인식하여 안전한 매장 운영을 지원.
