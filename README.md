@@ -155,11 +155,19 @@ Customer GUI<br>
 - 2,000개 이상의 테이블 이미지를 수집하여 두 가지 상태로 분류(Empty/Not Empty).
 - **데이터 증강**: 회전, 이동, 밝기 조정 등으로 모델의 일반화 성능 향상.
 - 모든 이미지 크기를 224x224로 조정 및 정규화(rescale = 1.0/255).
+![image](https://github.com/user-attachments/assets/0cfc6ce2-579e-4ecf-9004-5367c056d9c7)
+![image](https://github.com/user-attachments/assets/9a994db4-be82-4878-afdc-6c8206540131)
+![image](https://github.com/user-attachments/assets/4ab8f1d1-9d46-45f3-a9f7-018019d23cb1)
+
+
 
 **성과**  
 - 검증 정확도 **95.25%** 달성.
+![image](https://github.com/user-attachments/assets/47b21211-caad-4615-80bd-e836e9c70bed)
+
 - 안정적인 손실 감소를 통해 과적합 방지 및 높은 일반화 성능 확보.
 - **후처리**를 활용하여 테이블 번호와 상태를 매핑, 로봇 동선을 최적화.
+![image](https://github.com/user-attachments/assets/beadf8ec-2d0b-4940-9d4f-180adc8d8a51)
 
 ---
 
@@ -177,11 +185,18 @@ Customer GUI<br>
 **데이터 처리**  
 - 15 프레임 단위로 관절 좌표를 시퀀스화하여 학습 데이터 구성.
 - 다양한 행동과 방향 데이터를 수집하여 모델의 다양성 확보.
+![image](https://github.com/user-attachments/assets/ca2b14ca-81f7-4470-bb77-ae24f7a909f1)
+![image](https://github.com/user-attachments/assets/2e1c4204-0e58-4d7b-8743-e6930a4e9fe0)
+
+
 
 **성과**  
 - 검증 정확도 **95.17%** 달성.
+![image](https://github.com/user-attachments/assets/b062bfd0-ffa8-452e-b2f2-5db24aad96f9)
+
 - 충돌 회피 알고리즘에 기여하여 로봇이 안전한 경로로 이동 가능.
 - 이동 방향 정보(정면/다른 방향) 활용으로 로봇 동선을 최적화.
+![image](https://github.com/user-attachments/assets/af7792bd-16a8-49d4-af11-571cd0b60499)
 
 ---
 
