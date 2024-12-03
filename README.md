@@ -139,7 +139,30 @@ Customer GUI<br>
 <br>![주차](https://github.com/user-attachments/assets/752e2d25-b052-4e81-b9df-2ab72ba785af)
 ### 4.2 딥러닝
 자세추정 모델
+
+직접 수집: 프로젝트에 사용된 데이터는 실제 세트장 환경에서 직접 촬영한 테이블 이미지로 구성하였음.
+
+이미지 예시: 비어 있는 테이블과 비어 있지 않은 테이블의 두 가지 상태로 구성하였으며, 영상에서 각 상태별로 1,000장의 이미지를 추출함. 이렇게 수집된 데이터는 테이블 상태를 분류하는 데 필요한 다양성을 제공함.
+
+
 <br> 테이블 상태 체크 모델
+
+데이터 수집
+데이터 구성: 프로젝트에 사용된 데이터는 행동(서 있음, 달리고 있음, 걷고 있음, 앉아 있음)을 인식하기 위해, 사람의 17개 관절 좌표를 추출하여 특정 시퀀스 길이(15 프레임)로 데이터를 구성하였음.
+
+촬영 조건: 각 행동별로 다양한 방향(앞, 왼쪽, 오른쪽)에서 촬영한 동영상을 사용하여 모델의 다양성을 보장함.
+
+데이터 예시:
+
+"서 있음": standing_front.MOV, standing_left.MOV, standing_right.MOV
+
+"달리고 있음": running_front.MOV, running_left.MOV, running_right.MOV
+
+"걷고 있음": walking_front.MOV, walking_left.MOV, walking_right.MOV
+
+"앉아 있음": sitting_front.MOV, sitting_left.MOV, sitting_right.MOV
+
+
 ## 5. 트러블 슈팅
 ### 5.1 기존 패키지 문제 - 노이즈와 확률
 기존의 Nav2 패키지는 확률 기반 추정으로 인해 오차가 발생
